@@ -153,7 +153,7 @@ html,body{height:auto!important}
     <div class="card-hd"><div class="card-hd-bar"></div><div class="card-ttl">🏢 Identification de l'audit</div></div>
     <div class="card-body">
       <div class="form-id-grid">
-        <div class="fld"><label class="fld-lbl">Site *</label><select class="fld-sel" id="f-site"><option value="">— Sélectionner —</option><option value="38">A7</option><option value="41">RAP</option><option value="89">CPE</option><option value="47">RI 47</option><option value="37">AUTO&CO</option><option value="17">RI 17</option><option value="72">SMAP</option><option value="72bis">TDA</option></select></div>
+        <div class="fld"><label class="fld-lbl">Site *</label><select class="fld-sel" id="f-site"><option value="">— Sélectionner —</option><option value="38">38</option><option value="41">41</option><option value="89">89</option><option value="47">47</option><option value="37">37</option><option value="17">17</option><option value="72">72</option><option value="72bis">72bis</option></select></div>
         <div class="fld"><label class="fld-lbl">Date de l'audit *</label><input type="date" class="fld-inp" id="f-date"></div>
         <div class="fld"><label class="fld-lbl">Auditeur(s) *</label><input type="text" class="fld-inp" id="f-auditeur" placeholder="Nom Prénom"></div>
         <div class="fld"><label class="fld-lbl">Responsable de site</label><input type="text" class="fld-inp" id="f-responsable" placeholder="Nom Prénom"></div>
@@ -192,7 +192,7 @@ html,body{height:auto!important}
   Service QSSE · Système d'Audit SSE · v1.0 · 2026 · Usage interne
 </div>
 <script>
-const SP_CONFIG={  GSHEET_URL:https://script.google.com/macros/s/AKfycbz8rTYZlYESL_lpUcUc7QyXL0P_1Gh_oybLsew2x3Ro/dev,  MODE:"googlesheets"};
+const SP_CONFIG={  GSHEET_URL:"https://script.google.com/macros/s/AKfycbz8rTYZlYESL_lpUcUc7QyXL0P_1Gh_oybLsew2x3Ro/dev",  MODE:"googlesheets"};
 const SP={
   async getDigest(){
     const r=await fetch(`${SP_CONFIG.SITE_URL}/_api/contextinfo`,{method:"POST",headers:{"Accept":"application/json;odata=verbose"},credentials:"include"});
