@@ -1,0 +1,483 @@
+<!-- SSE — Plan d'Actions -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-mid:#7A96AA;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --ok-bg:#D6F0A8;--ok-tc:#2D5A00;--warn-bg:#FFF0B3;--warn-tc:#7A5000;
+  --bad-bg:#FFD6D6;--bad-tc:#8B0000;--blue-bg:#DBEAFE;--blue-tc:#1e3a8a;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:#fff;border-bottom-color:rgba(107,191,31,.5)}
+.nav-btn.active{color:#fff!important;border-bottom-color:#6BBF1F!important}
+.wrapper{max-width:1320px;margin:0 auto;padding:22px 24px 48px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.card-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.card-title{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;background:var(--slate);border-bottom:1px solid var(--border)}
+.fld-sel,.fld-inp{height:34px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;background:var(--white);color:var(--charcoal)}
+.btn{height:34px;padding:0 16px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--green);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-danger{background:var(--bad-bg);color:var(--bad-tc);border:1px solid #fca5a5}
+.btn-blue{background:var(--blue-bg);color:var(--blue-tc);border:1px solid #93c5fd}
+.btn-sm{height:28px;padding:0 10px;font-size:11px}
+/* Stats */
+.stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.stat-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 18px;flex:1;min-width:120px;text-align:center}
+.stat-val{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:800;color:var(--steel-dk)}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+/* Action card */
+.action-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden;border-left:4px solid var(--border)}
+.action-card.todo{border-left-color:#94a3b8}
+.action-card.inprogress{border-left-color:var(--amber,#d97706)}
+.action-card.done{border-left-color:var(--green)}
+.action-card.efficace{border-left-color:#4f46e5}
+.action-hd{padding:12px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;cursor:pointer}
+.action-origin{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:3px}
+.action-desc{font-size:13px;font-weight:600;color:var(--charcoal)}
+.action-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:5px}
+.action-badge{font-size:10px;padding:2px 8px;border-radius:12px;font-weight:600}
+.badge-todo{background:#f1f5f9;color:#64748b}
+.badge-inprogress{background:var(--warn-bg);color:var(--warn-tc)}
+.badge-done{background:var(--ok-bg);color:var(--ok-tc)}
+.badge-efficace{background:#eef2ff;color:#4f46e5}
+.action-progress{display:flex;align-items:center;gap:8px;min-width:100px}
+.progress-bar{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--green);transition:width .3s}
+.action-body{padding:12px 16px;border-top:1px solid var(--border);display:none}
+.action-body.open{display:block}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+@media(max-width:600px){.form-row,.form-row-3{grid-template-columns:1fr}}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld-lbl{font-size:11px;font-weight:600;color:var(--steel-dk)}
+.fld-txt{border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Nunito Sans',sans-serif;font-size:13px;resize:vertical;min-height:60px}
+.fld-range{width:100%;accent-color:var(--green)}
+.range-val{font-family:'Exo 2',sans-serif;font-size:16px;font-weight:700;color:var(--green-dk);text-align:center}
+.efficace-row{display:flex;gap:10px;align-items:center;margin-bottom:10px;padding:10px;background:var(--green-xlt);border-radius:7px}
+.efficace-row label{font-size:13px;font-weight:600;color:var(--green-dk)}
+.radio-grp{display:flex;gap:8px}
+.radio-grp label{display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer}
+.origin-box{background:var(--steel-xlt);border-radius:7px;padding:10px;margin-bottom:10px;font-size:12px;color:var(--steel-dk)}
+.origin-box strong{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:3px}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--white);border-radius:var(--radius);box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:600px;max-height:90vh;overflow-y:auto}
+.modal-hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:'Exo 2',sans-serif;font-size:16px;font-weight:700;color:var(--steel-dk)}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1}
+.modal-body{padding:20px}
+.modal-foot{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-title{font-family:'Exo 2',sans-serif;font-size:16px;font-weight:700;color:var(--steel-dk);margin-bottom:6px}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE</div>
+    <div class="ph-title">📋 Plan d'Actions SSE</div>
+    <div class="ph-sub">Suivi des actions correctives issues des audits</div>
+  </div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn NAV_DASH" onclick="window.location.href='SharePoint_Code_Incorpore_SSE.html'">📊 Tableau de bord</button>
+  <button class="nav-btn NAV_FORM" onclick="window.location.href='Formulaire_Audit_SSE.html'">📝 Nouvel audit</button>
+  <button class="nav-btn NAV_LIB" onclick="window.location.href='Bibliotheque_Audits_SSE.html'">📚 Bibliothèque</button>
+  <button class="nav-btn NAV_PLAN active">📋 Plan d'actions</button>
+</div>
+
+<div class="wrapper">
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val" id="st-total">—</div><div class="stat-lbl">Actions totales</div></div>
+    <div class="stat-card"><div class="stat-val" id="st-open" style="color:#d97706">—</div><div class="stat-lbl">En cours</div></div>
+    <div class="stat-card"><div class="stat-val" id="st-done" style="color:var(--green-dk)">—</div><div class="stat-lbl">Terminées</div></div>
+    <div class="stat-card"><div class="stat-val" id="st-efficace" style="color:#4f46e5">—</div><div class="stat-lbl">Efficaces</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">
+      <span class="card-title">📋 Actions correctives</span>
+      <button class="btn btn-primary" onclick="openNewModal()">➕ Nouvelle action</button>
+    </div>
+    <div class="filters">
+      <select class="fld-sel" id="f-site" onchange="render()"><option value="">Tous les sites</option></select>
+      <select class="fld-sel" id="f-statut" onchange="render()">
+        <option value="">Tous statuts</option>
+        <option value="todo">À faire</option>
+        <option value="inprogress">En cours</option>
+        <option value="done">Terminée</option>
+        <option value="efficace">Efficace ✅</option>
+      </select>
+      <select class="fld-sel" id="f-section" onchange="render()"><option value="">Toutes sections</option></select>
+      <input class="fld-inp" id="f-search" placeholder="Rechercher..." oninput="render()" style="min-width:160px">
+    </div>
+    <div style="padding:16px" id="action-list"><div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title">Chargement...</div></div></div>
+  </div>
+</div>
+
+<!-- Modal nouvelle/édition action -->
+<div class="modal-overlay" id="modal" style="display:none" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-hd">
+      <span class="modal-title" id="modal-title">Nouvelle action</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="origin-box">
+        <strong>Origine de l'action</strong>
+        <div id="m-origin-display">—</div>
+      </div>
+      <input type="hidden" id="m-id">
+      <input type="hidden" id="m-audit-id">
+      <input type="hidden" id="m-section-key">
+      <input type="hidden" id="m-criteria-idx">
+      <input type="hidden" id="m-origin">
+
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Site</label>
+          <input class="fld-inp" id="m-site" readonly style="background:var(--slate);height:36px">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Date audit</label>
+          <input class="fld-inp" id="m-audit-date" readonly style="background:var(--slate);height:36px">
+        </div>
+      </div>
+
+      <div class="fld" style="margin-bottom:10px">
+        <label class="fld-lbl">Description de l'action *</label>
+        <textarea class="fld-txt" id="m-description" placeholder="Décrivez l'action corrective à mener..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Responsable *</label>
+          <input class="fld-inp" id="m-responsable" placeholder="Nom du responsable" style="height:36px">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Délai *</label>
+          <input type="date" class="fld-inp" id="m-delai" style="height:36px">
+        </div>
+      </div>
+
+      <div class="fld" style="margin-bottom:10px">
+        <label class="fld-lbl">Avancement : <span id="m-avancement-val" style="color:var(--green-dk);font-weight:700">0%</span></label>
+        <input type="range" class="fld-range" id="m-avancement" min="0" max="100" step="5" value="0" oninput="updateAvancement(this.value)">
+      </div>
+
+      <div class="fld" style="margin-bottom:10px">
+        <label class="fld-lbl">Commentaire</label>
+        <textarea class="fld-txt" id="m-commentaire" placeholder="Commentaires sur l'avancement..." style="min-height:50px"></textarea>
+      </div>
+
+      <div class="efficace-row" id="m-efficace-row" style="display:none">
+        <label class="fld-lbl" style="margin:0">Action efficace ?</label>
+        <div class="radio-grp">
+          <label><input type="radio" name="efficace" value="oui" onchange="updateEfficace()"> ✅ Oui</label>
+          <label><input type="radio" name="efficace" value="non" onchange="updateEfficace()"> ❌ Non</label>
+          <label><input type="radio" name="efficace" value="" checked onchange="updateEfficace()"> — Non évalué</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveAction()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+
+const SECTIONS=[{"key":"duerp","label":"DUERP","icon":"📋","criteria":["Le DUERP existe sur le site","Le DUERP a été mis à jour il y a moins d'1 an","Le DUERP est rédigé sur la trame Groupe","Le contenu du DUERP est cohérent avec la réalité du terrain","Un PAPRIPACT ou plan d'actions est formalisé et suivi"]},{"key":"plan_prev","label":"Plan Prévention","icon":"🤝","criteria":["La liste des entreprises extérieures concernées est connue","Les plans de prévention sont réalisés avant chaque intervention","Les plans de prévention sont signés par les représentants légaux","Les plans de prévention sont conservés sur site et diffusés","Les plans de prévention sont mis à jour en cas de modification","Un protocole de sécurité est établi pour le chargement/déchargement"]},{"key":"accueil","label":"Accueil SSE","icon":"👷","criteria":["Un livret d'accueil sécurité est remis à chaque nouveau salarié","Un accueil SSE formalisé est réalisé avant la prise de poste","Un QCM ou test de compréhension est effectué à l'issue de l'accueil","La fiche d'accueil signée est archivée dans le dossier du salarié","Les risques spécifiques au poste sont présentés lors de l'accueil","Les consignes incendie et évacuation sont expliquées lors de l'accueil","Les EPI obligatoires sont remis et expliqués lors de l'accueil","Les intérimaires et CDD bénéficient également d'un accueil SSE","Un accueil spécifique est prévu pour les postes à risque (SIR)","Le responsable de site valide la réalisation de l'accueil","Les accueils réalisés sont enregistrés et traçables"]},{"key":"formation","label":"Formation Habilitation","icon":"🎓","criteria":["Un plan de formation SSE est établi et mis à jour annuellement","Les formations obligatoires sont réalisées dans les délais réglementaires","Les habilitations électriques sont à jour pour tous les salariés concernés","Les CACES sont valides pour tous les conducteurs d'engins","Les habilitations travail en hauteur sont validées et archivées","Les habilitations levage sont à jour et correspondent aux équipements","Les formations sont renouvelées après changement de poste ou d'équipement","Les formations sont renouvelées après absence prolongée ou accident","Les attestations et certificats de formation sont archivés","Un registre des habilitations est tenu à jour et accessible sur site","Les habilitations B0L/B1L/B2L pour véhicules électriques sont validées"]},{"key":"accident","label":"Accident Travail","icon":"🚑","criteria":["La procédure de gestion des accidents est affichée et connue de tous","Tout accident du travail est déclaré à la CPAM dans les 48 heures","Un registre des accidents du travail et soins est tenu à jour","Une analyse des causes est réalisée après chaque accident","Les presqu'accidents et situations dangereuses sont déclarés et analysés","Des actions correctives et préventives sont définies et suivies","Le retour d'expérience est partagé avec les équipes concernées","Les indicateurs accidents (TF, TG) sont calculés et communiqués","La boîte à pharmacie est accessible, complète et vérifiée régulièrement","Les Sauveteurs Secouristes du Travail (SST) sont formés et à jour","Les numéros d'urgence (15, 18) sont affichés de manière visible"]},{"key":"vgp","label":"Vérifications VGP","icon":"🔧","criteria":["Un tableau de suivi des vérifications périodiques est tenu à jour","Les ponts élévateurs véhicules sont contrôlés annuellement (organisme agréé)","Les équipements de levage (élingues, sangles, palans) contrôlés annuellement","Les chariots élévateurs et gerbeurs sont contrôlés tous les 6 mois","Les installations électriques sont contrôlées annuellement (organisme agréé)","Les extincteurs et RIA sont contrôlés annuellement (organisme agréé)","Les disjoncteurs différentiels sont testés tous les 6 mois (bouton TEST)","Les portes automatiques et portails motorisés contrôlés tous les 6 mois","Les compresseurs sont soumis aux inspections périodiques (IP/RP)","Les échelles, escabeaux et gardes-corps sont vérifiés annuellement","Les rapports de contrôle sont archivés et les écarts levés dans les délais"]},{"key":"epi","label":"Vêtements EPI","icon":"🦺","criteria":["La liste des EPI obligatoires par poste est établie et à jour","Les EPI sont fournis gratuitement par l'employeur à tous les salariés","Les salariés sont formés à l'utilisation et à l'entretien des EPI","Le port des EPI est contrôlé régulièrement par les responsables","Les EPI défectueux sont retirés du service et remplacés immédiatement","Les vêtements de travail sont fournis conformément à la convention collective","Les chaussures de sécurité sont adaptées aux risques identifiés par poste","Les EPI sont conformes aux normes EN et portent le marquage CE","Un registre de distribution des EPI est tenu à jour","Les EPI sont stockés dans des conditions adéquates (accessibles, propres)","Le choix des EPI est fondé sur l'évaluation des risques (DUERP)"]},{"key":"vhe","label":"VHE","icon":"⚡","criteria":["Les salariés intervenant sur VHE sont habilités (B0L, B1L, B2L — NF C18-550)","Les procédures de traitement d'un VHE sont disponibles et connues","Une ZST et ZST renforcée sont aménagées sur zone imperméable, identifiée","Des zones de stockage dédiées aux batteries lithium-ion sont aménagées","Un système de détection incendie est en place dans les zones de stockage VHE","Les moyens d'extinction adaptés aux feux électriques/lithium sont disponibles","Les véhicules électriques sont identifiés et signalés dès leur entrée sur site","Un suivi des flux entrants/sortants de batteries est réalisé","Des rondes de surveillance sont effectuées dans les zones de stockage VHE","Les EPI spécifiques HT (gants isolants, écrans faciaux) sont disponibles","Les prescriptions ICPE 2712-1 relatives aux VHE sont respectées"]},{"key":"incendie","label":"Risque Incendie","icon":"🔥","criteria":["Un Plan de Défense Incendie (PDI) est établi, affiché et connu des salariés","Les issues de secours sont libérées, signalées et accessibles en permanence","Des exercices d'évacuation incendie sont réalisés au moins une fois par an","Les extincteurs sont en nombre suffisant, signalés et en bon état","Un registre de sécurité incendie est tenu à jour sur le site","Les salariés sont formés à la manipulation des extincteurs","Des rondes de surveillance incendie sont réalisées conformément au PDI","Les matériaux combustibles sont séparés des sources d'inflammation","Les zones de stockage de liquides inflammables respectent les prescriptions ICPE","L'éclairage de secours est vérifié tous les 6 mois (test bouchon)","Les conduites à tenir en cas d'incendie sont affichées et connues de tous"]},{"key":"dechets","label":"Déchets Fluides","icon":"♻️","criteria":["Un plan de gestion des déchets est établi et mis à jour sur le site","Les déchets dangereux (huiles, batteries, filtres, liquides) sont triés et étiquetés","Les déchets sont stockés dans des contenants adaptés et en bon état","Les BSDD des déchets dangereux sont archivés 5 ans","Les prestataires de collecte des déchets sont agréés et identifiés","Les cuves et récipients de fluides sont en bon état et étanches","Des rétentions adaptées sont en place sous les zones de stockage fluides","Les écoulements accidentels sont pris en charge immédiatement avec absorbants","Un registre de suivi des déchets produits est tenu à jour","Les salariés sont sensibilisés aux procédures de tri et gestion des déchets","Les obligations ICPE liées aux déchets et fluides sont respectées"]}];
+
+let ACTIONS=[];
+
+// ─── API JSONP pour lecture ───
+function jsonpGetActions(){
+  return new Promise((resolve,reject)=>{
+    const cb='_cb'+Date.now();
+    window[cb]=function(d){
+      delete window[cb];
+      const el=document.getElementById('_jsonp_actions');
+      if(el)el.remove();
+      const data=(d.data||[]).map(row=>({
+        id:row[0],auditId:row[1],site:row[2],auditDate:row[3],
+        sectionKey:row[4],criteriaIdx:Number(row[5]),origin:row[6],
+        description:row[7],responsable:row[8],delai:row[9],
+        avancement:Number(row[10]||0),commentaire:row[11],
+        efficace:row[12]||'',createdAt:row[13]
+      }));
+      resolve(data);
+    };
+    const s=document.createElement('script');
+    s.id='_jsonp_actions';
+    s.src=GSHEET_URL+'?action=getActions&callback='+cb;
+    s.onerror=()=>reject(new Error('JSONP failed'));
+    document.head.appendChild(s);
+  });
+}
+
+async function apiSaveAction(action){
+  await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveAction',data:action})});
+}
+async function apiDeleteAction(id){
+  await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'deleteAction',id})});
+}
+async function apiUpdateAuditNC(auditId,sectionKey,criteriaIdx){
+  await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'checkAndUpdateNC',auditId,sectionKey,criteriaIdx})});
+}
+
+// ─── Init ───
+async function init(){
+  SECTIONS.forEach(s=>{
+    const o=document.createElement('option');
+    o.value=s.key;o.textContent=s.icon+' '+s.label;
+    document.getElementById('f-section').appendChild(o);
+  });
+  try{
+    ACTIONS=await jsonpGetActions();
+  }catch(e){
+    console.warn('Fallback local',e);
+    ACTIONS=JSON.parse(localStorage.getItem('sse_actions')||'[]');
+  }
+  // Peupler filtre sites
+  const sites=[...new Set(ACTIONS.map(a=>a.site))].filter(Boolean);
+  const fSite=document.getElementById('f-site');
+  sites.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent='Site '+s;fSite.appendChild(o);});
+  render();
+}
+
+function getStatut(a){
+  if(a.efficace==='oui')return 'efficace';
+  if(a.avancement>=100)return 'done';
+  if(a.avancement>0)return 'inprogress';
+  return 'todo';
+}
+function statutLabel(st){
+  if(st==='efficace')return'<span class="action-badge badge-efficace">✅ Efficace</span>';
+  if(st==='done')return'<span class="action-badge badge-done">✔ Terminée</span>';
+  if(st==='inprogress')return'<span class="action-badge badge-inprogress">⏳ En cours</span>';
+  return'<span class="action-badge badge-todo">📌 À faire</span>';
+}
+function getSec(key){return SECTIONS.find(s=>s.key===key)||{label:key,icon:''};}
+
+function render(){
+  const site=document.getElementById('f-site').value;
+  const statut=document.getElementById('f-statut').value;
+  const section=document.getElementById('f-section').value;
+  const search=document.getElementById('f-search').value.toLowerCase();
+
+  let lib=ACTIONS.filter(a=>{
+    if(site&&a.site!==site)return false;
+    if(section&&a.sectionKey!==section)return false;
+    if(statut&&getStatut(a)!==statut)return false;
+    if(search&&!(a.description.toLowerCase().includes(search)||a.responsable.toLowerCase().includes(search)||a.origin.toLowerCase().includes(search)))return false;
+    return true;
+  });
+
+  document.getElementById('st-total').textContent=ACTIONS.length;
+  document.getElementById('st-open').textContent=ACTIONS.filter(a=>getStatut(a)==='inprogress').length;
+  document.getElementById('st-done').textContent=ACTIONS.filter(a=>['done','efficace'].includes(getStatut(a))).length;
+  document.getElementById('st-efficace').textContent=ACTIONS.filter(a=>a.efficace==='oui').length;
+
+  const el=document.getElementById('action-list');
+  if(!lib.length){
+    el.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">'+(ACTIONS.length===0?'Aucune action planifiée':'Aucun résultat')+'</div><div style="font-size:12px;margin-top:4px">'+(ACTIONS.length===0?'Les actions sont créées depuis la bibliothèque des audits sur les NC détectées.':'Modifiez vos filtres.')+'</div></div>';
+    return;
+  }
+
+  el.innerHTML=lib.map(a=>{
+    const st=getStatut(a);
+    const sec=getSec(a.sectionKey);
+    const delaiStr=a.delai?new Date(a.delai).toLocaleDateString('fr-FR'):'—';
+    const retard=a.delai&&a.avancement<100&&new Date(a.delai)<new Date()?'<span style="color:var(--bad-tc);font-size:10px;font-weight:700"> ⚠️ En retard</span>':'';
+    return`<div class="action-card ${st}" id="ac-${a.id}">
+      <div class="action-hd" onclick="togAction('${a.id}')">
+        <div style="flex:1">
+          <div class="action-origin">${sec.icon} ${sec.label} · Critère ${Number(a.criteriaIdx)+1} · Site ${a.site} · ${a.auditDate}</div>
+          <div class="action-desc">${a.description||'—'}</div>
+          <div class="action-meta">
+            ${statutLabel(st)}
+            <span class="action-badge" style="background:var(--steel-xlt);color:var(--steel-dk)">👤 ${a.responsable||'—'}</span>
+            <span class="action-badge" style="background:var(--steel-xlt);color:var(--steel-dk)">📅 ${delaiStr}${retard}</span>
+          </div>
+        </div>
+        <div class="action-progress">
+          <div class="progress-bar"><div class="progress-fill" style="width:${a.avancement}%"></div></div>
+          <span style="font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk);min-width:32px;text-align:right">${a.avancement}%</span>
+        </div>
+      </div>
+      <div class="action-body" id="ab-${a.id}">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px"><strong>Origine :</strong> ${a.origin}</div>
+        ${a.commentaire?`<div style="font-size:12px;color:var(--charcoal);margin-bottom:8px;padding:8px;background:var(--slate);border-radius:6px">💬 ${a.commentaire}</div>`:''}
+        ${a.efficace==='oui'?'<div style="padding:6px 10px;background:var(--ok-bg);color:var(--ok-tc);border-radius:6px;font-size:12px;font-weight:600;margin-bottom:8px">✅ Action jugée efficace</div>':''}
+        ${a.efficace==='non'?'<div style="padding:6px 10px;background:var(--bad-bg);color:var(--bad-tc);border-radius:6px;font-size:12px;font-weight:600;margin-bottom:8px">❌ Action jugée non efficace</div>':''}
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-blue btn-sm" onclick="editAction('${a.id}')">✏️ Modifier</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteAction('${a.id}')">🗑️ Supprimer</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function togAction(id){
+  const b=document.getElementById('ab-'+id);
+  if(b)b.classList.toggle('open');
+}
+
+// ─── Modal ───
+let editingId=null;
+function openNewModal(auditId,site,auditDate,sectionKey,criteriaIdx,origin){
+  editingId=null;
+  document.getElementById('modal-title').textContent='Nouvelle action';
+  document.getElementById('m-id').value='';
+  document.getElementById('m-audit-id').value=auditId||'';
+  document.getElementById('m-site').value=site||'';
+  document.getElementById('m-audit-date').value=auditDate||'';
+  document.getElementById('m-section-key').value=sectionKey||'';
+  document.getElementById('m-criteria-idx').value=criteriaIdx!=null?criteriaIdx:'';
+  document.getElementById('m-origin').value=origin||'';
+  document.getElementById('m-origin-display').textContent=origin||'À renseigner';
+  document.getElementById('m-description').value='';
+  document.getElementById('m-responsable').value='';
+  document.getElementById('m-delai').value='';
+  document.getElementById('m-avancement').value=0;
+  document.getElementById('m-avancement-val').textContent='0%';
+  document.getElementById('m-commentaire').value='';
+  document.querySelectorAll('input[name="efficace"]').forEach(r=>r.checked=r.value==='');
+  document.getElementById('m-efficace-row').style.display='none';
+  document.getElementById('modal').style.display='flex';
+}
+
+function editAction(id){
+  const a=ACTIONS.find(x=>String(x.id)===String(id));
+  if(!a)return;
+  editingId=id;
+  document.getElementById('modal-title').textContent='Modifier l\'action';
+  document.getElementById('m-id').value=a.id;
+  document.getElementById('m-audit-id').value=a.auditId;
+  document.getElementById('m-site').value=a.site;
+  document.getElementById('m-audit-date').value=a.auditDate;
+  document.getElementById('m-section-key').value=a.sectionKey;
+  document.getElementById('m-criteria-idx').value=a.criteriaIdx;
+  document.getElementById('m-origin').value=a.origin;
+  document.getElementById('m-origin-display').textContent=a.origin;
+  document.getElementById('m-description').value=a.description||'';
+  document.getElementById('m-responsable').value=a.responsable||'';
+  document.getElementById('m-delai').value=a.delai||'';
+  document.getElementById('m-avancement').value=a.avancement||0;
+  document.getElementById('m-avancement-val').textContent=(a.avancement||0)+'%';
+  document.getElementById('m-commentaire').value=a.commentaire||'';
+  const av=Number(a.avancement||0);
+  document.getElementById('m-efficace-row').style.display=av>=100?'flex':'none';
+  document.querySelectorAll('input[name="efficace"]').forEach(r=>r.checked=r.value===(a.efficace||''));
+  document.getElementById('modal').style.display='flex';
+}
+
+function updateAvancement(v){
+  document.getElementById('m-avancement-val').textContent=v+'%';
+  document.getElementById('m-efficace-row').style.display=Number(v)>=100?'flex':'none';
+  if(Number(v)<100){
+    document.querySelectorAll('input[name="efficace"]').forEach(r=>r.checked=r.value==='');
+  }
+}
+function updateEfficace(){}
+
+function closeModal(){document.getElementById('modal').style.display='none';}
+function closeModalOutside(e){if(e.target===document.getElementById('modal'))closeModal();}
+
+async function saveAction(){
+  const desc=document.getElementById('m-description').value.trim();
+  const resp=document.getElementById('m-responsable').value.trim();
+  const delai=document.getElementById('m-delai').value;
+  if(!desc||!resp||!delai){showToast('Description, responsable et délai obligatoires',false);return;}
+
+  const efficaceEl=document.querySelector('input[name="efficace"]:checked');
+  const action={
+    id:document.getElementById('m-id').value||Date.now(),
+    auditId:document.getElementById('m-audit-id').value,
+    site:document.getElementById('m-site').value,
+    auditDate:document.getElementById('m-audit-date').value,
+    sectionKey:document.getElementById('m-section-key').value,
+    criteriaIdx:document.getElementById('m-criteria-idx').value,
+    origin:document.getElementById('m-origin').value,
+    description:desc,
+    responsable:resp,
+    delai:delai,
+    avancement:Number(document.getElementById('m-avancement').value),
+    commentaire:document.getElementById('m-commentaire').value.trim(),
+    efficace:efficaceEl?efficaceEl.value:'',
+    createdAt:new Date().toISOString()
+  };
+
+  showToast('Enregistrement...',false);
+  try{
+    await apiSaveAction(action);
+    // Vérifier si toutes les actions liées à cette NC sont efficaces → mettre à jour l'audit
+    if(action.efficace==='oui'){
+      await apiUpdateAuditNC(action.auditId,action.sectionKey,Number(action.criteriaIdx));
+    }
+    // Mettre à jour localement
+    const idx=ACTIONS.findIndex(a=>String(a.id)===String(action.id));
+    if(idx>=0)ACTIONS[idx]=action;else ACTIONS.push(action);
+    closeModal();
+    render();
+    showToast('Action enregistrée !',true);
+  }catch(e){
+    showToast('Erreur: '+e.message,false);
+  }
+}
+
+async function deleteAction(id){
+  if(!confirm('Supprimer cette action ?'))return;
+  try{
+    await apiDeleteAction(id);
+    ACTIONS=ACTIONS.filter(a=>String(a.id)!==String(id));
+    render();
+    showToast('Action supprimée',true);
+  }catch(e){showToast('Erreur: '+e.message,false);}
+}
+
+function showToast(msg,ok){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.background=ok?'var(--green-dk)':'var(--steel-dk)';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+init().then(()=>{
+  // Si on arrive depuis la bibliothèque avec une NC en paramètre
+  const p=new URLSearchParams(window.location.search);
+  if(p.get('auditId')){
+    openNewModal(
+      p.get('auditId'),
+      p.get('site'),
+      p.get('auditDate'),
+      p.get('sectionKey'),
+      p.get('criteriaIdx'),
+      decodeURIComponent(p.get('origin')||'')
+    );
+  }
+});
+</script>

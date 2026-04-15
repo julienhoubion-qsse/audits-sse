@@ -128,6 +128,10 @@ html,body{height:auto!important}
       style="">
       <span style="font-size:16px">📁</span> Bibliothèque des audits
     </button>
+    <button class="nav-btn NAV_PLAN" onclick="window.location.href='Plan_Actions_SSE.html'"
+      style="">
+      <span style="font-size:16px">📋</span> Plan d'actions
+    </button>
   </div>
 </nav>
 <style>
@@ -200,18 +204,25 @@ html,body{height:auto!important}
 const SP_CONFIG={GSHEET_URL:"https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec",MODE:"googlesheets"};
 const SP={
   async getAll(){
-    const r=await fetch(SP_CONFIG.GSHEET_URL+"?action=getAll");
-    const d=await r.json();
-    return (d.data||[]).map(row=>{
-      let dateStr=String(row[3]||'');
-      if(dateStr.includes('T'))dateStr=dateStr.split('T')[0];
-      let scores={};try{scores=JSON.parse(row[4]||'{}');}catch(e){}
-      let comments={};try{comments=JSON.parse(row[7]||'{}');}catch(e){}
-      return {
-        id:row[0],site:String(row[1]),auditeur:row[2],date:dateStr,
-        scores:scores,total:row[5],
-        savedAt:row[6],comments:comments
+    return new Promise((resolve,reject)=>{
+      const cb='_cb'+Date.now();
+      window[cb]=function(d){
+        delete window[cb];
+        document.getElementById('_jsonp_script')&&document.getElementById('_jsonp_script').remove();
+        const data=(d.data||[]).map(row=>{
+          let dateStr=String(row[3]||'');
+          if(dateStr.includes('T'))dateStr=dateStr.split('T')[0];
+          let scores={};try{scores=JSON.parse(row[4]||'{}');}catch(e){}
+          let comments={};try{comments=JSON.parse(row[7]||'{}');}catch(e){}
+          return {id:row[0],site:String(row[1]),auditeur:row[2],date:dateStr,scores:scores,total:row[5],savedAt:row[6],comments:comments};
+        });
+        resolve(data);
       };
+      const s=document.createElement('script');
+      s.id='_jsonp_script';
+      s.src=SP_CONFIG.GSHEET_URL+'?action=getAll&callback='+cb;
+      s.onerror=()=>reject(new Error('JSONP failed'));
+      document.head.appendChild(s);
     });
   },
   async create(record){
