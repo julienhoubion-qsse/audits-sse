@@ -198,10 +198,14 @@ const SP={
     const r=await fetch(SP_CONFIG.GSHEET_URL+"?action=getAll");
     const d=await r.json();
     return (d.data||[]).map(row=>{
+      let dateStr=String(row[3]||'');
+      if(dateStr.includes('T'))dateStr=dateStr.split('T')[0];
+      let scores={};try{scores=JSON.parse(row[4]||'{}');}catch(e){}
+      let comments={};try{comments=JSON.parse(row[7]||'{}');}catch(e){}
       return {
-        id:row[0],site:row[1],auditeur:row[2],date:row[3],
-        scores:JSON.parse(row[4]||"{}"),total:row[5],
-        savedAt:row[6],comments:JSON.parse(row[7]||"{}")
+        id:row[0],site:String(row[1]),auditeur:row[2],date:dateStr,
+        scores:scores,total:row[5],
+        savedAt:row[6],comments:comments
       };
     });
   },
