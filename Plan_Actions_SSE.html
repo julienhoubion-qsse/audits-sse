@@ -96,12 +96,10 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
   </div>
 </div>
 <div class="nav-bar">
-  <button class="nav-btn NAV_HOME" onclick="window.location.href='Accueil_SSE.html'"
-    style="">🏠 Accueil</button>
-  <button class="nav-btn NAV_DASH" onclick="window.location.href='SharePoint_Code_Incorpore_SSE.html'">📊 Tableau de bord</button>
-  <button class="nav-btn NAV_FORM" onclick="window.location.href='Formulaire_Audit_SSE.html'">📝 Nouvel audit</button>
-  <button class="nav-btn NAV_LIB" onclick="window.location.href='Bibliotheque_Audits_SSE.html'">📚 Bibliothèque</button>
-  <button class="nav-btn NAV_PLAN active">📋 Plan d'actions</button>
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn" onclick="window.location.href='Bibliotheque_Audits_SSE.html'">📚 Bibliothèque audits</button>
+  <button class="nav-btn" onclick="window.location.href='Bibliotheque_Accidents_SSE.html'">📂 Bibliothèque accidents</button>
+  <button class="nav-btn active" onclick="window.location.href='Plan_Actions_SSE.html'">📋 Plan d'actions</button>
 </div>
 
 <div class="wrapper">
@@ -126,7 +124,13 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
         <option value="done">Terminée</option>
         <option value="efficace">Efficace ✅</option>
       </select>
+      <select class="fld-sel" id="f-origine" onchange="render()">
+        <option value="">Toutes origines</option>
+        <option value="audit">📋 Audits</option>
+        <option value="accident">🚑 Faits accidentels</option>
+      </select>
       <select class="fld-sel" id="f-section" onchange="render()"><option value="">Toutes sections</option></select>
+      <select class="fld-sel" id="f-responsable" onchange="render()"><option value="">Tous responsables</option></select>
       <input class="fld-inp" id="f-search" placeholder="Rechercher..." oninput="render()" style="min-width:160px">
     </div>
     <div style="padding:16px" id="action-list"><div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title">Chargement...</div></div></div>
@@ -288,10 +292,25 @@ function render(){
   const section=document.getElementById('f-section').value;
   const search=document.getElementById('f-search').value.toLowerCase();
 
+  const origine=document.getElementById('f-origine').value;
+  const responsable=document.getElementById('f-responsable').value;
+
+  // Populate responsable dropdown
+  const respSel=document.getElementById('f-responsable');
+  const currentResp=respSel.value;
+  const allResp=[...new Set(ACTIONS.map(a=>a.responsable).filter(Boolean))].sort();
+  respSel.innerHTML='<option value="">Tous responsables</option>'+allResp.map(r=>'<option value="'+r+'"'+(r===currentResp?' selected':'')+'>'+r+'</option>').join('');
+
   let lib=ACTIONS.filter(a=>{
     if(site&&a.site!==site)return false;
     if(section&&a.sectionKey!==section)return false;
     if(statut&&getStatut(a)!==statut)return false;
+    if(responsable&&a.responsable!==responsable)return false;
+    if(origine){
+      const isAcc=String(a.auditId||'').startsWith('ACC-');
+      if(origine==='audit'&&isAcc)return false;
+      if(origine==='accident'&&!isAcc)return false;
+    }
     if(search&&!(a.description.toLowerCase().includes(search)||a.responsable.toLowerCase().includes(search)||a.origin.toLowerCase().includes(search)))return false;
     return true;
   });
