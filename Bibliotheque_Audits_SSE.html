@@ -333,11 +333,14 @@ function editAudit(id){
 }
 function createActionBtn(btn){
   const auditId=btn.dataset.aid, site=btn.dataset.site, auditDate=btn.dataset.date;
-  const sectionKey=btn.dataset.sk, criteriaIdx=btn.dataset.ci;
-  createAction(auditId,site,auditDate,sectionKey,criteriaIdx);
+  const sectionKey=btn.dataset.sk, criteriaIdx=Number(btn.dataset.ci);
+  const sec=SECTIONS.find(s=>s.key===sectionKey)||{label:sectionKey,icon:'',criteria:[]};
+  const origin=sec.icon+' '+sec.label+(sec.criteria[criteriaIdx]?' — Critère '+(criteriaIdx+1)+' : '+sec.criteria[criteriaIdx]:'');
+  const params=new URLSearchParams({auditId,site,auditDate,sectionKey,criteriaIdx,origin:encodeURIComponent(origin)});
+  window.location.href='Plan_Actions_SSE.html?'+params.toString();
 }
 function createAction(auditId,site,auditDate,sectionKey,criteriaIdx,origin){
-  const params=new URLSearchParams({auditId,site,auditDate,sectionKey,criteriaIdx,origin});
+  const params=new URLSearchParams({auditId,site,auditDate,sectionKey,criteriaIdx,origin:encodeURIComponent(origin||'')});
   window.location.href='Plan_Actions_SSE.html?'+params.toString();
 }
 async function init(){

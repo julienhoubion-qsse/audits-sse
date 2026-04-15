@@ -375,7 +375,6 @@ function openNewModal(auditId,site,auditDate,sectionKey,criteriaIdx,origin){
   document.getElementById('m-id').value='';
   document.getElementById('m-audit-id').value=auditId||'';
   document.getElementById('m-site').value=site||'';
-  document.getElementById('m-audit-date').value=auditDate||'';
   document.getElementById('m-section-key').value=sectionKey||'';
   document.getElementById('m-criteria-idx').value=criteriaIdx!=null?criteriaIdx:'';
   document.getElementById('m-origin').value=origin||'';
@@ -399,7 +398,6 @@ function editAction(id){
   document.getElementById('m-id').value=a.id;
   document.getElementById('m-audit-id').value=a.auditId;
   document.getElementById('m-site').value=a.site;
-  document.getElementById('m-audit-date').value=a.auditDate;
   document.getElementById('m-section-key').value=a.sectionKey;
   document.getElementById('m-criteria-idx').value=a.criteriaIdx;
   document.getElementById('m-origin').value=a.origin||'';
@@ -493,11 +491,12 @@ init().then(()=>{
   if(p.get('auditId')){
     const sk=p.get('sectionKey'),ci=Number(p.get('criteriaIdx'));
     const sec=SECTIONS.find(s=>s.key===sk)||{label:sk,icon:'',criteria:[]};
-    const originText=sec.icon+' '+sec.label+' — Critère '+(ci+1)+' : '+(sec.criteria[ci]||'');
+    const originFromUrl=p.get('origin')?decodeURIComponent(p.get('origin')):'';
+    const originText=originFromUrl||(sec.icon+' '+sec.label+(sec.criteria[ci]?' — Critère '+(ci+1)+' : '+sec.criteria[ci]:''));
     openNewModal(
       p.get('auditId'),
       p.get('site'),
-      p.get('auditDate'),
+      '',
       sk,
       ci,
       originText
