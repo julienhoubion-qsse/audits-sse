@@ -1,0 +1,230 @@
+<!-- SSE — Formulaire Causerie -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-mid:#7A96AA;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --ok-bg:#D6F0A8;--ok-tc:#2D5A00;--amber:#d97706;--amber-lt:#fef3c7;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--amber)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#fde68a;margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:#fff;border-bottom-color:rgba(107,191,31,.5)}
+.nav-btn.active{color:#fff!important;border-bottom-color:#6BBF1F!important}
+.wrapper{max-width:860px;margin:0 auto;padding:28px 24px 60px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:20px}
+.card-hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-hd-bar{width:4px;height:20px;background:var(--amber);border-radius:2px;flex-shrink:0}
+.card-title{font-family:'Exo 2',sans-serif;font-size:14px;font-weight:700;color:var(--steel-dk)}
+.card-body{padding:20px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:600px){.form-row{grid-template-columns:1fr}}
+.fld{display:flex;flex-direction:column;gap:5px}
+.fld-lbl{font-size:12px;font-weight:700;color:var(--steel-dk);text-transform:uppercase;letter-spacing:.5px}
+.fld-req{color:#dc2626;margin-left:2px}
+.fld-sel,.fld-inp{height:38px;border:1px solid var(--border);border-radius:7px;padding:0 12px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--white);color:var(--charcoal);transition:border-color .15s}
+.fld-sel:focus,.fld-inp:focus{outline:none;border-color:var(--steel)}
+.fld-txt{border:1px solid var(--border);border-radius:7px;padding:10px 12px;font-family:'Nunito Sans',sans-serif;font-size:13px;resize:vertical;min-height:80px;transition:border-color .15s;width:100%}
+.fld-txt:focus{outline:none;border-color:var(--steel)}
+/* Participants */
+.participant-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.participant-row{display:flex;gap:8px;align-items:center}
+.participant-row .fld-inp{flex:1}
+.btn-remove{background:var(--slate);border:1px solid var(--border);border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted)}
+.btn-remove:hover{background:#fee2e2;color:#dc2626;border-color:#fca5a5}
+/* Pièce jointe */
+.attach-box{background:var(--amber-lt);border:1px solid #fcd34d;border-radius:8px;padding:14px 16px}
+.attach-info{font-size:12px;color:#92400e;margin-top:6px}
+/* Btn */
+.btn{height:38px;padding:0 20px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--green);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-add{background:var(--green-lt);color:var(--green-dk);border:1px solid var(--green);height:32px;padding:0 14px;font-size:12px;font-weight:700;border-radius:7px;cursor:pointer}
+.form-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE</div>
+    <div class="ph-title">💬 Saisir une causerie SSE</div>
+    <div class="ph-sub">Enregistrement d'une causerie de sensibilisation SSE</div>
+  </div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn" onclick="window.location.href='Bibliotheque_Causeries_SSE.html'">📖 Bibliothèque causeries</button>
+  <button class="nav-btn active">💬 Saisir une causerie</button>
+</div>
+
+<div class="wrapper">
+
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Informations générales</div></div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Date <span class="fld-req">*</span></label>
+          <input type="date" class="fld-inp" id="f-date">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Site <span class="fld-req">*</span></label>
+          <select class="fld-sel" id="f-site">
+            <option value="">— Sélectionner —</option>
+            <option value="38">38</option><option value="41">41</option>
+            <option value="89">89</option><option value="47">47</option>
+            <option value="37">37</option><option value="17">17</option>
+            <option value="72">72</option><option value="72bis">72bis</option>
+          </select>
+        </div>
+      </div>
+      <div class="fld" style="margin-bottom:14px">
+        <label class="fld-lbl">Titre de la causerie <span class="fld-req">*</span></label>
+        <input type="text" class="fld-inp" id="f-titre" placeholder="Ex: Gestes et postures, Risque incendie...">
+      </div>
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Animateur <span class="fld-req">*</span></label>
+          <input type="text" class="fld-inp" id="f-animateur" placeholder="Nom Prénom">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Thème principal</label>
+          <select class="fld-sel" id="f-theme">
+            <option value="">— Sélectionner —</option>
+            <option value="Risque incendie">🔥 Risque incendie</option>
+            <option value="EPI">🦺 EPI</option>
+            <option value="Gestes et postures">💪 Gestes et postures</option>
+            <option value="Risque routier">🚗 Risque routier</option>
+            <option value="Produits dangereux">⚗️ Produits dangereux</option>
+            <option value="Travail en hauteur">🪜 Travail en hauteur</option>
+            <option value="VHE">⚡ VHE</option>
+            <option value="Secourisme">🩹 Secourisme</option>
+            <option value="Environnement">♻️ Environnement</option>
+            <option value="Autre">📋 Autre</option>
+          </select>
+        </div>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Description de la causerie</label>
+        <textarea class="fld-txt" id="f-description" placeholder="Résumé du contenu abordé..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Participants</div></div>
+    <div class="card-body">
+      <div class="fld" style="margin-bottom:14px">
+        <label class="fld-lbl">Participants du réseau</label>
+        <div class="participant-list" id="participants-list"></div>
+        <button class="btn-add" onclick="addParticipant()">➕ Ajouter un participant</button>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Participants hors réseau</label>
+        <textarea class="fld-txt" id="f-participants-hors" placeholder="Noms des participants extérieurs au réseau (un par ligne)..." style="min-height:60px"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Remarques et support</div></div>
+    <div class="card-body">
+      <div class="fld" style="margin-bottom:16px">
+        <label class="fld-lbl">Remarques des participants</label>
+        <textarea class="fld-txt" id="f-remarques" placeholder="Questions, observations, points d'attention soulevés..."></textarea>
+      </div>
+      <div class="attach-box">
+        <div class="fld-lbl">📎 Lien vers le support de causerie</div>
+        <input type="url" class="fld-inp" id="f-lien" placeholder="https://drive.google.com/..." style="margin-top:8px;width:100%">
+        <div class="attach-info">💡 Déposez votre support (PDF, PowerPoint...) dans un Google Drive partagé et collez le lien ici. Il sera accessible depuis la bibliothèque.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-foot">
+    <button class="btn btn-ghost" onclick="resetForm()">🔄 Réinitialiser</button>
+    <button class="btn btn-primary" onclick="saveCauserie()">💾 Enregistrer la causerie</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+let participantCount=0;
+
+document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+
+function addParticipant(name=''){
+  participantCount++;
+  const idx=participantCount;
+  const div=document.createElement('div');
+  div.className='participant-row';
+  div.id='p-row-'+idx;
+  div.innerHTML='<input type="text" class="fld-inp" id="p-'+idx+'" placeholder="Nom Prénom" value="'+name+'">'
+    +'<button class="btn-remove" onclick="document.getElementById(\'p-row-'+idx+'\').remove()" title="Supprimer">✕</button>';
+  document.getElementById('participants-list').appendChild(div);
+}
+
+function getParticipants(){
+  const inputs=document.querySelectorAll('#participants-list .fld-inp');
+  return Array.from(inputs).map(i=>i.value.trim()).filter(Boolean);
+}
+
+async function saveCauserie(){
+  const date=document.getElementById('f-date').value;
+  const site=document.getElementById('f-site').value;
+  const titre=document.getElementById('f-titre').value.trim();
+  const animateur=document.getElementById('f-animateur').value.trim();
+  if(!date||!site||!titre||!animateur){
+    showToast('Date, site, titre et animateur sont obligatoires',false);return;
+  }
+  const data={
+    id:Date.now(),date,site,titre,animateur,
+    theme:document.getElementById('f-theme').value,
+    description:document.getElementById('f-description').value.trim(),
+    participants:getParticipants().join(', '),
+    participantsHors:document.getElementById('f-participants-hors').value.trim(),
+    remarques:document.getElementById('f-remarques').value.trim(),
+    lien:document.getElementById('f-lien').value.trim(),
+    createdAt:new Date().toISOString()
+  };
+  showToast('Enregistrement en cours...',false);
+  try{
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveCauserie',data})});
+    showToast('Causerie enregistrée !',true);
+    setTimeout(()=>window.location.href='Bibliotheque_Causeries_SSE.html',1800);
+  }catch(e){showToast('Erreur: '+e.message,false);}
+}
+
+function resetForm(){
+  document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('f-site').value='';
+  document.getElementById('f-titre').value='';
+  document.getElementById('f-animateur').value='';
+  document.getElementById('f-theme').value='';
+  document.getElementById('f-description').value='';
+  document.getElementById('f-participants-hors').value='';
+  document.getElementById('f-remarques').value='';
+  document.getElementById('f-lien').value='';
+  document.getElementById('participants-list').innerHTML='';
+  participantCount=0;
+}
+
+function showToast(msg,ok){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=ok?'var(--green-dk)':'var(--steel-dk)';
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>

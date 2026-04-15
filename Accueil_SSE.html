@@ -182,6 +182,26 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
       </a>
     </div>
 
+    <!-- Groupe Causeries -->
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden">
+      <div style="background:#fffbeb;padding:10px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+        <span style="font-size:14px">💬</span>
+        <span style="font-family:'Exo 2',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#d97706">Causeries SSE</span>
+      </div>
+      <a class="nav-card" onclick="window.location.href='Formulaire_Causerie_SSE.html'" style="border-radius:0;box-shadow:none;border:none;border-bottom:1px solid var(--border)">
+        <span class="nav-card-icon">💬</span>
+        <div class="nav-card-title">Saisir une causerie</div>
+        <div class="nav-card-desc">Enregistrer une nouvelle causerie de sensibilisation SSE.</div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+      <a class="nav-card" onclick="window.location.href='Bibliotheque_Causeries_SSE.html'" style="border-radius:0;box-shadow:none;border:none">
+        <span class="nav-card-icon">📖</span>
+        <div class="nav-card-title">Bibliothèque des causeries</div>
+        <div class="nav-card-desc">Consulter l'historique de toutes les causeries réalisées.</div>
+        <span class="nav-card-arrow">›</span>
+      </a>
+    </div>
+
     <!-- Plan d'actions seul -->
     <a class="nav-card" onclick="window.location.href='Plan_Actions_SSE.html'" style="grid-column:1/-1;display:flex;align-items:center;gap:20px">
       <span class="nav-card-icon" style="font-size:36px">📋</span>
@@ -201,6 +221,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
     <div class="stat-card amber"><div class="stat-val" id="s-actions">—</div><div class="stat-lbl">Actions en cours</div></div>
     <div class="stat-card red"><div class="stat-val" id="s-accidents">—</div><div class="stat-lbl">Faits accidentels</div></div>
     <div class="stat-card purple"><div class="stat-val" id="s-sites">—</div><div class="stat-lbl">Sites audités</div></div>
+    <div class="stat-card" style="border-top:3px solid #d97706"><div class="stat-val" id="s-causeries" style="color:#d97706">—</div><div class="stat-lbl">Causeries</div></div>
   </div>
 
   <div class="section-title">Derniers audits</div>
@@ -290,6 +311,13 @@ async function loadData(){
   }catch(e){
     document.getElementById('s-accidents').textContent='0';
   }
+
+  try{
+    // Causeries
+    const cauData=await jsonpGet('getCauseries');
+    const cauEl=document.getElementById('s-causeries');
+    if(cauEl)cauEl.textContent=(cauData.data||[]).length;
+  }catch(e){}
 }
 
 loadData();

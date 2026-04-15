@@ -1,0 +1,233 @@
+<!-- SSE — Bibliothèque des causeries -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-mid:#7A96AA;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --amber:#d97706;--amber-lt:#fef3c7;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--amber)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#fde68a;margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:#fff;border-bottom-color:rgba(107,191,31,.5)}
+.nav-btn.active{color:#fff!important;border-bottom-color:#6BBF1F!important}
+.wrapper{max-width:1100px;margin:0 auto;padding:22px 24px 48px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;background:var(--slate);border-bottom:1px solid var(--border)}
+.fld-sel,.fld-inp{height:34px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;background:var(--white);color:var(--charcoal)}
+.btn{height:34px;padding:0 16px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--green);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-danger{background:#fee2e2;color:#dc2626;border:1px solid #fca5a5}
+.btn-amber{background:var(--amber-lt);color:var(--amber);border:1px solid #fcd34d}
+.btn-sm{height:28px;padding:0 10px;font-size:11px}
+.stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.stat-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 18px;flex:1;min-width:120px;text-align:center}
+.stat-val{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:800;color:var(--steel-dk)}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+/* Causerie card */
+.cau-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden;border-left:4px solid var(--amber)}
+.cau-hd{padding:13px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.cau-site{font-family:'Exo 2',sans-serif;font-size:16px;font-weight:800;color:var(--steel-dk);background:var(--steel-xlt);padding:4px 10px;border-radius:6px;flex-shrink:0}
+.cau-body-info{flex:1}
+.cau-titre{font-size:13px;font-weight:700;color:var(--charcoal)}
+.cau-meta{font-size:11px;color:var(--muted);margin-top:3px;display:flex;gap:10px;flex-wrap:wrap}
+.theme-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;background:var(--amber-lt);color:var(--amber)}
+.nb-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;background:var(--steel-xlt);color:var(--steel-dk)}
+.cau-body{padding:14px 16px;border-top:1px solid var(--border);display:none}
+.cau-body.open{display:block}
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:12px}
+.detail-item{background:var(--slate);border-radius:7px;padding:10px 12px}
+.detail-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:3px}
+.detail-val{font-size:13px;color:var(--charcoal);font-weight:600}
+.desc-box{background:var(--slate);border-radius:7px;padding:12px;font-size:13px;color:var(--charcoal);margin-bottom:10px;line-height:1.6}
+.participants-box{background:var(--green-xlt);border-radius:7px;padding:12px;margin-bottom:10px}
+.lien-box{background:var(--amber-lt);border-radius:7px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-title{font-family:'Exo 2',sans-serif;font-size:16px;font-weight:700;color:var(--steel-dk);margin-bottom:6px}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE</div>
+    <div class="ph-title">📖 Bibliothèque des causeries SSE</div>
+    <div class="ph-sub">Historique de toutes les causeries réalisées</div>
+  </div>
+  <div style="position:relative;z-index:1">
+    <button class="btn btn-primary" onclick="window.location.href='Formulaire_Causerie_SSE.html'">➕ Nouvelle causerie</button>
+  </div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn" onclick="window.location.href='Formulaire_Causerie_SSE.html'">💬 Saisir une causerie</button>
+  <button class="nav-btn active">📖 Bibliothèque causeries</button>
+</div>
+
+<div class="wrapper">
+  <div class="stats-row">
+    <div class="stat-card" style="border-top:3px solid var(--amber)"><div class="stat-val" id="st-total" style="color:var(--amber)">—</div><div class="stat-lbl">Causeries réalisées</div></div>
+    <div class="stat-card"><div class="stat-val" id="st-sites">—</div><div class="stat-lbl">Sites couverts</div></div>
+    <div class="stat-card" style="border-top:3px solid var(--green)"><div class="stat-val" id="st-participants" style="color:var(--green-dk)">—</div><div class="stat-lbl">Participants total</div></div>
+    <div class="stat-card"><div class="stat-val" id="st-mois">—</div><div class="stat-lbl">Ce mois-ci</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <select class="fld-sel" id="f-site" onchange="render()">
+        <option value="">Tous les sites</option>
+        <option value="38">38</option><option value="41">41</option>
+        <option value="89">89</option><option value="47">47</option>
+        <option value="37">37</option><option value="17">17</option>
+        <option value="72">72</option><option value="72bis">72bis</option>
+      </select>
+      <select class="fld-sel" id="f-theme" onchange="render()">
+        <option value="">Tous thèmes</option>
+        <option value="Risque incendie">🔥 Risque incendie</option>
+        <option value="EPI">🦺 EPI</option>
+        <option value="Gestes et postures">💪 Gestes et postures</option>
+        <option value="Risque routier">🚗 Risque routier</option>
+        <option value="Produits dangereux">⚗️ Produits dangereux</option>
+        <option value="Travail en hauteur">🪜 Travail en hauteur</option>
+        <option value="VHE">⚡ VHE</option>
+        <option value="Secourisme">🩹 Secourisme</option>
+        <option value="Environnement">♻️ Environnement</option>
+        <option value="Autre">📋 Autre</option>
+      </select>
+      <input class="fld-inp" id="f-search" placeholder="Rechercher titre, animateur..." oninput="render()" style="min-width:200px">
+    </div>
+    <div style="padding:16px" id="cau-list">
+      <div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title">Chargement...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+let CAUSERIES=[];
+
+function jsonpGet(action){
+  return new Promise((resolve,reject)=>{
+    const cb='_cb'+Date.now()+Math.random().toString(36).slice(2);
+    window[cb]=function(d){delete window[cb];const el=document.getElementById('_js_'+cb);if(el)el.remove();resolve(d);};
+    const s=document.createElement('script');s.id='_js_'+cb;
+    s.src=GSHEET_URL+'?action='+action+'&callback='+cb;
+    s.onerror=()=>reject(new Error('failed'));
+    document.head.appendChild(s);
+  });
+}
+
+function countParticipants(str){
+  if(!str)return 0;
+  return str.split(',').map(s=>s.trim()).filter(Boolean).length;
+}
+
+function render(){
+  const site=document.getElementById('f-site').value;
+  const theme=document.getElementById('f-theme').value;
+  const search=document.getElementById('f-search').value.toLowerCase();
+
+  let lib=CAUSERIES.filter(c=>{
+    if(site&&c.site!==site)return false;
+    if(theme&&c.theme!==theme)return false;
+    if(search&&!((c.titre||'').toLowerCase().includes(search)||(c.animateur||'').toLowerCase().includes(search)))return false;
+    return true;
+  }).sort((a,b)=>b.date.localeCompare(a.date));
+
+  // Stats
+  const now=new Date();
+  const moisCourant=now.getFullYear()+'-'+(now.getMonth()+1).toString().padStart(2,'0');
+  document.getElementById('st-total').textContent=CAUSERIES.length;
+  document.getElementById('st-sites').textContent=new Set(CAUSERIES.map(c=>c.site)).size;
+  document.getElementById('st-participants').textContent=CAUSERIES.reduce((acc,c)=>acc+countParticipants(c.participants),0);
+  document.getElementById('st-mois').textContent=CAUSERIES.filter(c=>c.date&&c.date.startsWith(moisCourant)).length;
+
+  const el=document.getElementById('cau-list');
+  if(!lib.length){
+    el.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">'+(CAUSERIES.length===0?'Aucune causerie enregistrée':'Aucun résultat')+'</div><div style="font-size:12px;margin-top:4px">'+(CAUSERIES.length===0?'Commencez par enregistrer une causerie.':'Modifiez vos filtres.')+'</div>'+(CAUSERIES.length===0?'<br><br><button class="btn btn-primary" onclick="window.location.href=\'Formulaire_Causerie_SSE.html\'">💬 Nouvelle causerie</button>':'')+'</div>';
+    return;
+  }
+
+  el.innerHTML=lib.map(c=>{
+    const dateStr=c.date?new Date(c.date).toLocaleDateString('fr-FR'):'—';
+    const nbPart=countParticipants(c.participants);
+    const nbHors=c.participantsHors?c.participantsHors.split('\n').map(s=>s.trim()).filter(Boolean).length:0;
+    const nbTotal=nbPart+nbHors;
+    return`<div class="cau-card" id="cc-${c.id}">
+      <div class="cau-hd" onclick="tog('${c.id}')">
+        <div class="cau-site">Site ${c.site}</div>
+        <div class="cau-body-info">
+          <div class="cau-titre">💬 ${c.titre||'—'}</div>
+          <div class="cau-meta">
+            <span>📅 ${dateStr}</span>
+            <span>👤 ${c.animateur||'—'}</span>
+            ${c.theme?'<span class="theme-badge">'+c.theme+'</span>':''}
+            <span class="nb-badge">👥 ${nbTotal} participant${nbTotal>1?'s':''}</span>
+          </div>
+        </div>
+        <span style="color:var(--border);font-size:18px">›</span>
+      </div>
+      <div class="cau-body" id="cb-${c.id}">
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-lbl">Date</div><div class="detail-val">${dateStr}</div></div>
+          <div class="detail-item"><div class="detail-lbl">Animateur</div><div class="detail-val">${c.animateur||'—'}</div></div>
+          <div class="detail-item"><div class="detail-lbl">Thème</div><div class="detail-val">${c.theme||'—'}</div></div>
+          <div class="detail-item"><div class="detail-lbl">Participants réseau</div><div class="detail-val">${nbPart}</div></div>
+        </div>
+        ${c.description?`<div class="detail-lbl" style="margin-bottom:6px">Description</div><div class="desc-box">${c.description}</div>`:''}
+        ${c.participants?`<div class="participants-box"><div class="detail-lbl" style="margin-bottom:5px">👥 Participants réseau</div><div style="font-size:12px;color:var(--charcoal)">${c.participants}</div></div>`:''}
+        ${c.participantsHors?`<div class="participants-box" style="background:var(--steel-xlt)"><div class="detail-lbl" style="margin-bottom:5px">👥 Participants hors réseau</div><div style="font-size:12px;color:var(--charcoal)">${c.participantsHors.replace(/\n/g,', ')}</div></div>`:''}
+        ${c.remarques?`<div class="detail-lbl" style="margin-bottom:6px">Remarques des participants</div><div class="desc-box" style="background:#fffbeb;border:1px solid #fcd34d">${c.remarques}</div>`:''}
+        ${c.lien?`<div class="lien-box"><span style="font-size:18px">📎</span><div style="flex:1"><div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:2px">Support de causerie</div><a href="${c.lien}" target="_blank" style="font-size:12px;color:var(--steel-dk);word-break:break-all">Ouvrir le document →</a></div></div>`:''}
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+          <button class="btn btn-danger btn-sm" onclick="delCauserie('${c.id}')">🗑️ Supprimer</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function tog(id){
+  const b=document.getElementById('cb-'+id);
+  if(b)b.classList.toggle('open');
+}
+
+async function delCauserie(id){
+  if(!confirm('Supprimer cette causerie ?'))return;
+  try{
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'deleteCauserie',id})});
+    CAUSERIES=CAUSERIES.filter(c=>String(c.id)!==String(id));
+    render();
+  }catch(e){alert('Erreur: '+e.message);}
+}
+
+async function init(){
+  try{
+    const d=await jsonpGet('getCauseries');
+    CAUSERIES=(d.data||[]).map(row=>({
+      id:row[0],
+      date:String(row[1]||'').split('T')[0],
+      site:String(row[2]),
+      titre:row[3],animateur:row[4],theme:row[5],
+      description:row[6],participants:row[7],
+      participantsHors:row[8],remarques:row[9],
+      lien:row[10],createdAt:row[11]
+    }));
+    render();
+  }catch(e){
+    console.warn(e);
+    document.getElementById('cau-list').innerHTML='<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">Erreur de chargement</div></div>';
+  }
+}
+init();
+</script>
