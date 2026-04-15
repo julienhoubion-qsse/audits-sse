@@ -270,7 +270,7 @@ function render(){
 
   const el=document.getElementById('audit-list');
   if(!lib.length){
-    el.innerHTML=`<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">${AUDITS.length===0?'Aucun audit enregistré':'Aucun résultat'}</div><div style="font-size:12px;margin-top:5px">${AUDITS.length===0?'Commencez par saisir un premier audit.':'Modifiez vos filtres.'}</div>${AUDITS.length===0?'<br><button class="btn btn-primary" onclick="window.location.href='Formulaire_Audit_SSE.html'">📝 Saisir un audit</button>':''}</div>`;
+    el.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">'+(AUDITS.length===0?'Aucun audit enregistré':'Aucun résultat')+'</div><div style="font-size:12px;margin-top:5px">'+(AUDITS.length===0?'Commencez par saisir un premier audit.':'Modifiez vos filtres.')+'</div>'+(AUDITS.length===0?'<br><button class="btn btn-primary" onclick="window.location.href=\'Formulaire_Audit_SSE.html\'">📝 Saisir un audit</button>':'')+'</div>';
     return;
   }
 
