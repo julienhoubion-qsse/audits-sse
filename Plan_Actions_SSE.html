@@ -145,24 +145,25 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="origin-box">
-        <strong>Origine de l'action</strong>
-        <div id="m-origin-display">—</div>
-      </div>
       <input type="hidden" id="m-id">
       <input type="hidden" id="m-audit-id">
       <input type="hidden" id="m-section-key">
       <input type="hidden" id="m-criteria-idx">
-      <input type="hidden" id="m-origin">
 
       <div class="form-row">
         <div class="fld">
-          <label class="fld-lbl">Site</label>
-          <input class="fld-inp" id="m-site" readonly style="background:var(--slate);height:36px">
+          <label class="fld-lbl">Site *</label>
+          <select class="fld-sel" id="m-site" style="height:36px">
+            <option value="">— Sélectionner —</option>
+            <option value="38">38</option><option value="41">41</option>
+            <option value="89">89</option><option value="47">47</option>
+            <option value="37">37</option><option value="17">17</option>
+            <option value="72">72</option><option value="72bis">72bis</option>
+          </select>
         </div>
         <div class="fld">
-          <label class="fld-lbl">Date audit</label>
-          <input class="fld-inp" id="m-audit-date" readonly style="background:var(--slate);height:36px">
+          <label class="fld-lbl">Origine de l'action</label>
+          <input class="fld-inp" id="m-origin" placeholder="Ex: Audit DUERP, Fait accidentel..." style="height:36px">
         </div>
       </div>
 
@@ -378,7 +379,7 @@ function openNewModal(auditId,site,auditDate,sectionKey,criteriaIdx,origin){
   document.getElementById('m-section-key').value=sectionKey||'';
   document.getElementById('m-criteria-idx').value=criteriaIdx!=null?criteriaIdx:'';
   document.getElementById('m-origin').value=origin||'';
-  document.getElementById('m-origin-display').textContent=origin||'À renseigner';
+  document.getElementById('m-origin').value=origin||'';
   document.getElementById('m-description').value='';
   document.getElementById('m-responsable').value='';
   document.getElementById('m-delai').value='';
@@ -401,8 +402,7 @@ function editAction(id){
   document.getElementById('m-audit-date').value=a.auditDate;
   document.getElementById('m-section-key').value=a.sectionKey;
   document.getElementById('m-criteria-idx').value=a.criteriaIdx;
-  document.getElementById('m-origin').value=a.origin;
-  document.getElementById('m-origin-display').textContent=a.origin;
+  document.getElementById('m-origin').value=a.origin||'';
   document.getElementById('m-description').value=a.description||'';
   document.getElementById('m-responsable').value=a.responsable||'';
   document.getElementById('m-delai').value=a.delai||'';
@@ -438,7 +438,7 @@ async function saveAction(){
     id:document.getElementById('m-id').value||Date.now(),
     auditId:document.getElementById('m-audit-id').value,
     site:document.getElementById('m-site').value,
-    auditDate:document.getElementById('m-audit-date').value,
+    auditDate:'',
     sectionKey:document.getElementById('m-section-key').value,
     criteriaIdx:document.getElementById('m-criteria-idx').value,
     origin:document.getElementById('m-origin').value,
