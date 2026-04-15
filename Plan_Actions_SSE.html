@@ -470,13 +470,16 @@ init().then(()=>{
   // Si on arrive depuis la bibliothèque avec une NC en paramètre
   const p=new URLSearchParams(window.location.search);
   if(p.get('auditId')){
+    const sk=p.get('sectionKey'),ci=Number(p.get('criteriaIdx'));
+    const sec=SECTIONS.find(s=>s.key===sk)||{label:sk,icon:'',criteria:[]};
+    const originText=sec.icon+' '+sec.label+' — Critère '+(ci+1)+' : '+(sec.criteria[ci]||'');
     openNewModal(
       p.get('auditId'),
       p.get('site'),
       p.get('auditDate'),
-      p.get('sectionKey'),
-      p.get('criteriaIdx'),
-      decodeURIComponent(p.get('origin')||'')
+      sk,
+      ci,
+      originText
     );
   }
 });
