@@ -232,17 +232,6 @@ const STORAGE={
     try{await SP.delete(id);}catch(e){const lib=JSON.parse(localStorage.getItem("sse_audits")||"[]").filter(a=>a.id!==id);localStorage.setItem("sse_audits",JSON.stringify(lib));}
   }
 };
-const STORAGE={
-  async getAll(){
-    try{return await SP.getAll();}catch(e){console.warn("SP error, local fallback:",e);return JSON.parse(localStorage.getItem("sse_audits")||"[]");}
-  },
-  async save(record){
-    try{await SP.create(record);return true;}catch(e){console.warn("SP save error:",e);const lib=JSON.parse(localStorage.getItem("sse_audits")||"[]");lib.push({...record,id:Date.now()});localStorage.setItem("sse_audits",JSON.stringify(lib));return false;}
-  },
-  async delete(id){
-    try{await SP.delete(id);}catch(e){const lib=JSON.parse(localStorage.getItem("sse_audits")||"[]").filter(a=>a.id!==id);localStorage.setItem("sse_audits",JSON.stringify(lib));}
-  }
-};
 </script>
 <div class="toast" id="toast"></div>
 <script>
