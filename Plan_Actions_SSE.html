@@ -335,7 +335,7 @@ function render(){
     return`<div class="action-card ${st}" id="ac-${a.id}">
       <div class="action-hd" onclick="togAction('${a.id}')">
         <div style="flex:1">
-          <div class="action-origin">${sec.icon} ${sec.label} · Critère ${Number(a.criteriaIdx)+1} · Site ${a.site} · ${a.auditDate}</div>
+          <div class="action-origin">${a.origin ? a.origin : (sec.icon+' '+sec.label+' · Site '+a.site)}</div>
           <div class="action-desc">${a.description||'—'}</div>
           <div class="action-meta">
             ${statutLabel(st)}
