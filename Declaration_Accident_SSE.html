@@ -1,0 +1,348 @@
+<!-- SSE — Déclaration de faits accidentels -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-mid:#7A96AA;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --ok-bg:#D6F0A8;--ok-tc:#2D5A00;--warn-bg:#FFF0B3;--warn-tc:#7A5000;
+  --bad-bg:#FFD6D6;--bad-tc:#8B0000;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:#dc2626}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#fca5a5;margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:#fff;border-bottom-color:rgba(107,191,31,.5)}
+.nav-btn.active{color:#fff!important;border-bottom-color:#6BBF1F!important}
+.wrapper{max-width:860px;margin:0 auto;padding:28px 24px 60px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:20px}
+.card-hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-hd-bar{width:4px;height:20px;background:#dc2626;border-radius:2px;flex-shrink:0}
+.card-title{font-family:'Exo 2',sans-serif;font-size:14px;font-weight:700;color:var(--steel-dk)}
+.card-body{padding:20px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:600px){.form-row,.form-row-3{grid-template-columns:1fr}}
+.fld{display:flex;flex-direction:column;gap:5px}
+.fld-lbl{font-size:12px;font-weight:700;color:var(--steel-dk);text-transform:uppercase;letter-spacing:.5px}
+.fld-sel,.fld-inp{height:38px;border:1px solid var(--border);border-radius:7px;padding:0 12px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--white);color:var(--charcoal);transition:border-color .15s}
+.fld-sel:focus,.fld-inp:focus{outline:none;border-color:var(--steel)}
+.fld-txt{border:1px solid var(--border);border-radius:7px;padding:10px 12px;font-family:'Nunito Sans',sans-serif;font-size:13px;resize:vertical;min-height:80px;transition:border-color .15s}
+.fld-txt:focus{outline:none;border-color:var(--steel)}
+.fld-req{color:#dc2626;margin-left:2px}
+/* Type selector */
+.type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px}
+.type-btn{
+  border:2px solid var(--border);border-radius:10px;padding:14px 16px;
+  cursor:pointer;transition:all .15s;background:var(--white);text-align:left;
+  display:flex;flex-direction:column;gap:4px;
+}
+.type-btn:hover{border-color:var(--steel-lt);background:var(--steel-xlt)}
+.type-btn.selected{border-color:#dc2626;background:#fff5f5}
+.type-btn .type-icon{font-size:22px}
+.type-btn .type-label{font-family:'Exo 2',sans-serif;font-size:12px;font-weight:700;color:var(--steel-dk)}
+.type-btn .type-desc{font-size:11px;color:var(--muted)}
+/* Arrêt section */
+.arret-section{background:var(--warn-bg);border-radius:8px;padding:14px;margin-bottom:14px;display:none}
+.arret-section.show{display:block}
+/* Actions section */
+.actions-section{background:var(--green-xlt);border:1px solid var(--green-lt);border-radius:8px;padding:14px;margin-top:16px}
+.action-item{background:var(--white);border-radius:7px;padding:12px;margin-bottom:8px;border:1px solid var(--border)}
+.action-item:last-child{margin-bottom:0}
+/* Btn */
+.btn{height:38px;padding:0 20px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--green);color:#fff}
+.btn-danger{background:#dc2626;color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-add{background:var(--green-lt);color:var(--green-dk);border:1px solid var(--green);height:32px;padding:0 12px;font-size:12px}
+.form-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE</div>
+    <div class="ph-title">🚑 Déclaration de faits accidentels</div>
+    <div class="ph-sub">Accident du travail · Accident de trajet · Soins infirmiers</div>
+  </div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn" onclick="window.location.href='SharePoint_Code_Incorpore_SSE.html'">📊 Tableau de bord</button>
+  <button class="nav-btn" onclick="window.location.href='Formulaire_Audit_SSE.html'">📝 Nouvel audit</button>
+  <button class="nav-btn" onclick="window.location.href='Bibliotheque_Audits_SSE.html'">📚 Bibliothèque</button>
+  <button class="nav-btn" onclick="window.location.href='Plan_Actions_SSE.html'">📋 Plan d'actions</button>
+  <button class="nav-btn active">🚑 Déclaration</button>
+</div>
+
+<div class="wrapper">
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-hd-bar"></div>
+      <div class="card-title">Type de fait accidentel <span style="color:#dc2626">*</span></div>
+    </div>
+    <div class="card-body">
+      <div class="type-grid">
+        <button class="type-btn" data-type="Accident avec arrêt" onclick="selectType(this)">
+          <span class="type-icon">🏥</span>
+          <span class="type-label">Accident avec arrêt</span>
+          <span class="type-desc">Arrêt de travail prescrit</span>
+        </button>
+        <button class="type-btn" data-type="Accident sans arrêt" onclick="selectType(this)">
+          <span class="type-icon">🩹</span>
+          <span class="type-label">Accident sans arrêt</span>
+          <span class="type-desc">Pas d'arrêt de travail</span>
+        </button>
+        <button class="type-btn" data-type="Accident de trajet" onclick="selectType(this)">
+          <span class="type-icon">🚗</span>
+          <span class="type-label">Accident de trajet</span>
+          <span class="type-desc">Domicile ↔ Lieu de travail</span>
+        </button>
+        <button class="type-btn" data-type="Soins infirmiers" onclick="selectType(this)">
+          <span class="type-icon">💊</span>
+          <span class="type-label">Soins infirmiers</span>
+          <span class="type-desc">Premiers secours sur site</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-hd-bar"></div>
+      <div class="card-title">Informations générales</div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Date de l'accident <span class="fld-req">*</span></label>
+          <input type="date" class="fld-inp" id="f-date">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Site concerné <span class="fld-req">*</span></label>
+          <select class="fld-sel" id="f-site">
+            <option value="">— Sélectionner —</option>
+            <option value="38">38</option>
+            <option value="41">41</option>
+            <option value="89">89</option>
+            <option value="47">47</option>
+            <option value="37">37</option>
+            <option value="17">17</option>
+            <option value="72">72</option>
+            <option value="72bis">72bis</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Victime <span class="fld-req">*</span></label>
+          <input type="text" class="fld-inp" id="f-victime" placeholder="Nom Prénom">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Siège des lésions</label>
+          <input type="text" class="fld-inp" id="f-siege" placeholder="Ex: Main droite, Dos...">
+        </div>
+      </div>
+      <div class="fld" style="margin-bottom:14px">
+        <label class="fld-lbl">Activité de la victime au moment du fait <span class="fld-req">*</span></label>
+        <input type="text" class="fld-inp" id="f-activite" placeholder="Ex: Démontage moteur, Manutention...">
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Description des circonstances <span class="fld-req">*</span></label>
+        <textarea class="fld-txt" id="f-description" placeholder="Décrivez précisément les circonstances de l'accident..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="arret-card" style="display:none">
+    <div class="card-hd">
+      <div class="card-hd-bar"></div>
+      <div class="card-title">Informations sur l'arrêt de travail</div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Durée de l'arrêt (jours)</label>
+          <input type="number" class="fld-inp" id="f-duree" min="0" placeholder="Nombre de jours">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Date de fin d'arrêt prévue</label>
+          <input type="date" class="fld-inp" id="f-fin-arret">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-hd-bar" style="background:var(--green)"></div>
+      <div class="card-title">Actions correctives à planifier</div>
+    </div>
+    <div class="card-body">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ajoutez les actions correctives à mettre en place suite à cet accident. Elles seront automatiquement intégrées dans le plan d'actions.</p>
+      <div id="actions-list"></div>
+      <button class="btn btn-add" onclick="addAction()">➕ Ajouter une action</button>
+    </div>
+  </div>
+
+  <div class="form-foot">
+    <button class="btn btn-ghost" onclick="resetForm()">🔄 Réinitialiser</button>
+    <button class="btn btn-danger" onclick="saveDeclaration()">💾 Enregistrer la déclaration</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+const SITES=["38","41","89","47","37","17","72","72bis"];
+
+let selectedType='';
+let actionCount=0;
+
+// Init date
+document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+
+function selectType(btn){
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedType=btn.dataset.type;
+  // Afficher la section arrêt si accident avec arrêt
+  const arretCard=document.getElementById('arret-card');
+  arretCard.style.display=selectedType==='Accident avec arrêt'?'block':'none';
+}
+
+function addAction(){
+  actionCount++;
+  const idx=actionCount;
+  const div=document.createElement('div');
+  div.className='action-item';
+  div.id='action-item-'+idx;
+  div.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <span style="font-family:'Exo 2',sans-serif;font-size:12px;font-weight:700;color:var(--steel-dk)">Action ${idx}</span>
+      <button class="btn btn-ghost" style="height:26px;padding:0 8px;font-size:11px" onclick="removeAction(${idx})">✕ Supprimer</button>
+    </div>
+    <div class="form-row" style="margin-bottom:8px">
+      <div class="fld">
+        <label class="fld-lbl">Description de l'action</label>
+        <input type="text" class="fld-inp" id="act-desc-${idx}" placeholder="Action à mener..." style="height:34px">
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Responsable</label>
+        <input type="text" class="fld-inp" id="act-resp-${idx}" placeholder="Nom du responsable" style="height:34px">
+      </div>
+    </div>
+    <div class="fld">
+      <label class="fld-lbl">Délai</label>
+      <input type="date" class="fld-inp" id="act-delai-${idx}" style="height:34px;max-width:200px">
+    </div>`;
+  document.getElementById('actions-list').appendChild(div);
+}
+
+function removeAction(idx){
+  const el=document.getElementById('action-item-'+idx);
+  if(el)el.remove();
+}
+
+async function saveDeclaration(){
+  if(!selectedType){showToast('Veuillez sélectionner un type de fait',false);return;}
+  const date=document.getElementById('f-date').value;
+  const site=document.getElementById('f-site').value;
+  const victime=document.getElementById('f-victime').value.trim();
+  const activite=document.getElementById('f-activite').value.trim();
+  const description=document.getElementById('f-description').value.trim();
+  if(!date||!site||!victime||!activite||!description){
+    showToast('Veuillez remplir tous les champs obligatoires',false);return;
+  }
+
+  const declaration={
+    id:Date.now(),
+    date,site,victime,
+    siege:document.getElementById('f-siege').value.trim(),
+    type:selectedType,
+    activite,description,
+    duree:document.getElementById('f-duree')?document.getElementById('f-duree').value:'',
+    finArret:document.getElementById('f-fin-arret')?document.getElementById('f-fin-arret').value:'',
+    createdAt:new Date().toISOString()
+  };
+
+  // Récupérer les actions
+  const actions=[];
+  for(let i=1;i<=actionCount;i++){
+    const descEl=document.getElementById('act-desc-'+i);
+    const respEl=document.getElementById('act-resp-'+i);
+    const delaiEl=document.getElementById('act-delai-'+i);
+    if(!descEl)continue;
+    const desc=descEl.value.trim();
+    if(!desc)continue;
+    const origin='🚑 Fait accidentel — '+selectedType+' — Site '+site+' — '+date+' — '+victime;
+    actions.push({
+      id:Date.now()+i,
+      auditId:'ACC-'+declaration.id,
+      site,auditDate:date,
+      sectionKey:'accident',
+      criteriaIdx:0,
+      origin,
+      description:desc,
+      responsable:respEl?respEl.value.trim():'',
+      delai:delaiEl?delaiEl.value:'',
+      avancement:0,commentaire:'',efficace:'',
+      createdAt:new Date().toISOString()
+    });
+  }
+
+  showToast('Enregistrement en cours...',false);
+  try{
+    // Sauvegarder la déclaration
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveAccident',data:declaration})});
+    // Sauvegarder les actions
+    for(const act of actions){
+      await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveAction',data:act})});
+    }
+    showToast('Déclaration enregistrée !'+(actions.length?' '+actions.length+' action(s) créée(s)':''),true);
+    setTimeout(()=>{
+      if(actions.length>0){
+        if(confirm('Déclaration enregistrée avec '+actions.length+' action(s). Aller au plan d\'actions ?')){
+          window.location.href='Plan_Actions_SSE.html';
+        }
+      } else {
+        resetForm();
+      }
+    },1500);
+  }catch(e){showToast('Erreur: '+e.message,false);}
+}
+
+function resetForm(){
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));
+  selectedType='';
+  document.getElementById('arret-card').style.display='none';
+  document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('f-site').value='';
+  document.getElementById('f-victime').value='';
+  document.getElementById('f-siege').value='';
+  document.getElementById('f-activite').value='';
+  document.getElementById('f-description').value='';
+  document.getElementById('f-duree').value='';
+  document.getElementById('f-fin-arret').value='';
+  document.getElementById('actions-list').innerHTML='';
+  actionCount=0;
+}
+
+function showToast(msg,ok){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.background=ok?'var(--green-dk)':'var(--steel-dk)';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+</script>
