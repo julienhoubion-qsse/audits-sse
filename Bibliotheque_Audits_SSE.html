@@ -181,31 +181,44 @@ html,body{height:auto!important}
   Service QSSE · Système d'Audit SSE · v1.0 · 2026 · Usage interne
 </div>
 <script>
-const SP_CONFIG={  GSHEET_URL:"https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec",  MODE:"googlesheets"};
+const SP_CONFIG={GSHEET_URL:"https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec",MODE:"googlesheets"};
 const SP={
-  async getDigest(){
-    const r=await fetch(`${SP_CONFIG.SITE_URL}/_api/contextinfo`,{method:"POST",headers:{"Accept":"application/json;odata=verbose"},credentials:"include"});
-    const d=await r.json();return d.d.GetContextWebInformation.FormDigestValue;
-  },
   async getAll(){
-    const url=`${SP_CONFIG.SITE_URL}/_api/web/lists/getbytitle('${SP_CONFIG.LIST_NAME}')/items?$select=Id,Title,Site,DateAudit,Auditeur,Responsable,TypeAudit,Perimetre,ScoreDUERP,ScorePlanPrev,ScoreAccueil,ScoreFormation,ScoreAccident,ScoreVGP,ScoreEPI,ScoreVHE,ScoreIncendie,ScoreDechets,ScoreGlobal,StatutGlobal,CommentairesJSON&$orderby=DateAudit desc&$top=500`;
-    const r=await fetch(url,{headers:{"Accept":"application/json;odata=verbose"},credentials:"include"});
+    const r=await fetch(SP_CONFIG.GSHEET_URL+"?action=getAll");
     const d=await r.json();
-    return(d.d.results||[]).map(item=>({id:item.Id,site:item.Site,date:item.DateAudit?item.DateAudit.split("T")[0]:"",auditeur:item.Auditeur||"",responsable:item.Responsable||"",type:item.TypeAudit||"Audit interne",perimetre:item.Perimetre||"",scores:{duerp:item.ScoreDUERP,plan_prev:item.ScorePlanPrev,accueil:item.ScoreAccueil,formation:item.ScoreFormation,accident:item.ScoreAccident,vgp:item.ScoreVGP,epi:item.ScoreEPI,vhe:item.ScoreVHE,incendie:item.ScoreIncendie,dechets:item.ScoreDechets},comments:item.CommentairesJSON?JSON.parse(item.CommentairesJSON):{},savedAt:item.DateAudit}));
+    return (d.data||[]).map(row=>{
+      return {
+        id:row[0],site:row[1],auditeur:row[2],date:row[3],
+        scores:JSON.parse(row[4]||"{}"),total:row[5],
+        savedAt:row[6],comments:JSON.parse(row[7]||"{}")
+      };
+    });
   },
   async create(record){
-    const digest=await SP.getDigest();
-    const sc=record.scores;
-    const allVals=Object.values(sc).filter(v=>v!==null);
-    const global=allVals.length?Math.round(allVals.reduce((a,b)=>a+b,0)/allVals.length):null;
-    const statut=global===null?"":global>=80?"Satisfaisant":global>=50?"À améliorer":"Critique";
-    const payload={"__metadata":{"type":"SP.Data.AuditSSEListItem"},"Title":`${record.site}_${record.date}`,"Site":record.site,"DateAudit":record.date?record.date+"T00:00:00Z":null,"Auditeur":record.auditeur,"Responsable":record.responsable,"TypeAudit":record.type,"Perimetre":record.perimetre,"ScoreDUERP":sc.duerp,"ScorePlanPrev":sc.plan_prev,"ScoreAccueil":sc.accueil,"ScoreFormation":sc.formation,"ScoreAccident":sc.accident,"ScoreVGP":sc.vgp,"ScoreEPI":sc.epi,"ScoreVHE":sc.vhe,"ScoreIncendie":sc.incendie,"ScoreDechets":sc.dechets,"ScoreGlobal":global,"StatutGlobal":statut,"CommentairesJSON":JSON.stringify(record.comments||{})};
-    const r=await fetch(`${SP_CONFIG.SITE_URL}/_api/web/lists/getbytitle('${SP_CONFIG.LIST_NAME}')/items`,{method:"POST",headers:{"Accept":"application/json;odata=verbose","Content-Type":"application/json;odata=verbose","X-RequestDigest":digest},credentials:"include",body:JSON.stringify(payload)});
-    if(!r.ok)throw new Error(`SP Error: ${r.status}`);return await r.json();
+    const resp=await fetch(SP_CONFIG.GSHEET_URL,{
+      method:"POST",
+      body:JSON.stringify({action:"create",data:record})
+    });
+    const txt=await resp.text();
+    if(txt!=="ok")throw new Error("GSheets error: "+txt);
+    return true;
   },
   async delete(id){
-    const digest=await SP.getDigest();
-    await fetch(`${SP_CONFIG.SITE_URL}/_api/web/lists/getbytitle('${SP_CONFIG.LIST_NAME}')/items(${id})`,{method:"DELETE",headers:{"Accept":"application/json;odata=verbose","X-RequestDigest":digest,"IF-MATCH":"*"},credentials:"include"});
+    await fetch(SP_CONFIG.GSHEET_URL,{
+      method:"POST",
+      body:JSON.stringify({action:"delete",id:id})
+    });
+  }
+};
+const STORAGE={
+  async getAll(){
+    try{return await SP.getAll();}catch(e){console.warn("GSheets error, local fallback:",e);return JSON.parse(localStorage.getItem("sse_audits")||"[]");}
+  },
+  async save(record){
+    try{await SP.create(record);return true;}catch(e){console.warn("GSheets save error:",e);const lib=JSON.parse(localStorage.getItem("sse_audits")||"[]");lib.push({...record,id:Date.now()});localStorage.setItem("sse_audits",JSON.stringify(lib));return false;}
+  },
+  async delete(id){
+    try{await SP.delete(id);}catch(e){const lib=JSON.parse(localStorage.getItem("sse_audits")||"[]").filter(a=>a.id!==id);localStorage.setItem("sse_audits",JSON.stringify(lib));}
   }
 };
 const STORAGE={
