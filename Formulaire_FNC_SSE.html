@@ -230,22 +230,23 @@ document.querySelector('[data-statut="Ouvert"]').classList.add('selected-open');
 
 function addImmAction(desc,par,date){
   immCount++;
-  const idx=immCount;
-  const div=document.createElement('div');
+  var idx=immCount;
+  var div=document.createElement('div');
   div.id='imm-'+idx;
   div.style.cssText='background:var(--slate);border-radius:7px;padding:12px;margin-bottom:10px;border:1px solid var(--border)';
-  div.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
-    +'<span style="font-family:sans-serif;font-size:12px;font-weight:700;color:var(--steel-dk)">Action immédiate '+idx+'</span>'
-    +(idx>1?'<button onclick="document.getElementById('imm-'+idx+'').remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px">✕</button>':'')
-    +'</div>'
-    +'<div class="fld" style="margin-bottom:8px">'
-    +'<label class="fld-lbl">Description</label>'
-    +'<textarea class="fld-txt" id="imm-desc-'+idx+'" placeholder="Description de l'action immédiate..." style="min-height:60px">'+(desc||'')+'</textarea>'
-    +'</div>'
-    +'<div class="form-row">'
-    +'<div class="fld"><label class="fld-lbl">Réalisée par</label><input type="text" class="fld-inp" id="imm-par-'+idx+'" placeholder="Nom Prénom" value="'+(par||'')+'" style="height:34px"></div>'
-    +'<div class="fld"><label class="fld-lbl">Réalisée le</label><input type="date" class="fld-inp" id="imm-date-'+idx+'" value="'+(date||'')+'" style="height:34px"></div>'
-    +'</div>';
+  var html='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+  html+='<span style="font-size:12px;font-weight:700;color:var(--steel-dk)">Action immédiate '+idx+'</span>';
+  if(idx>1)html+='<button data-idx="'+idx+'" onclick="document.getElementById(\'imm-\'+this.dataset.idx).remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px">&#x2715;</button>';
+  html+='</div>';
+  html+='<div class="fld" style="margin-bottom:8px">';
+  html+='<label class="fld-lbl">Description</label>';
+  html+='<textarea class="fld-txt" id="imm-desc-'+idx+'" placeholder="Description..." style="min-height:60px">'+(desc||'')+'</textarea>';
+  html+='</div>';
+  html+='<div class="form-row">';
+  html+='<div class="fld"><label class="fld-lbl">Réalisée par</label><input type="text" class="fld-inp" id="imm-par-'+idx+'" placeholder="Nom Prénom" value="'+(par||'')+'" style="height:34px"></div>';
+  html+='<div class="fld"><label class="fld-lbl">Réalisée le</label><input type="date" class="fld-inp" id="imm-date-'+idx+'" value="'+(date||'')+'" style="height:34px"></div>';
+  html+='</div>';
+  div.innerHTML=html;
   document.getElementById('imm-list').appendChild(div);
 }
 
