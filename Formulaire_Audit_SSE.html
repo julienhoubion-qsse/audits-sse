@@ -1,0 +1,414 @@
+<!-- SSE — Formulaire Audit — Code incorporé SharePoint -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-mid:#7A96AA;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --ok-bg:#D6F0A8;--ok-tc:#2D5A00;--warn-bg:#FFF0B3;--warn-tc:#7A5000;
+  --bad-bg:#FFD6D6;--bad-tc:#8B0000;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10);--shadow-md:0 6px 28px rgba(46,69,88,.16)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));
+  padding:20px 28px;display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;
+  text-transform:uppercase;color:var(--green);margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.ph-right{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+.ph-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+  border-radius:8px;padding:8px 14px;text-align:center}
+.ph-badge-lbl{font-size:9px;color:var(--steel-lt);text-transform:uppercase;letter-spacing:1px}
+.ph-badge-val{font-family:'Exo 2',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-top:1px}
+.wrapper{max-width:1320px;margin:0 auto;padding:22px 24px 48px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.card-hd{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;
+  background:linear-gradient(90deg,var(--steel-xlt),var(--white) 60%)}
+.card-hd-bar{width:4px;height:18px;border-radius:2px;background:var(--green);flex-shrink:0}
+.card-ttl{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk)}
+.card-body{padding:16px 18px}
+.btn{padding:9px 18px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:'Nunito Sans',sans-serif;border:none;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--green);color:#fff}
+.btn-primary:hover{background:var(--green-dk);transform:translateY(-1px)}
+.btn-steel{background:var(--steel);color:#fff}
+.btn-steel:hover{background:var(--steel-dk);transform:translateY(-1px)}
+.btn-ghost{background:var(--slate);color:var(--steel-dk);border:1.5px solid var(--border)}
+.btn-ghost:hover{background:var(--steel-xlt)}
+.btn-danger{background:#E53935;color:#fff}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.fld-inp,.fld-sel{padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;
+  font-size:13px;font-family:'Nunito Sans',sans-serif;color:var(--charcoal);
+  background:var(--white);outline:none;transition:border-color .15s}
+.fld-inp:focus,.fld-sel:focus{border-color:var(--green)}
+.bar-chart{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:flex;align-items:center;gap:10px}
+.bar-lbl{font-size:12px;font-weight:700;color:var(--steel-dk);width:90px;flex-shrink:0;font-family:'Exo 2',sans-serif}
+.bar-track{flex:1;height:22px;background:var(--slate);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;
+  padding-right:7px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.bar-fill.ok{background:linear-gradient(90deg,var(--green-dk),var(--green))}
+.bar-fill.warn{background:linear-gradient(90deg,#F57F17,#FFA000)}
+.bar-fill.bad{background:linear-gradient(90deg,#B71C1C,#E53935)}
+.bar-pct{font-size:11px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3)}
+.bar-badge{font-size:10px;font-weight:700;border-radius:20px;padding:3px 8px;width:80px;text-align:center;flex-shrink:0;font-family:'Exo 2',sans-serif}
+.b-ok{background:var(--ok-bg);color:var(--ok-tc)}
+.b-warn{background:var(--warn-bg);color:var(--warn-tc)}
+.b-bad{background:var(--bad-bg);color:var(--bad-tc)}
+.toast{position:fixed;bottom:20px;right:20px;z-index:9999;background:var(--steel-dk);color:#fff;
+  border-radius:10px;padding:12px 20px;font-size:13px;font-weight:600;box-shadow:var(--shadow-md);
+  display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;
+  transition:all .3s;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{background:var(--green-dk)}
+/* Auto resize iframe */
+html,body{height:auto!important}
+</style>
+<style>
+.form-id-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.sum-bar{display:flex;gap:12px;flex-wrap:wrap;background:var(--steel-xlt);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;align-items:center}
+.sum-item{text-align:center}.sum-val{font-family:'Exo 2',sans-serif;font-size:22px;font-weight:800}
+.sum-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.sum-item.ok .sum-val{color:var(--ok-tc)}.sum-item.warn .sum-val{color:var(--warn-tc)}.sum-item.bad .sum-val{color:var(--bad-tc)}.sum-item.score .sum-val{color:var(--green-dk);font-size:28px}
+.sum-div{width:1px;background:var(--border);height:36px;flex-shrink:0}
+.prog-bar{flex:1;min-width:140px}.prog-track{height:9px;background:var(--border);border-radius:5px;overflow:hidden;margin-top:5px}
+.prog-fill{height:100%;border-radius:5px;background:var(--green);transition:width .5s ease}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;cursor:pointer;
+  background:linear-gradient(90deg,var(--steel-xlt),var(--white) 70%);border-bottom:1px solid var(--border);user-select:none}
+.sec-hd:hover{background:linear-gradient(90deg,var(--steel-lt),var(--steel-xlt) 70%)}
+.sec-hd-l{display:flex;align-items:center;gap:9px}
+.sec-icon{font-size:17px}.sec-name{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk)}
+.sec-ref{font-size:10px;color:var(--muted);margin-top:1px}
+.sec-score{font-family:'Exo 2',sans-serif;font-size:12px;font-weight:800;padding:3px 12px;border-radius:20px;background:var(--slate);color:var(--steel-dk)}
+.sec-score.ok{background:var(--ok-bg);color:var(--ok-tc)}.sec-score.warn{background:var(--warn-bg);color:var(--warn-tc)}.sec-score.bad{background:var(--bad-bg);color:var(--bad-tc)}
+.sec-body{background:var(--white);padding:0 16px}.sec-body.collapsed{display:none}
+.crit-row{display:grid;grid-template-columns:1fr auto;align-items:start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.crit-row:last-child{border-bottom:none}
+.crit-num{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:700;color:var(--steel-mid);margin-bottom:2px}
+.crit-txt{font-size:12px;color:var(--charcoal);line-height:1.4}
+.crit-comment{font-size:11px;color:var(--muted);margin-top:4px;width:100%;padding:4px 7px;
+  border:1.5px solid var(--border);border-radius:5px;font-family:'Nunito Sans',sans-serif;resize:none;min-height:28px;outline:none;transition:border-color .15s}
+.crit-comment:focus{border-color:var(--green)}
+.sbtn-grp{display:flex;gap:4px;flex-shrink:0;margin-top:2px}
+.sbtn{width:42px;height:32px;border-radius:6px;border:2px solid var(--border);background:var(--slate);
+  font-size:11px;font-weight:800;cursor:pointer;font-family:'Exo 2',sans-serif;color:var(--muted);transition:all .15s}
+.sbtn.sel-C{background:var(--ok-bg);border-color:var(--ok-tc);color:var(--ok-tc)}
+.sbtn.sel-NC{background:var(--bad-bg);border-color:var(--bad-tc);color:var(--bad-tc)}
+.sbtn.sel-NA{background:var(--warn-bg);border-color:var(--warn-tc);color:var(--warn-tc)}
+.chev{font-size:11px;color:var(--muted);transition:transform .2s}.chev.open{transform:rotate(180deg)}
+@media(max-width:640px){.form-id-grid{grid-template-columns:1fr 1fr}}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE · Exigences SSE</div>
+
+    <div class="ph-title">📝 Formulaire de Saisie d'Audit SSE</div>
+    <div class="ph-sub">Remplissez les critères section par section · Scores calculés automatiquement</div>
+  </div>
+  <div class="ph-right">
+    <div class="ph-badge"><div class="ph-badge-lbl">Date</div><div class="ph-badge-val" id="today">—</div></div>
+  </div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn" onclick="window.location.href='Bibliotheque_Audits_SSE.html'">📚 Bibliothèque audits</button>
+  <button class="nav-btn" onclick="window.location.href='Plan_Actions_SSE.html'">📋 Plan d'actions</button>
+  <button class="nav-btn active" onclick="window.location.href='Formulaire_Audit_SSE.html'">📝 Saisir un audit</button>
+</div>
+
+
+<div class="wrapper">
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-ttl">🏢 Identification de l'audit</div></div>
+    <div class="card-body">
+      <div class="form-id-grid">
+        <div class="fld"><label class="fld-lbl">Site *</label><select class="fld-sel" id="f-site"><option value="">— Sélectionner —</option><option value="38">38</option><option value="41">41</option><option value="89">89</option><option value="47">47</option><option value="37">37</option><option value="17">17</option><option value="72">72</option><option value="72bis">72bis</option></select></div>
+        <div class="fld"><label class="fld-lbl">Date de l'audit *</label><input type="date" class="fld-inp" id="f-date"></div>
+        <div class="fld"><label class="fld-lbl">Auditeur(s) *</label><input type="text" class="fld-inp" id="f-auditeur" placeholder="Nom Prénom"></div>
+        <div class="fld"><label class="fld-lbl">Responsable de site</label><input type="text" class="fld-inp" id="f-responsable" placeholder="Nom Prénom"></div>
+        <div class="fld"><label class="fld-lbl">Type d'audit</label><select class="fld-sel" id="f-type"><option>Audit interne</option><option>Audit externe</option><option>Audit surprise</option><option>Audit de suivi</option></select></div>
+        <div class="fld"><label class="fld-lbl">Périmètre audité</label><input type="text" class="fld-inp" id="f-perimetre" placeholder="Ex : Atelier démontage"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sum-bar">
+    <div class="sum-item score"><div class="sum-val" id="s-score">—</div><div class="sum-lbl">Score global</div></div>
+    <div class="sum-div"></div>
+    <div class="sum-item ok"><div class="sum-val" id="s-c">0</div><div class="sum-lbl">Conformes</div></div>
+    <div class="sum-item bad"><div class="sum-val" id="s-nc">0</div><div class="sum-lbl">Non conformes</div></div>
+    <div class="sum-item warn"><div class="sum-val" id="s-na">0</div><div class="sum-lbl">Non applicables</div></div>
+    <div class="sum-div"></div>
+    <div class="prog-bar">
+      <div style="font-size:10px;color:var(--muted);font-weight:600">Progression</div>
+      <div class="prog-track"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px" id="prog-txt">0 / 99 critères</div>
+    </div>
+  </div>
+
+  <div id="sections-container"></div>
+
+  <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap">
+    <button class="btn btn-ghost" onclick="resetForm()">🗑️ Réinitialiser</button>
+    <button class="btn btn-steel" onclick="exportCSV()">📥 Export CSV</button>
+    <button class="btn btn-primary" onclick="saveAudit()">💾 Enregistrer l'audit</button>
+  </div>
+</div>
+<div style="text-align:center;padding:14px 20px;font-size:11px;color:#6B7D8A;
+  border-top:1px solid #D0DDE8;display:flex;align-items:center;justify-content:center;gap:10px;
+  font-family:'Nunito Sans',sans-serif;background:#fff">
+  
+  Service QSSE · Système d'Audit SSE · v1.0 · 2026 · Usage interne
+</div>
+<script>
+const SP_CONFIG={GSHEET_URL:"https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec",MODE:"googlesheets"};
+const SP={
+  async getAll(){
+    return new Promise((resolve,reject)=>{
+      const cb='_cb'+Date.now();
+      window[cb]=function(d){
+        delete window[cb];
+        document.getElementById('_jsonp_script')&&document.getElementById('_jsonp_script').remove();
+        const data=(d.data||[]).map(row=>{
+          let dateStr=String(row[3]||'');
+          if(dateStr.includes('T'))dateStr=dateStr.split('T')[0];
+          let scores={};try{scores=JSON.parse(row[4]||'{}');}catch(e){}
+          let comments={};try{comments=JSON.parse(row[7]||'{}');}catch(e){}
+          return {id:row[0],site:String(row[1]),auditeur:row[2],date:dateStr,scores:scores,total:row[5],savedAt:row[6],comments:comments};
+        });
+        resolve(data);
+      };
+      const s=document.createElement('script');
+      s.id='_jsonp_script';
+      s.src=SP_CONFIG.GSHEET_URL+'?action=getAll&callback='+cb;
+      s.onerror=()=>reject(new Error('JSONP failed'));
+      document.head.appendChild(s);
+    });
+  },
+  async create(record){
+    const resp=await fetch(SP_CONFIG.GSHEET_URL,{
+      method:"POST",
+      body:JSON.stringify({action:"create",data:record})
+    });
+    const txt=await resp.text();
+    if(txt!=="ok")throw new Error("GSheets error: "+txt);
+    return true;
+  },
+  async delete(id){
+    await fetch(SP_CONFIG.GSHEET_URL,{
+      method:"POST",
+      body:JSON.stringify({action:"delete",id:id})
+    });
+  }
+};
+const STORAGE={
+  async getAll(){
+    try{return await SP.getAll();}catch(e){console.warn("GSheets error, local fallback:",e);return JSON.parse(localStorage.getItem("sse_audits")||"[]");}
+  },
+  async save(record){
+    try{await SP.create(record);return true;}catch(e){console.warn("GSheets save error:",e);const lib=JSON.parse(localStorage.getItem("sse_audits")||"[]");lib.push({...record,id:Date.now()});localStorage.setItem("sse_audits",JSON.stringify(lib));return false;}
+  },
+  async delete(id){
+    try{await SP.delete(id);}catch(e){const lib=JSON.parse(localStorage.getItem("sse_audits")||"[]").filter(a=>a.id!==id);localStorage.setItem("sse_audits",JSON.stringify(lib));}
+  }
+};
+</script>
+<div class="toast" id="toast"></div>
+<script>
+const SECTIONS=[{"key": "duerp", "label": "DUERP", "icon": "📋", "ref": "Art. L.4121-3 CT | Décret 2001-1016 | Loi 2021-1018", "criteria": ["Le DUERP existe sur le site", "Le DUERP a été mis à jour il y a moins d'1 an", "Le DUERP est rédigé sur la trame Groupe", "Le contenu du DUERP est cohérent avec la réalité du terrain", "Un PAPRIPACT ou plan d'actions est formalisé et suivi"]}, {"key": "plan_prev", "label": "Plan Prévention", "icon": "🤝", "ref": "Art. R.4512-1 à R.4512-16 CT | Décret 92-158", "criteria": ["La liste des entreprises extérieures concernées est connue", "Les plans de prévention sont réalisés avant chaque intervention", "Les plans de prévention sont signés par les représentants légaux", "Les plans de prévention sont conservés sur site et diffusés", "Les plans de prévention sont mis à jour en cas de modification", "Un protocole de sécurité est établi pour le chargement/déchargement"]}, {"key": "accueil", "label": "Accueil SSE", "icon": "👷", "ref": "Art. L.4141-2 CT | Art. R.4141-1 à R.4141-20", "criteria": ["Un livret d'accueil sécurité est remis à chaque nouveau salarié", "Un accueil SSE formalisé est réalisé avant la prise de poste", "Un QCM ou test de compréhension est effectué à l'issue de l'accueil", "La fiche d'accueil signée est archivée dans le dossier du salarié", "Les risques spécifiques au poste sont présentés lors de l'accueil", "Les consignes incendie et évacuation sont expliquées lors de l'accueil", "Les EPI obligatoires sont remis et expliqués lors de l'accueil", "Les intérimaires et CDD bénéficient également d'un accueil SSE", "Un accueil spécifique est prévu pour les postes à risque (SIR)", "Le responsable de site valide la réalisation de l'accueil", "Les accueils réalisés sont enregistrés et traçables"]}, {"key": "formation", "label": "Formation Habilitation", "icon": "🎓", "ref": "Art. L.4141-1 CT | Décret 98-1084 | Décret 2010-1018", "criteria": ["Un plan de formation SSE est établi et mis à jour annuellement", "Les formations obligatoires sont réalisées dans les délais réglementaires", "Les habilitations électriques sont à jour pour tous les salariés concernés", "Les CACES sont valides pour tous les conducteurs d'engins", "Les habilitations travail en hauteur sont validées et archivées", "Les habilitations levage sont à jour et correspondent aux équipements", "Les formations sont renouvelées après changement de poste ou d'équipement", "Les formations sont renouvelées après absence prolongée ou accident", "Les attestations et certificats de formation sont archivés", "Un registre des habilitations est tenu à jour et accessible sur site", "Les habilitations B0L/B1L/B2L pour véhicules électriques sont validées"]}, {"key": "accident", "label": "Accident Travail", "icon": "🚑", "ref": "Art. L.441-1 et R.441-2 CSS | Art. R.4121-1 CT", "criteria": ["La procédure de gestion des accidents est affichée et connue de tous", "Tout accident du travail est déclaré à la CPAM dans les 48 heures", "Un registre des accidents du travail et soins est tenu à jour", "Une analyse des causes est réalisée après chaque accident", "Les presqu'accidents et situations dangereuses sont déclarés et analysés", "Des actions correctives et préventives sont définies et suivies", "Le retour d'expérience est partagé avec les équipes concernées", "Les indicateurs accidents (TF, TG) sont calculés et communiqués", "La boîte à pharmacie est accessible, complète et vérifiée régulièrement", "Les Sauveteurs Secouristes du Travail (SST) sont formés et à jour", "Les numéros d'urgence (15, 18) sont affichés de manière visible"]}, {"key": "vgp", "label": "Vérifications VGP", "icon": "🔧", "ref": "Art. R.4322-1 CT | Arrêté 01/03/2004 | Décret 88-1056", "criteria": ["Un tableau de suivi des vérifications périodiques est tenu à jour", "Les ponts élévateurs véhicules sont contrôlés annuellement (organisme agréé)", "Les équipements de levage (élingues, sangles, palans) contrôlés annuellement", "Les chariots élévateurs et gerbeurs sont contrôlés tous les 6 mois", "Les installations électriques sont contrôlées annuellement (organisme agréé)", "Les extincteurs et RIA sont contrôlés annuellement (organisme agréé)", "Les disjoncteurs différentiels sont testés tous les 6 mois (bouton TEST)", "Les portes automatiques et portails motorisés contrôlés tous les 6 mois", "Les compresseurs sont soumis aux inspections périodiques (IP/RP)", "Les échelles, escabeaux et gardes-corps sont vérifiés annuellement", "Les rapports de contrôle sont archivés et les écarts levés dans les délais"]}, {"key": "epi", "label": "Vêtements EPI", "icon": "🦺", "ref": "Art. L.4121-1 CT | Règlement UE 2016/425 | Art. R.4321-4", "criteria": ["La liste des EPI obligatoires par poste est établie et à jour", "Les EPI sont fournis gratuitement par l'employeur à tous les salariés", "Les salariés sont formés à l'utilisation et à l'entretien des EPI", "Le port des EPI est contrôlé régulièrement par les responsables", "Les EPI défectueux sont retirés du service et remplacés immédiatement", "Les vêtements de travail sont fournis conformément à la convention collective", "Les chaussures de sécurité sont adaptées aux risques identifiés par poste", "Les EPI sont conformes aux normes EN et portent le marquage CE", "Un registre de distribution des EPI est tenu à jour", "Les EPI sont stockés dans des conditions adéquates (accessibles, propres)", "Le choix des EPI est fondé sur l'évaluation des risques (DUERP)"]}, {"key": "vhe", "label": "VHE", "icon": "⚡", "ref": "NF C18-550 | Art. R.4544-9 CT | ICPE 2712-1", "criteria": ["Les salariés intervenant sur VHE sont habilités (B0L, B1L, B2L — NF C18-550)", "Les procédures de traitement d'un VHE sont disponibles et connues", "Une ZST et ZST renforcée sont aménagées sur zone imperméable, identifiée", "Des zones de stockage dédiées aux batteries lithium-ion sont aménagées", "Un système de détection incendie est en place dans les zones de stockage VHE", "Les moyens d'extinction adaptés aux feux électriques/lithium sont disponibles", "Les véhicules électriques sont identifiés et signalés dès leur entrée sur site", "Un suivi des flux entrants/sortants de batteries est réalisé", "Des rondes de surveillance sont effectuées dans les zones de stockage VHE", "Les EPI spécifiques HT (gants isolants, écrans faciaux) sont disponibles", "Les prescriptions ICPE 2712-1 relatives aux VHE sont respectées"]}, {"key": "incendie", "label": "Risque Incendie", "icon": "🔥", "ref": "Art. R.4227-1 à R.4227-57 CT | ICPE 2712-1", "criteria": ["Un Plan de Défense Incendie (PDI) est établi, affiché et connu des salariés", "Les issues de secours sont libérées, signalées et accessibles en permanence", "Des exercices d'évacuation incendie sont réalisés au moins une fois par an", "Les extincteurs sont en nombre suffisant, signalés et en bon état", "Un registre de sécurité incendie est tenu à jour sur le site", "Les salariés sont formés à la manipulation des extincteurs", "Des rondes de surveillance incendie sont réalisées conformément au PDI", "Les matériaux combustibles sont séparés des sources d'inflammation", "Les zones de stockage de liquides inflammables respectent les prescriptions ICPE", "L'éclairage de secours est vérifié tous les 6 mois (test bouchon)", "Les conduites à tenir en cas d'incendie sont affichées et connues de tous"]}, {"key": "dechets", "label": "Déchets Fluides", "icon": "♻️", "ref": "Code Environnement L.541-1 | ICPE 2712/2714 | Arrêté BSDD", "criteria": ["Un plan de gestion des déchets est établi et mis à jour sur le site", "Les déchets dangereux (huiles, batteries, filtres, liquides) sont triés et étiquetés", "Les déchets sont stockés dans des contenants adaptés et en bon état", "Les BSDD des déchets dangereux sont archivés 5 ans", "Les prestataires de collecte des déchets sont agréés et identifiés", "Les cuves et récipients de fluides sont en bon état et étanches", "Des rétentions adaptées sont en place sous les zones de stockage fluides", "Les écoulements accidentels sont pris en charge immédiatement avec absorbants", "Un registre de suivi des déchets produits est tenu à jour", "Les salariés sont sensibilisés aux procédures de tri et gestion des déchets", "Les obligations ICPE liées aux déchets et fluides sont respectées"]}];
+const SITES=["38", "41", "89", "47", "37", "17", "72", "72bis"];
+let SS={};
+
+async function loadAuditForEdit(auditId){
+  showToast('Chargement de l\'audit...',false);
+  // Load audits via JSONP
+  try{
+    const audits=await STORAGE.getAll();
+    const audit=audits.find(a=>String(a.id)===String(auditId));
+    if(!audit){showToast('Audit non trouvé',false);return;}
+    // Fill form fields
+    document.getElementById('f-site').value=audit.site||'';
+    document.getElementById('f-date').value=audit.date||'';
+    document.getElementById('f-auditeur').value=audit.auditeur||'';
+    document.getElementById('f-responsable').value=audit.responsable||'';
+    document.getElementById('f-type').value=audit.type||'Audit interne';
+    document.getElementById('f-perimetre').value=audit.perimetre||'';
+    // Store original id for update
+    window._editAuditId=auditId;
+    window._editAuditOriginalId=audit.id;
+    // Fill section answers after sections are rendered
+    setTimeout(()=>{
+      if(audit.comments){
+        SECTIONS.forEach((sec,si)=>{
+          if(!audit.comments[sec.key])return;
+          audit.comments[sec.key].forEach((item,ci)=>{
+            if(item.status){
+              SS[si][ci]=item.status;
+              ['C','NC','NA'].forEach(s=>document.getElementById('b-'+si+'-'+ci+'-'+s).className='sbtn'+(SS[si][ci]===s?' sel-'+s:''));
+              if(item.comment){const el=document.getElementById('cmt-'+si+'-'+ci);if(el)el.value=item.comment;}
+            }
+          });
+          updBadge(si);
+        });
+        updSum();
+      }
+      // Change save button label
+      const btn=document.querySelector('.btn-primary[onclick="saveAudit()"]');
+      if(btn)btn.textContent='💾 Mettre à jour l\'audit';
+      showToast('Audit chargé — modifiez et enregistrez',true);
+    },500);
+  }catch(e){showToast('Erreur chargement: '+e.message,false);}
+}
+function init(){
+  document.getElementById('today').textContent=new Date().toLocaleDateString('fr-FR');
+  document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+  // Mode édition
+  const urlParams=new URLSearchParams(window.location.search);
+  const editId=urlParams.get('edit');
+  if(editId){
+    loadAuditForEdit(editId);
+  }
+  const c=document.getElementById('sections-container');
+  SECTIONS.forEach((sec,si)=>{
+    SS[si]=sec.criteria.map(()=>null);
+    const d=document.createElement('div');
+    d.className='card';d.style.marginBottom='10px';
+    d.innerHTML=`
+      <div class="sec-hd" onclick="tog(${si})">
+        <div class="sec-hd-l"><span class="sec-icon">${sec.icon}</span>
+          <div><div class="sec-name">${sec.label}</div><div class="sec-ref">${sec.ref}</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="sec-score" id="sb-${si}">0/${sec.criteria.length}</span>
+          <span class="chev" id="ch-${si}">▼</span>
+        </div>
+      </div>
+      <div class="sec-body collapsed" id="sec-${si}">
+        ${sec.criteria.map((cr,ci)=>`
+          <div class="crit-row">
+            <div>
+              <div class="crit-num">Critère ${ci+1}/${sec.criteria.length}</div>
+              <div class="crit-txt">${cr}</div>
+              <textarea class="crit-comment" id="cmt-${si}-${ci}" placeholder="Commentaire (optionnel)" rows="1"></textarea>
+            </div>
+            <div class="sbtn-grp">
+              <button class="sbtn" id="b-${si}-${ci}-C" onclick="setSt(${si},${ci},'C')">C</button>
+              <button class="sbtn" id="b-${si}-${ci}-NC" onclick="setSt(${si},${ci},'NC')">NC</button>
+              <button class="sbtn" id="b-${si}-${ci}-NA" onclick="setSt(${si},${ci},'NA')">NA</button>
+            </div>
+          </div>`).join('')}
+        <div style="padding:8px 0 4px;display:flex;gap:7px;justify-content:flex-end">
+          <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="setAll(${si},'C')">Tout C</button>
+          <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="setAll(${si},'NA')">Tout NA</button>
+        </div>
+      </div>`;
+    c.appendChild(d);
+  });
+  updSum();
+}
+
+function tog(si){
+  document.getElementById(`sec-${si}`).classList.toggle('collapsed');
+  document.getElementById(`ch-${si}`).classList.toggle('open');
+}
+function setSt(si,ci,st){
+  SS[si][ci]=SS[si][ci]===st?null:st;
+  ['C','NC','NA'].forEach(s=>document.getElementById(`b-${si}-${ci}-${s}`).className='sbtn'+(SS[si][ci]===s?' sel-'+s:''));
+  updBadge(si);updSum();
+}
+function setAll(si,st){
+  SECTIONS[si].criteria.forEach((_,ci)=>{
+    SS[si][ci]=st;
+    ['C','NC','NA'].forEach(s=>document.getElementById(`b-${si}-${ci}-${s}`).className='sbtn'+(s===st?' sel-'+s:''));
+  });
+  updBadge(si);updSum();
+}
+function updBadge(si){
+  const s=SS[si],f=s.filter(v=>v!==null).length,c=s.filter(v=>v==='C').length,na=s.filter(v=>v==='NA').length;
+  const ap=s.length-na,pct=ap>0&&f>0?Math.round(c/ap*100):null;
+  const b=document.getElementById(`sb-${si}`);
+  b.textContent=pct!==null&&f>0?pct+'%':f+'/'+s.length;
+  b.className='sec-score'+(pct===null||f===0?'':pct>=80?' ok':pct>=50?' warn':' bad');
+}
+function updSum(){
+  let tc=0,tnc=0,tna=0,tf=0,ta=0;
+  SECTIONS.forEach((_,si)=>SS[si].forEach(v=>{ta++;if(v){tf++;if(v==='C')tc++;else if(v==='NC')tnc++;else tna++;}}));
+  const ap=ta-tna,pct=ap>0&&(tc+tnc)>0?Math.round(tc/ap*100):null;
+  document.getElementById('s-c').textContent=tc;
+  document.getElementById('s-nc').textContent=tnc;
+  document.getElementById('s-na').textContent=tna;
+  document.getElementById('s-score').textContent=pct!==null?pct+'%':'—';
+  document.getElementById('prog').style.width=(tf/ta*100)+'%';
+  document.getElementById('prog-txt').textContent=tf+' / '+ta+' critères';
+}
+function buildRec(){
+  const site=document.getElementById('f-site').value,date=document.getElementById('f-date').value,aud=document.getElementById('f-auditeur').value;
+  if(!site||!date||!aud){showToast('⚠️ Site, date et auditeur obligatoires',false);return null;}
+  let scores={},comments={};
+  SECTIONS.forEach((sec,si)=>{
+    const c=SS[si].filter(v=>v==='C').length,na=SS[si].filter(v=>v==='NA').length,ap=sec.criteria.length-na;
+    scores[sec.key]=ap>0?Math.round(c/ap*100):null;
+    comments[sec.key]=sec.criteria.map((_,ci)=>({status:SS[si][ci],comment:document.getElementById(`cmt-${si}-${ci}`).value}));
+  });
+  const scVals=Object.values(scores).filter(v=>v!==null);
+  const total=scVals.length?Math.round(scVals.reduce((a,b)=>a+b,0)/scVals.length):null;
+  return{id:Date.now(),site,date,auditeur:aud,responsable:document.getElementById('f-responsable').value,type:document.getElementById('f-type').value,perimetre:document.getElementById('f-perimetre').value,scores,total,comments,savedAt:new Date().toISOString()};
+}
+async function saveAudit(){
+  const rec=buildRec();if(!rec)return;
+  showToast('Enregistrement en cours...',false);
+  // Si mode édition, supprimer l'ancien et recréer avec même id
+  if(window._editAuditOriginalId){
+    rec.id=window._editAuditOriginalId;
+    try{
+      await STORAGE.delete(window._editAuditOriginalId);
+      await STORAGE.save(rec);
+      showToast('Audit mis à jour !',true);
+    }catch(e){showToast('Erreur: '+e.message,false);return;}
+  }else{
+    try{
+      const ok=await STORAGE.save(rec);
+      showToast(ok?'Audit enregistré !':'Sauvegarde locale (SP indisponible)',ok);
+    }catch(e){showToast('Erreur: '+e.message,false);return;}
+  }
+  setTimeout(()=>window.location.href='Bibliotheque_Audits_SSE.html',1800);
+}
+function exportCSV(){
+  const rec=buildRec();if(!rec)return;
+  let csv='Site;Date;Auditeur;Responsable;Type;Périmètre';
+  SECTIONS.forEach(s=>csv+=`;${s.icon} ${s.label}`);csv+=';Score Global\n';
+  let row=`${rec.site};${rec.date};${rec.auditeur};${rec.responsable};${rec.type};${rec.perimetre}`;
+  SECTIONS.forEach(s=>row+=`;${rec.scores[s.key]!==null?rec.scores[s.key]+'%':''}`);
+  const all=SECTIONS.map(s=>rec.scores[s.key]).filter(v=>v!==null);
+  row+=`;${all.length?Math.round(all.reduce((a,b)=>a+b,0)/all.length)+'%':''}`;
+  const blob=new Blob([csv+row],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`Audit_${rec.site}_${rec.date}.csv`;a.click();
+  showToast('📥 CSV exporté !',true);
+}
+function resetForm(){
+  if(!confirm('Réinitialiser ?'))return;
+  SECTIONS.forEach((sec,si)=>{SS[si]=sec.criteria.map(()=>null);sec.criteria.forEach((_,ci)=>{['C','NC','NA'].forEach(s=>document.getElementById(`b-${si}-${ci}-${s}`).className='sbtn');document.getElementById(`cmt-${si}-${ci}`).value='';}); updBadge(si);});
+  updSum();showToast('Réinitialisé',false);
+}
+function showToast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(ok?' success':'')+' show';setTimeout(()=>t.className='toast',3000);}
+init();
+</script>
+<script>
+function notifyHeight(){
+  var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
+  window.parent.postMessage({type:'resize',height:h+60},'*');
+}
+window.addEventListener('load',function(){
+  notifyHeight();
+  if(window.ResizeObserver){new ResizeObserver(notifyHeight).observe(document.body);}
+  else{setInterval(notifyHeight,800);}
+});
+</script>
