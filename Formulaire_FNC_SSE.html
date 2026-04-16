@@ -14,8 +14,8 @@
 body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
 .page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
 .page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--purple)}
-.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#c4b5fd;margin-bottom:5px;position:relative;z-index:1}
-.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-tag{font-family:sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#c4b5fd;margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
 .ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
 .nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
 .nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
@@ -25,7 +25,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 .card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:20px}
 .card-hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .card-hd-bar{width:4px;height:20px;background:var(--purple);border-radius:2px;flex-shrink:0}
-.card-title{font-family:'Exo 2',sans-serif;font-size:14px;font-weight:700;color:var(--steel-dk)}
+.card-title{font-family:sans-serif;font-size:14px;font-weight:700;color:var(--steel-dk)}
 .card-body{padding:20px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
@@ -42,7 +42,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 .type-btn:hover{border-color:var(--steel-lt);background:var(--steel-xlt)}
 .type-btn.selected{border-color:var(--purple);background:var(--purple-lt)}
 .type-btn .type-icon{font-size:20px;display:block;margin-bottom:4px}
-.type-btn .type-label{font-family:'Exo 2',sans-serif;font-size:11px;font-weight:700;color:var(--steel-dk)}
+.type-btn .type-label{font-family:sans-serif;font-size:11px;font-weight:700;color:var(--steel-dk)}
 /* Action planifier toggle */
 .action-toggle{display:flex;align-items:center;gap:12px;padding:14px;background:var(--green-xlt);border-radius:8px;margin-bottom:14px;cursor:pointer}
 .toggle-switch{width:44px;height:24px;background:var(--border);border-radius:12px;position:relative;transition:background .2s;flex-shrink:0}
@@ -224,8 +224,6 @@ let actionCount=0;
 
 document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
 let immCount=0;
-// Ajouter une première action immédiate par défaut
-addImmAction();
 
 // Init statut buttons
 document.querySelector('[data-statut="Ouvert"]').classList.add('selected-open');
@@ -237,7 +235,7 @@ function addImmAction(desc,par,date){
   div.id='imm-'+idx;
   div.style.cssText='background:var(--slate);border-radius:7px;padding:12px;margin-bottom:10px;border:1px solid var(--border)';
   div.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
-    +'<span style="font-family:'Exo 2',sans-serif;font-size:12px;font-weight:700;color:var(--steel-dk)">Action immédiate '+idx+'</span>'
+    +'<span style="font-family:sans-serif;font-size:12px;font-weight:700;color:var(--steel-dk)">Action immédiate '+idx+'</span>'
     +(idx>1?'<button onclick="document.getElementById('imm-'+idx+'').remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px">✕</button>':'')
     +'</div>'
     +'<div class="fld" style="margin-bottom:8px">'
@@ -298,7 +296,7 @@ function addAction(){
   div.id='act-'+idx;
   div.style.cssText='background:var(--slate);border-radius:7px;padding:12px;margin-bottom:8px;border:1px solid var(--border)';
   div.innerHTML='<div style="display:flex;justify-content:space-between;margin-bottom:8px">'
-    +'<span style="font-family:\'Exo 2\',sans-serif;font-size:12px;font-weight:700;color:var(--steel-dk)">Action '+idx+'</span>'
+    +'<span style="font-family:sans-serif;font-size:12px;font-weight:700;color:var(--steel-dk)">Action '+idx+'</span>'
     +'<button onclick="document.getElementById(\'act-'+idx+'\').remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px">✕</button>'
     +'</div>'
     +'<div class="form-row" style="margin-bottom:8px">'
@@ -374,8 +372,6 @@ function resetForm(){
   document.getElementById('f-site').value='';
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
 let immCount=0;
-// Ajouter une première action immédiate par défaut
-addImmAction();
   document.getElementById('f-description').value='';
   document.querySelectorAll('.statut-btn').forEach(b=>b.className='statut-btn');
   document.querySelector('[data-statut="Ouvert"]').classList.add('selected-open');
@@ -396,6 +392,9 @@ addImmAction();
   document.getElementById('f-type-libre').value='';
   document.getElementById('type-libre-fld').style.display='none';
 }
+
+// Init première action immédiate
+addImmAction();
 
 // Mode édition
 const urlParams=new URLSearchParams(window.location.search);
