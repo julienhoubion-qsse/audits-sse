@@ -182,6 +182,24 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 
   <div class="card">
     <div class="card-hd">
+      <div class="card-hd-bar" style="background:#7c3aed"></div>
+      <div class="card-title">Analyse des causes profondes</div>
+    </div>
+    <div class="card-body">
+      <div class="fld" style="margin-bottom:16px">
+        <label class="fld-lbl">Analyse des causes profondes</label>
+        <textarea class="fld-txt" id="f-causes" placeholder="Décrivez les causes profondes identifiées (facteurs humains, organisationnels, techniques, environnementaux...)..." style="min-height:100px"></textarea>
+      </div>
+      <div class="attach-box">
+        <div class="fld-lbl">📎 Lien vers un document joint</div>
+        <input type="url" class="fld-inp" id="f-lien" placeholder="https://drive.google.com/..." style="margin-top:8px;width:100%">
+        <div class="attach-info">💡 Déposez votre document (rapport, photos, arbre des causes...) dans un Google Drive partagé et collez le lien ici.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">
       <div class="card-hd-bar" style="background:var(--green)"></div>
       <div class="card-title">Actions correctives à planifier</div>
     </div>
@@ -269,6 +287,8 @@ async function saveDeclaration(){
     siege:document.getElementById('f-siege').value.trim(),
     type:selectedType,
     activite,description,
+    causes:document.getElementById('f-causes').value.trim(),
+    lien:document.getElementById('f-lien').value.trim(),
     duree:document.getElementById('f-duree')?document.getElementById('f-duree').value:'',
     finArret:document.getElementById('f-fin-arret')?document.getElementById('f-fin-arret').value:'',
     createdAt:new Date().toISOString()
@@ -330,6 +350,8 @@ function resetForm(){
   document.getElementById('f-siege').value='';
   document.getElementById('f-activite').value='';
   document.getElementById('f-description').value='';
+  document.getElementById('f-causes').value='';
+  document.getElementById('f-lien').value='';
   document.getElementById('f-duree').value='';
   document.getElementById('f-fin-arret').value='';
   document.getElementById('actions-list').innerHTML='';

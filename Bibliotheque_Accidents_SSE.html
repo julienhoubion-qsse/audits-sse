@@ -225,6 +225,8 @@ function render(){
         <div class="detail-lbl" style="margin-bottom:6px">Description des circonstances</div>
         <div class="desc-box">${a.description||'—'}</div>
         ${buildRelatedActions(a.id)}
+        ${a.causes?`<div class="detail-lbl" style="margin-bottom:6px;margin-top:8px">🔍 Analyse des causes profondes</div><div class="desc-box" style="background:#faf5ff;border:1px solid #e9d5ff">${a.causes}</div>`:''}
+        ${a.lien?`<div style="background:#fef3c7;border-radius:7px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:18px">📎</span><div style="flex:1"><div style="font-size:11px;font-weight:700;color:#d97706;margin-bottom:2px">Document joint</div><a href="${a.lien}" target="_blank" style="font-size:12px;color:var(--steel-dk);word-break:break-all">Ouvrir le document →</a></div></div>`:''}
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
           <button class="btn btn-primary btn-sm" onclick="createActionFromAcc('${a.id}','${a.site}','${a.date}','${(a.type||'').replace(/'/g,'')}','${(a.victime||'').replace(/'/g,'')}')">➕ Créer une action</button>
           <button class="btn btn-danger btn-sm" onclick="delAcc('${a.id}')">🗑️ Supprimer</button>
@@ -274,8 +276,9 @@ async function init(){
       site:String(row[2]),
       victime:row[3],siege:row[4],type:row[5],
       activite:row[6],description:row[7],
-      duree:row[8],finArret:String(row[9]||'').split('T')[0],
-      createdAt:row[10]
+      causes:row[8],lien:row[9],
+      duree:row[10],finArret:String(row[11]||'').split('T')[0],
+      createdAt:row[12]
     }));
     render();
   }catch(e){
