@@ -1,0 +1,419 @@
+<!-- SSE — Formulaire FNC/Remontée opérationnelle -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-mid:#7A96AA;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --ok-bg:#D6F0A8;--ok-tc:#2D5A00;--warn-bg:#FFF0B3;--warn-tc:#7A5000;
+  --bad-bg:#FFD6D6;--bad-tc:#8B0000;--purple:#7c3aed;--purple-lt:#ede9fe;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--purple)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#c4b5fd;margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:#fff;border-bottom-color:rgba(107,191,31,.5)}
+.nav-btn.active{color:#fff!important;border-bottom-color:#6BBF1F!important}
+.wrapper{max-width:860px;margin:0 auto;padding:28px 24px 60px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:20px}
+.card-hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-hd-bar{width:4px;height:20px;background:var(--purple);border-radius:2px;flex-shrink:0}
+.card-title{font-family:'Exo 2',sans-serif;font-size:14px;font-weight:700;color:var(--steel-dk)}
+.card-body{padding:20px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:600px){.form-row,.form-row-3{grid-template-columns:1fr}}
+.fld{display:flex;flex-direction:column;gap:5px}
+.fld-lbl{font-size:12px;font-weight:700;color:var(--steel-dk);text-transform:uppercase;letter-spacing:.5px}
+.fld-req{color:#dc2626;margin-left:2px}
+.fld-sel,.fld-inp{height:38px;border:1px solid var(--border);border-radius:7px;padding:0 12px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--white);color:var(--charcoal);transition:border-color .15s}
+.fld-sel:focus,.fld-inp:focus,.fld-txt:focus{outline:none;border-color:var(--steel)}
+.fld-txt{border:1px solid var(--border);border-radius:7px;padding:10px 12px;font-family:'Nunito Sans',sans-serif;font-size:13px;resize:vertical;min-height:80px;transition:border-color .15s;width:100%}
+/* Type selector */
+.type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px}
+.type-btn{border:2px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .15s;background:var(--white);text-align:left}
+.type-btn:hover{border-color:var(--steel-lt);background:var(--steel-xlt)}
+.type-btn.selected{border-color:var(--purple);background:var(--purple-lt)}
+.type-btn .type-icon{font-size:20px;display:block;margin-bottom:4px}
+.type-btn .type-label{font-family:'Exo 2',sans-serif;font-size:11px;font-weight:700;color:var(--steel-dk)}
+/* Action planifier toggle */
+.action-toggle{display:flex;align-items:center;gap:12px;padding:14px;background:var(--green-xlt);border-radius:8px;margin-bottom:14px;cursor:pointer}
+.toggle-switch{width:44px;height:24px;background:var(--border);border-radius:12px;position:relative;transition:background .2s;flex-shrink:0}
+.toggle-switch.on{background:var(--green)}
+.toggle-switch::after{content:'';position:absolute;width:20px;height:20px;background:#fff;border-radius:50%;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle-switch.on::after{left:22px}
+.toggle-label{font-size:13px;font-weight:600;color:var(--green-dk)}
+/* Statut */
+.statut-grid{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.statut-btn{border:2px solid var(--border);border-radius:8px;padding:8px 16px;cursor:pointer;font-size:12px;font-weight:700;background:var(--white);transition:all .15s}
+.statut-btn.selected-open{border-color:#d97706;background:#fef3c7;color:#92400e}
+.statut-btn.selected-progress{border-color:#3b82f6;background:#dbeafe;color:#1e3a8a}
+.statut-btn.selected-closed{border-color:var(--green);background:var(--ok-bg);color:var(--ok-tc)}
+/* Attach */
+.attach-box{background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:14px 16px}
+.attach-info{font-size:12px;color:#92400e;margin-top:6px}
+/* Btn */
+.btn{height:38px;padding:0 20px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--purple);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.form-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE</div>
+    <div class="ph-title">📋 Saisir une remontée / FNC</div>
+    <div class="ph-sub">Fiche de Non-Conformité · Remontée opérationnelle</div>
+  </div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn" onclick="window.location.href='Bibliotheque_FNC_SSE.html'">📂 Bibliothèque FNC</button>
+  <button class="nav-btn active">📋 Saisir une FNC</button>
+</div>
+
+<div class="wrapper">
+
+  <!-- Type -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Type de remontée <span style="color:#dc2626">*</span></div></div>
+    <div class="card-body">
+      <div class="type-grid">
+        <button class="type-btn" data-type="Non-Conformité" onclick="selectType(this)"><span class="type-icon">🚫</span><span class="type-label">Non-Conformité</span></button>
+        <button class="type-btn" data-type="Situation dangereuse" onclick="selectType(this)"><span class="type-icon">⚠️</span><span class="type-label">Situation dangereuse</span></button>
+        <button class="type-btn" data-type="Réclamation client" onclick="selectType(this)"><span class="type-icon">📣</span><span class="type-label">Réclamation client</span></button>
+        <button class="type-btn" data-type="Anomalie diverse" onclick="selectType(this)"><span class="type-icon">🔧</span><span class="type-label">Anomalie diverse</span></button>
+        <button class="type-btn" data-type="Non respect des objectifs" onclick="selectType(this)"><span class="type-icon">📉</span><span class="type-label">Non respect des objectifs</span></button>
+        <button class="type-btn" data-type="Environnement" onclick="selectType(this)"><span class="type-icon">♻️</span><span class="type-label">Environnement</span></button>
+        <button class="type-btn" data-type="Santé-Sécurité" onclick="selectType(this)"><span class="type-icon">🦺</span><span class="type-label">Santé-Sécurité</span></button>
+        <button class="type-btn" data-type="Suggestion d'amélioration" onclick="selectType(this)"><span class="type-icon">💡</span><span class="type-label">Suggestion d'amélioration</span></button>
+        <button class="type-btn" data-type="Autre" onclick="selectType(this)"><span class="type-icon">✏️</span><span class="type-label">Autre (saisie libre)</span></button>
+      </div>
+      <div id="type-libre-fld" style="display:none;margin-top:10px">
+        <input type="text" class="fld-inp" id="f-type-libre" placeholder="Précisez le type de remontée..." style="width:100%">
+      </div>
+    </div>
+  </div>
+
+  <!-- Infos générales -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Informations générales</div></div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Titre / Référence <span class="fld-req">*</span></label>
+          <input type="text" class="fld-inp" id="f-titre" placeholder="Ex: FNC-001, NC1-ISO 2025...">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Rédacteur <span class="fld-req">*</span></label>
+          <input type="text" class="fld-inp" id="f-redacteur" placeholder="Nom Prénom">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Site / Service concerné</label>
+          <select class="fld-sel" id="f-site">
+            <option value="">— Sélectionner —</option>
+            <option value="38">38</option><option value="41">41</option>
+            <option value="89">89</option><option value="47">47</option>
+            <option value="37">37</option><option value="17">17</option>
+            <option value="72">72</option><option value="72bis">72bis</option>
+            <option value="Réseau">Réseau</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Date de détection</label>
+          <input type="date" class="fld-inp" id="f-date">
+        </div>
+      </div>
+      <div class="fld" style="margin-bottom:14px">
+        <label class="fld-lbl">Description du constat <span class="fld-req">*</span></label>
+        <textarea class="fld-txt" id="f-description" placeholder="Décrivez précisément le constat observé..." style="min-height:100px"></textarea>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Statut</label>
+        <div class="statut-grid">
+          <button class="statut-btn selected-open" data-statut="Ouvert" onclick="selectStatut(this)">🔴 Ouvert</button>
+          <button class="statut-btn" data-statut="En cours" onclick="selectStatut(this)">🔵 En cours</button>
+          <button class="statut-btn" data-statut="Clôturé" onclick="selectStatut(this)">✅ Clôturé</button>
+        </div>
+      </div>
+      <div class="fld" id="date-cloture-fld" style="display:none">
+        <label class="fld-lbl">Date de clôture</label>
+        <input type="date" class="fld-inp" id="f-date-cloture">
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions immédiates -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Action(s) immédiate(s)</div></div>
+    <div class="card-body">
+      <div class="fld" style="margin-bottom:14px">
+        <label class="fld-lbl">Description de l'action immédiate</label>
+        <textarea class="fld-txt" id="f-action-imm" placeholder="Action(s) immédiate(s) mise(s) en place..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Réalisée par</label>
+          <input type="text" class="fld-inp" id="f-action-par" placeholder="Nom Prénom">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Réalisée le</label>
+          <input type="date" class="fld-inp" id="f-action-date">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analyse des causes -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Analyse des causes racines</div></div>
+    <div class="card-body">
+      <div class="fld">
+        <textarea class="fld-txt" id="f-causes" placeholder="Analyse des causes racines identifiées (5 pourquoi, diagramme d'Ishikawa...)..." style="min-height:100px"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pièce jointe -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Document joint</div></div>
+    <div class="card-body">
+      <div class="attach-box">
+        <div class="fld-lbl">📎 Lien vers photos / pièces jointes</div>
+        <input type="url" class="fld-inp" id="f-lien" placeholder="https://drive.google.com/..." style="margin-top:8px;width:100%">
+        <div class="attach-info">💡 Déposez vos photos ou documents dans un Google Drive partagé et collez le lien ici.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions à planifier -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar" style="background:var(--green)"></div><div class="card-title">Actions à planifier dans le plan d'actions</div></div>
+    <div class="card-body">
+      <div class="action-toggle" id="action-toggle" onclick="toggleAction()">
+        <div class="toggle-switch" id="toggle-sw"></div>
+        <div>
+          <div class="toggle-label" id="toggle-label">Actions à planifier : Non</div>
+          <div style="font-size:12px;color:var(--muted)">Activer pour créer des actions dans le plan d'actions</div>
+        </div>
+      </div>
+      <div id="actions-section" style="display:none">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Les actions seront automatiquement intégrées dans le plan d'actions avec l'origine pré-remplie.</p>
+        <div id="actions-list"></div>
+        <button class="btn-add" onclick="addAction()" style="background:var(--green-lt);color:var(--green-dk);border:1px solid var(--green);height:32px;padding:0 14px;font-size:12px;font-weight:700;border-radius:7px;cursor:pointer">➕ Ajouter une action</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-foot">
+    <button class="btn btn-ghost" onclick="resetForm()">🔄 Réinitialiser</button>
+    <button class="btn btn-primary" onclick="saveFNC()">💾 Enregistrer la FNC</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+
+let selectedType='';
+let selectedStatut='Ouvert';
+let actionPlanifier=false;
+let actionCount=0;
+
+document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+
+// Init statut buttons
+document.querySelector('[data-statut="Ouvert"]').classList.add('selected-open');
+
+function selectType(btn){
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedType=btn.dataset.type;
+  document.getElementById('type-libre-fld').style.display=selectedType==='Autre'?'block':'none';
+}
+
+function selectStatut(btn){
+  document.querySelectorAll('.statut-btn').forEach(b=>b.className='statut-btn');
+  selectedStatut=btn.dataset.statut;
+  if(selectedStatut==='Ouvert')btn.classList.add('selected-open');
+  else if(selectedStatut==='En cours')btn.classList.add('selected-progress');
+  else if(selectedStatut==='Clôturé')btn.classList.add('selected-closed');
+  document.getElementById('date-cloture-fld').style.display=selectedStatut==='Clôturé'?'block':'none';
+}
+
+function toggleAction(){
+  actionPlanifier=!actionPlanifier;
+  const sw=document.getElementById('toggle-sw');
+  const lbl=document.getElementById('toggle-label');
+  const sec=document.getElementById('actions-section');
+  sw.classList.toggle('on',actionPlanifier);
+  lbl.textContent='Actions à planifier : '+(actionPlanifier?'Oui':'Non');
+  sec.style.display=actionPlanifier?'block':'none';
+}
+
+function addAction(){
+  actionCount++;
+  const idx=actionCount;
+  const div=document.createElement('div');
+  div.id='act-'+idx;
+  div.style.cssText='background:var(--slate);border-radius:7px;padding:12px;margin-bottom:8px;border:1px solid var(--border)';
+  div.innerHTML='<div style="display:flex;justify-content:space-between;margin-bottom:8px">'
+    +'<span style="font-family:\'Exo 2\',sans-serif;font-size:12px;font-weight:700;color:var(--steel-dk)">Action '+idx+'</span>'
+    +'<button onclick="document.getElementById(\'act-'+idx+'\').remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px">✕</button>'
+    +'</div>'
+    +'<div class="form-row" style="margin-bottom:8px">'
+    +'<div class="fld"><label class="fld-lbl">Description</label><input type="text" class="fld-inp" id="ad-'+idx+'" placeholder="Action à mener..." style="height:34px"></div>'
+    +'<div class="fld"><label class="fld-lbl">Responsable</label><input type="text" class="fld-inp" id="ar-'+idx+'" placeholder="Nom Prénom" style="height:34px"></div>'
+    +'</div>'
+    +'<div class="fld"><label class="fld-lbl">Délai</label><input type="date" class="fld-inp" id="al-'+idx+'" style="height:34px;max-width:200px"></div>';
+  document.getElementById('actions-list').appendChild(div);
+}
+
+function getActions(){
+  const acts=[];
+  for(let i=1;i<=actionCount;i++){
+    const d=document.getElementById('ad-'+i);
+    if(!d||!d.value.trim())continue;
+    acts.push({desc:d.value.trim(),resp:document.getElementById('ar-'+i).value.trim(),delai:document.getElementById('al-'+i).value});
+  }
+  return acts;
+}
+
+async function saveFNC(){
+  if(!selectedType){showToast('Veuillez sélectionner un type',false);return;}
+  const titre=document.getElementById('f-titre').value.trim();
+  const redacteur=document.getElementById('f-redacteur').value.trim();
+  const description=document.getElementById('f-description').value.trim();
+  if(!titre||!redacteur||!description){showToast('Titre, rédacteur et description sont obligatoires',false);return;}
+
+  const data={
+    id:Date.now(),
+    titre,redacteur,
+    type:(selectedType==='Autre'&&document.getElementById('f-type-libre').value.trim()?document.getElementById('f-type-libre').value.trim():selectedType),
+    site:document.getElementById('f-site').value,
+    date:document.getElementById('f-date').value,
+    description,
+    statut:selectedStatut,
+    dateCloture:document.getElementById('f-date-cloture').value,
+    actionImm:document.getElementById('f-action-imm').value.trim(),
+    actionPar:document.getElementById('f-action-par').value.trim(),
+    actionDate:document.getElementById('f-action-date').value,
+    causes:document.getElementById('f-causes').value.trim(),
+    lien:document.getElementById('f-lien').value.trim(),
+    actionPlanifier:actionPlanifier,
+    createdAt:new Date().toISOString()
+  };
+
+  const actions=getActions();
+  showToast('Enregistrement en cours...',false);
+  try{
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveFNC',data})});
+    for(const act of actions){
+      const origin='📋 FNC — '+selectedType+' — '+titre+(data.site?' — Site '+data.site:'');
+      await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveAction',data:{
+        id:Date.now()+Math.random(),
+        auditId:'FNC-'+data.id,
+        site:data.site,auditDate:data.date,
+        sectionKey:'fnc',criteriaIdx:0,
+        origin,description:act.desc,
+        responsable:act.resp,delai:act.delai,
+        avancement:0,commentaire:'',efficace:'',
+        createdAt:new Date().toISOString()
+      }})});
+    }
+    showToast('FNC enregistrée !'+(actions.length?' '+actions.length+' action(s) créée(s)':''),true);
+    setTimeout(()=>window.location.href='Bibliotheque_FNC_SSE.html',1800);
+  }catch(e){showToast('Erreur: '+e.message,false);}
+}
+
+function resetForm(){
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));
+  selectedType='';
+  document.getElementById('f-titre').value='';
+  document.getElementById('f-redacteur').value='';
+  document.getElementById('f-site').value='';
+  document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('f-description').value='';
+  document.querySelectorAll('.statut-btn').forEach(b=>b.className='statut-btn');
+  document.querySelector('[data-statut="Ouvert"]').classList.add('selected-open');
+  selectedStatut='Ouvert';
+  document.getElementById('date-cloture-fld').style.display='none';
+  document.getElementById('f-date-cloture').value='';
+  document.getElementById('f-action-imm').value='';
+  document.getElementById('f-action-par').value='';
+  document.getElementById('f-action-date').value='';
+  document.getElementById('f-causes').value='';
+  document.getElementById('f-lien').value='';
+  actionPlanifier=false;
+  document.getElementById('toggle-sw').classList.remove('on');
+  document.getElementById('toggle-label').textContent='Actions à planifier : Non';
+  document.getElementById('actions-section').style.display='none';
+  document.getElementById('actions-list').innerHTML='';
+  actionCount=0;
+  document.getElementById('f-type-libre').value='';
+  document.getElementById('type-libre-fld').style.display='none';
+}
+
+// Mode édition
+const urlParams=new URLSearchParams(window.location.search);
+const editId=urlParams.get('edit');
+if(editId) loadFNCForEdit(editId);
+
+function jsonpGet(action){
+  return new Promise((resolve,reject)=>{
+    const cb='_cb'+Date.now()+Math.random().toString(36).slice(2);
+    window[cb]=function(d){delete window[cb];const el=document.getElementById('_js_'+cb);if(el)el.remove();resolve(d);};
+    const s=document.createElement('script');s.id='_js_'+cb;
+    s.src=GSHEET_URL+'?action='+action+'&callback='+cb;
+    s.onerror=()=>reject(new Error('failed'));
+    document.head.appendChild(s);
+  });
+}
+
+async function loadFNCForEdit(id){
+  try{
+    const d=await jsonpGet('getFNCs');
+    const fnc=(d.data||[]).find(r=>String(r[0])===String(id));
+    if(!fnc){alert('FNC non trouvée');return;}
+    document.getElementById('f-titre').value=fnc[1]||'';
+    document.getElementById('f-redacteur').value=fnc[2]||'';
+    document.getElementById('f-site').value=fnc[4]||'';
+    document.getElementById('f-date').value=String(fnc[5]||'').split('T')[0];
+    document.getElementById('f-description').value=fnc[6]||'';
+    document.getElementById('f-action-imm').value=fnc[8]||'';
+    document.getElementById('f-action-par').value=fnc[9]||'';
+    document.getElementById('f-action-date').value=String(fnc[10]||'').split('T')[0];
+    document.getElementById('f-causes').value=fnc[11]||'';
+    document.getElementById('f-lien').value=fnc[12]||'';
+    document.getElementById('f-date-cloture').value=String(fnc[14]||'').split('T')[0];
+    // Type
+    document.querySelectorAll('.type-btn').forEach(btn=>{if(btn.dataset.type===fnc[3])selectType(btn);});
+    // Statut
+    document.querySelectorAll('.statut-btn').forEach(btn=>{if(btn.dataset.statut===fnc[7])selectStatut(btn);});
+    window._editFNCId=id;
+    const btn=document.querySelector('.btn-primary[onclick="saveFNC()"]');
+    if(btn)btn.textContent='💾 Mettre à jour la FNC';
+    showToast('FNC chargée — modifiez et enregistrez',true);
+  }catch(e){alert('Erreur: '+e.message);}
+}
+
+function showToast(msg,ok){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=ok?'var(--green-dk)':'var(--steel-dk)';
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>

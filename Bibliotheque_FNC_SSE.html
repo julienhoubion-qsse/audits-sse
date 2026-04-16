@@ -1,0 +1,291 @@
+<!-- SSE — Bibliothèque FNC -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-mid:#7A96AA;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --ok-bg:#D6F0A8;--ok-tc:#2D5A00;--bad-bg:#FFD6D6;--bad-tc:#8B0000;
+  --purple:#7c3aed;--purple-lt:#ede9fe;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--purple)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#c4b5fd;margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:#fff;border-bottom-color:rgba(107,191,31,.5)}
+.nav-btn.active{color:#fff!important;border-bottom-color:#6BBF1F!important}
+.wrapper{max-width:1100px;margin:0 auto;padding:22px 24px 48px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;background:var(--slate);border-bottom:1px solid var(--border)}
+.fld-sel,.fld-inp{height:34px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;background:var(--white);color:var(--charcoal)}
+.btn{height:34px;padding:0 16px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--purple);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-danger{background:var(--bad-bg);color:var(--bad-tc);border:1px solid #fca5a5}
+.btn-blue{background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd}
+.btn-sm{height:28px;padding:0 10px;font-size:11px}
+/* Stats */
+.stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.stat-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 18px;flex:1;min-width:120px;text-align:center}
+.stat-val{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:800;color:var(--steel-dk)}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+/* FNC card */
+.fnc-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden;border-left:4px solid var(--purple)}
+.fnc-card.statut-ouvert{border-left-color:#dc2626}
+.fnc-card.statut-encours{border-left-color:#3b82f6}
+.fnc-card.statut-cloture{border-left-color:var(--green)}
+.fnc-hd{padding:13px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.fnc-ref{font-family:'Exo 2',sans-serif;font-size:12px;font-weight:800;color:var(--steel-dk);background:var(--purple-lt);color:var(--purple);padding:4px 10px;border-radius:6px;flex-shrink:0;white-space:nowrap}
+.fnc-info{flex:1}
+.fnc-titre{font-size:13px;font-weight:700;color:var(--charcoal)}
+.fnc-meta{font-size:11px;color:var(--muted);margin-top:3px;display:flex;gap:10px;flex-wrap:wrap}
+.type-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;background:var(--purple-lt);color:var(--purple)}
+.statut-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px}
+.s-ouvert{background:#fee2e2;color:#dc2626}
+.s-encours{background:#dbeafe;color:#1d4ed8}
+.s-cloture{background:var(--ok-bg);color:var(--ok-tc)}
+.fnc-body{padding:14px 16px;border-top:1px solid var(--border);display:none}
+.fnc-body.open{display:block}
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:12px}
+.detail-item{background:var(--slate);border-radius:7px;padding:10px 12px}
+.detail-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:3px}
+.detail-val{font-size:13px;color:var(--charcoal);font-weight:600}
+.desc-box{background:var(--slate);border-radius:7px;padding:12px;font-size:13px;color:var(--charcoal);margin-bottom:10px;line-height:1.6}
+.actions-box{background:var(--green-xlt);border-radius:7px;padding:12px;margin-bottom:10px}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-title{font-family:'Exo 2',sans-serif;font-size:16px;font-weight:700;color:var(--steel-dk);margin-bottom:6px}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE</div>
+    <div class="ph-title">📂 Bibliothèque des FNC / Remontées opérationnelles</div>
+    <div class="ph-sub">Historique de toutes les fiches de non-conformité et remontées</div>
+  </div>
+  <div style="position:relative;z-index:1">
+    <button class="btn btn-primary" onclick="window.location.href='Formulaire_FNC_SSE.html'">➕ Nouvelle FNC</button>
+  </div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn" onclick="window.location.href='Formulaire_FNC_SSE.html'">📋 Saisir une FNC</button>
+  <button class="nav-btn active">📂 Bibliothèque FNC</button>
+</div>
+
+<div class="wrapper">
+  <div class="stats-row">
+    <div class="stat-card" style="border-top:3px solid var(--purple)"><div class="stat-val" id="st-total" style="color:var(--purple)">—</div><div class="stat-lbl">Total FNC</div></div>
+    <div class="stat-card" style="border-top:3px solid #dc2626"><div class="stat-val" id="st-ouvert" style="color:#dc2626">—</div><div class="stat-lbl">Ouvertes</div></div>
+    <div class="stat-card" style="border-top:3px solid #3b82f6"><div class="stat-val" id="st-encours" style="color:#3b82f6">—</div><div class="stat-lbl">En cours</div></div>
+    <div class="stat-card" style="border-top:3px solid var(--green)"><div class="stat-val" id="st-cloture" style="color:var(--green-dk)">—</div><div class="stat-lbl">Clôturées</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <select class="fld-sel" id="f-site" onchange="render()">
+        <option value="">Tous les sites</option>
+        <option value="38">38</option><option value="41">41</option>
+        <option value="89">89</option><option value="47">47</option>
+        <option value="37">37</option><option value="17">17</option>
+        <option value="72">72</option><option value="72bis">72bis</option>
+        <option value="Réseau">Réseau</option>
+      </select>
+      <select class="fld-sel" id="f-type" onchange="render()">
+        <option value="">Tous types</option>
+        <option value="Non-Conformité">🚫 Non-Conformité</option>
+        <option value="Situation dangereuse">⚠️ Situation dangereuse</option>
+        <option value="Réclamation client">📣 Réclamation client</option>
+        <option value="Anomalie diverse">🔧 Anomalie diverse</option>
+        <option value="Non respect des objectifs">📉 Non respect des objectifs</option>
+        <option value="Environnement">♻️ Environnement</option>
+        <option value="Santé-Sécurité">🦺 Santé-Sécurité</option>
+        <option value="Suggestion d'amélioration">💡 Suggestion d'amélioration</option>
+      </select>
+      <select class="fld-sel" id="f-statut" onchange="render()">
+        <option value="">Tous statuts</option>
+        <option value="Ouvert">🔴 Ouvert</option>
+        <option value="En cours">🔵 En cours</option>
+        <option value="Clôturé">✅ Clôturé</option>
+      </select>
+      <input class="fld-inp" id="f-search" placeholder="Rechercher titre, rédacteur..." oninput="render()" style="min-width:200px">
+    </div>
+    <div style="padding:16px" id="fnc-list">
+      <div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title">Chargement...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+let FNCS=[];
+let ACTIONS_ALL=[];
+
+function jsonpGet(action){
+  return new Promise((resolve,reject)=>{
+    const cb='_cb'+Date.now()+Math.random().toString(36).slice(2);
+    window[cb]=function(d){delete window[cb];const el=document.getElementById('_js_'+cb);if(el)el.remove();resolve(d);};
+    const s=document.createElement('script');s.id='_js_'+cb;
+    s.src=GSHEET_URL+'?action='+action+'&callback='+cb;
+    s.onerror=()=>reject(new Error('failed'));
+    document.head.appendChild(s);
+  });
+}
+
+function statutClass(s){
+  if(s==='Clôturé')return'statut-cloture';
+  if(s==='En cours')return'statut-encours';
+  return'statut-ouvert';
+}
+function statutBadge(s){
+  if(s==='Clôturé')return'<span class="statut-badge s-cloture">✅ Clôturé</span>';
+  if(s==='En cours')return'<span class="statut-badge s-encours">🔵 En cours</span>';
+  return'<span class="statut-badge s-ouvert">🔴 Ouvert</span>';
+}
+
+function buildRelatedActions(fncId){
+  const related=ACTIONS_ALL.filter(a=>String(a.auditId)==='FNC-'+String(fncId));
+  if(!related.length)return'';
+  var rows='';
+  related.forEach(function(a){
+    var pct=a.avancement||0;
+    var badge='';
+    if(a.efficace==='oui')badge='<span style="background:#eef2ff;color:#4f46e5;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px">✅ Efficace</span>';
+    else if(pct>=100)badge='<span style="background:var(--ok-bg);color:var(--ok-tc);font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px">✔ Terminée</span>';
+    else if(pct>0)badge='<span style="background:#fef3c7;color:#92400e;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px">⏳ En cours</span>';
+    else badge='<span style="background:#f1f5f9;color:#64748b;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px">📌 À faire</span>';
+    rows+='<div style="padding:8px 10px;border:1px solid var(--border);border-radius:7px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">'
+      +'<div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--charcoal)">'+(a.description||'—')+'</div>'
+      +'<div style="font-size:11px;color:var(--muted);margin-top:2px">👤 '+(a.responsable||'—')+' · '+pct+'%</div></div>'
+      +badge+'</div>';
+  });
+  return'<div style="margin-top:12px"><div style="font-family:\'Exo 2\',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--steel-dk);margin-bottom:8px">📋 Actions en cours ('+related.length+')</div>'+rows+'</div>';
+}
+
+function render(){
+  const site=document.getElementById('f-site').value;
+  const type=document.getElementById('f-type').value;
+  const statut=document.getElementById('f-statut').value;
+  const search=document.getElementById('f-search').value.toLowerCase();
+
+  let lib=FNCS.filter(function(f){
+    if(site&&f.site!==site)return false;
+    if(type&&f.type!==type)return false;
+    if(statut&&f.statut!==statut)return false;
+    if(search&&!((f.titre||'').toLowerCase().includes(search)||(f.redacteur||'').toLowerCase().includes(search)||(f.description||'').toLowerCase().includes(search)))return false;
+    return true;
+  }).sort(function(a,b){return b.date.localeCompare(a.date);});
+
+  document.getElementById('st-total').textContent=FNCS.length;
+  document.getElementById('st-ouvert').textContent=FNCS.filter(function(f){return f.statut==='Ouvert';}).length;
+  document.getElementById('st-encours').textContent=FNCS.filter(function(f){return f.statut==='En cours';}).length;
+  document.getElementById('st-cloture').textContent=FNCS.filter(function(f){return f.statut==='Clôturé';}).length;
+
+  var el=document.getElementById('fnc-list');
+  if(!lib.length){
+    var empty='<div class="empty-state"><div class="empty-icon">📭</div>';
+    empty+='<div class="empty-title">'+(FNCS.length===0?'Aucune FNC enregistrée':'Aucun résultat')+'</div>';
+    empty+='<div style="font-size:12px;margin-top:4px">'+(FNCS.length===0?'Commencez par saisir une FNC.':'Modifiez vos filtres.')+'</div>';
+    if(FNCS.length===0)empty+='<br><br><button class="btn btn-primary" onclick="location.href=\'Formulaire_FNC_SSE.html\'">📋 Nouvelle FNC</button>';
+    empty+='</div>';
+    el.innerHTML=empty;
+    return;
+  }
+
+  el.innerHTML=lib.map(function(f){
+    var dateStr=f.date?new Date(f.date).toLocaleDateString('fr-FR'):'—';
+    var sc=statutClass(f.statut);
+    var html='';
+    html+='<div class="fnc-card '+sc+'" id="fc-'+f.id+'">';
+    html+='<div class="fnc-hd" data-id="'+f.id+'" onclick="tog(this.dataset.id)">';
+    html+='<div class="fnc-ref">'+f.titre+'</div>';
+    html+='<div class="fnc-info">';
+    html+='<div class="fnc-titre">'+f.type+(f.site?' · Site '+f.site:'')+'</div>';
+    html+='<div class="fnc-meta">';
+    html+='<span>📅 '+dateStr+'</span>';
+    html+='<span>👤 '+f.redacteur+'</span>';
+    html+=statutBadge(f.statut);
+    html+='</div></div>';
+    html+='<span style="color:var(--border);font-size:18px">›</span>';
+    html+='</div>';
+    html+='<div class="fnc-body" id="fb-'+f.id+'">';
+    html+='<div class="detail-grid">';
+    html+='<div class="detail-item"><div class="detail-lbl">Rédacteur</div><div class="detail-val">'+f.redacteur+'</div></div>';
+    html+='<div class="detail-item"><div class="detail-lbl">Type</div><div class="detail-val">'+f.type+'</div></div>';
+    html+='<div class="detail-item"><div class="detail-lbl">Site</div><div class="detail-val">'+(f.site||'—')+'</div></div>';
+    html+='<div class="detail-item"><div class="detail-lbl">Statut</div><div class="detail-val">'+f.statut+'</div></div>';
+    if(f.dateCloture)html+='<div class="detail-item"><div class="detail-lbl">Date clôture</div><div class="detail-val">'+new Date(f.dateCloture).toLocaleDateString('fr-FR')+'</div></div>';
+    html+='</div>';
+    html+='<div class="detail-lbl" style="margin-bottom:6px">Description du constat</div>';
+    html+='<div class="desc-box">'+f.description+'</div>';
+    if(f.actionImm)html+='<div class="detail-lbl" style="margin-bottom:6px">Action(s) immédiate(s)</div><div class="desc-box" style="background:#fffbeb;border:1px solid #fcd34d">'+f.actionImm+(f.actionPar?' <em style="color:var(--muted)">— '+f.actionPar+'</em>':'')+'</div>';
+    if(f.causes)html+='<div class="detail-lbl" style="margin-bottom:6px">Analyse des causes racines</div><div class="desc-box" style="background:#faf5ff;border:1px solid #e9d5ff">'+f.causes+'</div>';
+    if(f.lien)html+='<div style="background:#fef3c7;border-radius:7px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:18px">📎</span><div><div style="font-size:11px;font-weight:700;color:#d97706;margin-bottom:2px">Document joint</div><a href="'+f.lien+'" target="_blank" style="font-size:12px;color:var(--steel-dk)">Ouvrir le document →</a></div></div>';
+    html+=buildRelatedActions(f.id);
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">';
+    html+='<button class="btn btn-blue btn-sm" data-id="'+f.id+'" onclick="editFNC(this.dataset.id)">✏️ Modifier</button>';
+    html+='<button class="btn btn-primary btn-sm" data-id="'+f.id+'" data-site="'+f.site+'" data-date="'+f.date+'" data-titre="'+f.titre+'" data-type="'+f.type+'" onclick="addActionFNC(this)">➕ Action</button>';
+    html+='<button class="btn btn-danger btn-sm" data-id="'+f.id+'" onclick="delFNC(this.dataset.id)">🗑️ Supprimer</button>';
+    html+='</div>';
+    html+='</div></div>';
+    return html;
+  }).join('');
+}
+
+function tog(id){
+  var b=document.getElementById('fb-'+id);
+  if(b)b.classList.toggle('open');
+}
+function editFNC(id){window.location.href='Formulaire_FNC_SSE.html?edit='+id;}
+function addActionFNC(btn){
+  var origin='📋 FNC — '+btn.dataset.type+' — '+btn.dataset.titre+(btn.dataset.site?' — Site '+btn.dataset.site:'');
+  var params=new URLSearchParams({auditId:'FNC-'+btn.dataset.id,site:btn.dataset.site,auditDate:btn.dataset.date,sectionKey:'fnc',criteriaIdx:0,origin:encodeURIComponent(origin)});
+  window.location.href='Plan_Actions_SSE.html?'+params.toString();
+}
+async function delFNC(id){
+  if(!confirm('Supprimer cette FNC ?'))return;
+  try{
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'deleteFNC',id})});
+    FNCS=FNCS.filter(function(f){return String(f.id)!==String(id);});
+    render();
+  }catch(e){alert('Erreur: '+e.message);}
+}
+
+async function init(){
+  try{
+    const [fncRes,actRes]=await Promise.allSettled([jsonpGet('getFNCs'),jsonpGet('getActions')]);
+    if(actRes.status==='fulfilled'){
+      ACTIONS_ALL=(actRes.value.data||[]).map(function(r){
+        return{id:r[0],auditId:r[1],description:r[7],responsable:r[8],avancement:Number(r[10]||0),efficace:r[12]};
+      });
+    }
+    if(fncRes.status==='fulfilled'){
+      FNCS=(fncRes.value.data||[]).map(function(r){
+        return{
+          id:r[0],titre:r[1],redacteur:r[2],type:r[3],
+          site:String(r[4]||''),date:String(r[5]||'').split('T')[0],
+          description:r[6],statut:r[7]||'Ouvert',
+          actionImm:r[8],actionPar:r[9],
+          actionDate:String(r[10]||'').split('T')[0],
+          causes:r[11],lien:r[12],
+          actionPlanifier:r[13],
+          dateCloture:String(r[14]||'').split('T')[0],
+          createdAt:r[15]
+        };
+      });
+      render();
+    }
+  }catch(e){
+    document.getElementById('fnc-list').innerHTML='<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">Erreur de chargement</div></div>';
+  }
+}
+init();
+</script>
