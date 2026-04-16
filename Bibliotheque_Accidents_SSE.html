@@ -165,7 +165,7 @@ function buildRelatedActions(accId){
       +'<div style="font-size:11px;color:var(--muted);margin-top:2px">👤 '+(a.responsable||'—')+' · '+pct+'%</div></div>'
       +badge+'</div>';
   }).join('');
-  return'<div style="margin-top:12px"><div style="font-family:&quot;Exo 2&quot;,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--steel-dk);margin-bottom:8px">📋 Actions en cours ('+related.length+')</div>'+rows+'</div>';
+  return '<div style="margin-top:12px"><div style="font-family:Arial,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#2E4558;margin-bottom:8px">📋 Actions en cours ('+related.length+')</div>'+rows+'</div>';
 }
 function render(){
   const site=document.getElementById('f-site').value;
@@ -218,15 +218,15 @@ function render(){
           <div class="detail-item"><div class="detail-lbl">Siège des lésions</div><div class="detail-val">${a.siege||'—'}</div></div>
           <div class="detail-item"><div class="detail-lbl">Date</div><div class="detail-val">${dateStr}</div></div>
           <div class="detail-item"><div class="detail-lbl">Site</div><div class="detail-val">${a.site}</div></div>
-          ${hasArret?`<div class="detail-item"><div class="detail-lbl">Durée arrêt</div><div class="detail-val">${a.duree?a.duree+' jour(s)':'—'}</div></div><div class="detail-item"><div class="detail-lbl">Fin d'arrêt</div><div class="detail-val">${a.finArret?new Date(a.finArret).toLocaleDateString('fr-FR'):'—'}</div></div>`:''}
+          ${hasArret?'<div class="detail-item"><div class="detail-lbl">Durée arrêt</div><div class="detail-val">'+(a.duree?a.duree+' jour(s)':'—')+'</div></div><div class="detail-item"><div class="detail-lbl">Fin d'arrêt</div><div class="detail-val">'+(a.finArret?new Date(a.finArret).toLocaleDateString('fr-FR'):'—')+'</div></div>':''}
         </div>
         <div class="detail-lbl" style="margin-bottom:6px">Activité au moment du fait</div>
         <div class="desc-box" style="margin-bottom:10px">${a.activite||'—'}</div>
         <div class="detail-lbl" style="margin-bottom:6px">Description des circonstances</div>
         <div class="desc-box">${a.description||'—'}</div>
         ${buildRelatedActions(a.id)}
-        ${a.causes?`<div class="detail-lbl" style="margin-bottom:6px;margin-top:8px">🔍 Analyse des causes profondes</div><div class="desc-box" style="background:#faf5ff;border:1px solid #e9d5ff">${a.causes}</div>`:''}
-        ${a.lien?`<div style="background:#fef3c7;border-radius:7px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:18px">📎</span><div style="flex:1"><div style="font-size:11px;font-weight:700;color:#d97706;margin-bottom:2px">Document joint</div><a href="${a.lien}" target="_blank" style="font-size:12px;color:var(--steel-dk);word-break:break-all">Ouvrir le document →</a></div></div>`:''}
+        ${a.causes?'<div class="detail-lbl" style="margin-bottom:6px;margin-top:8px">🔍 Analyse des causes profondes</div><div class="desc-box" style="background:#faf5ff;border:1px solid #e9d5ff">'+a.causes+'</div>':''}
+        ${a.lien?'<div style="background:#fef3c7;border-radius:7px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:18px">📎</span><div style="flex:1"><div style="font-size:11px;font-weight:700;color:#d97706;margin-bottom:2px">Document joint</div><a href="'+a.lien+'" target="_blank" style="font-size:12px;color:var(--steel-dk);word-break:break-all">Ouvrir le document →</a></div></div>':''}
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
           <button class="btn btn-primary btn-sm" onclick="createActionFromAcc('${a.id}','${a.site}','${a.date}','${(a.type||'').replace(/'/g,'')}','${(a.victime||'').replace(/'/g,'')}')">➕ Créer une action</button>
           <button class="btn btn-danger btn-sm" onclick="delAcc('${a.id}')">🗑️ Supprimer</button>
