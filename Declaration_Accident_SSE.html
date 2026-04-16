@@ -376,15 +376,16 @@ async function saveDeclaration(){
     for(const act of actions){
       await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveAction',data:act})});
     }
-    showToast('Déclaration enregistrée !'+(actions.length?' '+actions.length+' action(s) créée(s)':''),true);
+    const msg=window._editAccId?'Déclaration mise à jour !':'Déclaration enregistrée !'+(actions.length?' '+actions.length+' action(s) créée(s)':'');
+    showToast(msg,true);
     setTimeout(()=>{
-      if(actions.length>0){
+      if(!window._editAccId && actions.length>0){
         if(confirm('Déclaration enregistrée avec '+actions.length+' action(s). Aller au plan d\'actions ?')){
           window.location.href='Plan_Actions_SSE.html';
+          return;
         }
-      } else {
-        resetForm();
       }
+      window.location.href='Bibliotheque_Accidents_SSE.html';
     },1500);
   }catch(e){showToast('Erreur: '+e.message,false);}
 }
