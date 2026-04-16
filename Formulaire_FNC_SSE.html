@@ -160,20 +160,8 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
   <div class="card">
     <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Action(s) immédiate(s)</div></div>
     <div class="card-body">
-      <div class="fld" style="margin-bottom:14px">
-        <label class="fld-lbl">Description de l'action immédiate</label>
-        <textarea class="fld-txt" id="f-action-imm" placeholder="Action(s) immédiate(s) mise(s) en place..."></textarea>
-      </div>
-      <div class="form-row">
-        <div class="fld">
-          <label class="fld-lbl">Réalisée par</label>
-          <input type="text" class="fld-inp" id="f-action-par" placeholder="Nom Prénom">
-        </div>
-        <div class="fld">
-          <label class="fld-lbl">Réalisée le</label>
-          <input type="date" class="fld-inp" id="f-action-date">
-        </div>
-      </div>
+      <div id="imm-list"></div>
+      <button class="btn-add" onclick="addImmAction()" style="background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border);height:32px;padding:0 14px;font-size:12px;font-weight:700;border-radius:7px;cursor:pointer">➕ Ajouter une action immédiate</button>
     </div>
   </div>
 
@@ -235,9 +223,47 @@ let actionPlanifier=false;
 let actionCount=0;
 
 document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+let immCount=0;
+// Ajouter une première action immédiate par défaut
+addImmAction();
 
 // Init statut buttons
 document.querySelector('[data-statut="Ouvert"]').classList.add('selected-open');
+
+function addImmAction(desc,par,date){
+  immCount++;
+  const idx=immCount;
+  const div=document.createElement('div');
+  div.id='imm-'+idx;
+  div.style.cssText='background:var(--slate);border-radius:7px;padding:12px;margin-bottom:10px;border:1px solid var(--border)';
+  div.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+    +'<span style="font-family:'Exo 2',sans-serif;font-size:12px;font-weight:700;color:var(--steel-dk)">Action immédiate '+idx+'</span>'
+    +(idx>1?'<button onclick="document.getElementById('imm-'+idx+'').remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px">✕</button>':'')
+    +'</div>'
+    +'<div class="fld" style="margin-bottom:8px">'
+    +'<label class="fld-lbl">Description</label>'
+    +'<textarea class="fld-txt" id="imm-desc-'+idx+'" placeholder="Description de l'action immédiate..." style="min-height:60px">'+(desc||'')+'</textarea>'
+    +'</div>'
+    +'<div class="form-row">'
+    +'<div class="fld"><label class="fld-lbl">Réalisée par</label><input type="text" class="fld-inp" id="imm-par-'+idx+'" placeholder="Nom Prénom" value="'+(par||'')+'" style="height:34px"></div>'
+    +'<div class="fld"><label class="fld-lbl">Réalisée le</label><input type="date" class="fld-inp" id="imm-date-'+idx+'" value="'+(date||'')+'" style="height:34px"></div>'
+    +'</div>';
+  document.getElementById('imm-list').appendChild(div);
+}
+
+function getImmActions(){
+  const acts=[];
+  for(let i=1;i<=immCount;i++){
+    const d=document.getElementById('imm-desc-'+i);
+    if(!d)continue;
+    acts.push({
+      desc:d.value.trim(),
+      par:(document.getElementById('imm-par-'+i)||{}).value||'',
+      date:(document.getElementById('imm-date-'+i)||{}).value||''
+    });
+  }
+  return acts.filter(a=>a.desc);
+}
 
 function selectType(btn){
   document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));
@@ -309,9 +335,9 @@ async function saveFNC(){
     description,
     statut:selectedStatut,
     dateCloture:document.getElementById('f-date-cloture').value,
-    actionImm:document.getElementById('f-action-imm').value.trim(),
-    actionPar:document.getElementById('f-action-par').value.trim(),
-    actionDate:document.getElementById('f-action-date').value,
+    actionImm:JSON.stringify(getImmActions()),
+    actionPar:'',
+    actionDate:'',
     causes:document.getElementById('f-causes').value.trim(),
     lien:document.getElementById('f-lien').value.trim(),
     actionPlanifier:actionPlanifier,
@@ -347,15 +373,18 @@ function resetForm(){
   document.getElementById('f-redacteur').value='';
   document.getElementById('f-site').value='';
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+let immCount=0;
+// Ajouter une première action immédiate par défaut
+addImmAction();
   document.getElementById('f-description').value='';
   document.querySelectorAll('.statut-btn').forEach(b=>b.className='statut-btn');
   document.querySelector('[data-statut="Ouvert"]').classList.add('selected-open');
   selectedStatut='Ouvert';
   document.getElementById('date-cloture-fld').style.display='none';
   document.getElementById('f-date-cloture').value='';
-  document.getElementById('f-action-imm').value='';
-  document.getElementById('f-action-par').value='';
-  document.getElementById('f-action-date').value='';
+  document.getElementById('imm-list').innerHTML='';
+  immCount=0;
+  addImmAction();
   document.getElementById('f-causes').value='';
   document.getElementById('f-lien').value='';
   actionPlanifier=false;
@@ -394,9 +423,19 @@ async function loadFNCForEdit(id){
     document.getElementById('f-site').value=fnc[4]||'';
     document.getElementById('f-date').value=String(fnc[5]||'').split('T')[0];
     document.getElementById('f-description').value=fnc[6]||'';
-    document.getElementById('f-action-imm').value=fnc[8]||'';
-    document.getElementById('f-action-par').value=fnc[9]||'';
-    document.getElementById('f-action-date').value=String(fnc[10]||'').split('T')[0];
+    // Actions immédiates
+    document.getElementById('imm-list').innerHTML='';
+    immCount=0;
+    try{
+      const imms=JSON.parse(fnc[8]||'[]');
+      if(Array.isArray(imms)&&imms.length>0){
+        imms.forEach(function(im){addImmAction(im.desc,im.par,im.date);});
+      } else if(fnc[8]){
+        addImmAction(fnc[8],fnc[9]||'',String(fnc[10]||'').split('T')[0]);
+      } else {
+        addImmAction();
+      }
+    }catch(ex){addImmAction(fnc[8]||'','','');}
     document.getElementById('f-causes').value=fnc[11]||'';
     document.getElementById('f-lien').value=fnc[12]||'';
     document.getElementById('f-date-cloture').value=String(fnc[14]||'').split('T')[0];

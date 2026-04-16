@@ -226,7 +226,26 @@ function render(){
     html+='</div>';
     html+='<div class="detail-lbl" style="margin-bottom:6px">Description du constat</div>';
     html+='<div class="desc-box">'+f.description+'</div>';
-    if(f.actionImm)html+='<div class="detail-lbl" style="margin-bottom:6px">Action(s) immédiate(s)</div><div class="desc-box" style="background:#fffbeb;border:1px solid #fcd34d">'+f.actionImm+(f.actionPar?' <em style="color:var(--muted)">— '+f.actionPar+'</em>':'')+'</div>';
+    if(f.actionImm){
+      html+='<div class="detail-lbl" style="margin-bottom:6px">Action(s) immédiate(s)</div>';
+      try{
+        var imms=JSON.parse(f.actionImm);
+        if(Array.isArray(imms)&&imms.length>0){
+          imms.forEach(function(im,idx){
+            html+='<div class="desc-box" style="background:#fffbeb;border:1px solid #fcd34d;margin-bottom:6px">';
+            if(imms.length>1)html+='<strong style="font-size:11px;color:var(--muted)">Action '+(idx+1)+'</strong><br>';
+            html+=im.desc;
+            if(im.par)html+=' <em style="color:var(--muted)">— '+im.par+'</em>';
+            if(im.date)html+=' <em style="color:var(--muted)">· '+new Date(im.date).toLocaleDateString('fr-FR')+'</em>';
+            html+='</div>';
+          });
+        } else {
+          html+='<div class="desc-box" style="background:#fffbeb;border:1px solid #fcd34d">'+f.actionImm+'</div>';
+        }
+      }catch(ex){
+        html+='<div class="desc-box" style="background:#fffbeb;border:1px solid #fcd34d">'+f.actionImm+'</div>';
+      }
+    }
     if(f.causes)html+='<div class="detail-lbl" style="margin-bottom:6px">Analyse des causes racines</div><div class="desc-box" style="background:#faf5ff;border:1px solid #e9d5ff">'+f.causes+'</div>';
     if(f.lien)html+='<div style="background:#fef3c7;border-radius:7px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:18px">📎</span><div><div style="font-size:11px;font-weight:700;color:#d97706;margin-bottom:2px">Document joint</div><a href="'+f.lien+'" target="_blank" style="font-size:12px;color:var(--steel-dk)">Ouvrir le document →</a></div></div>';
     html+=buildRelatedActions(f.id);
