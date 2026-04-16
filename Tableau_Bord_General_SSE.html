@@ -1,0 +1,464 @@
+<!-- SSE — Tableau de bord général -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-mid:#7A96AA;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --purple:#7c3aed;--amber:#d97706;--red:#dc2626;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10);--shadow-md:0 6px 28px rgba(46,69,88,.16)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:#fff;border-bottom-color:rgba(107,191,31,.5)}
+.nav-btn.active{color:#fff!important;border-bottom-color:#6BBF1F!important}
+.wrapper{max-width:1320px;margin:0 auto;padding:22px 24px 48px}
+/* Filters */
+.filter-bar{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 20px;margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.filter-bar label{font-size:12px;font-weight:700;color:var(--steel-dk);text-transform:uppercase;letter-spacing:.5px}
+.fld-sel{height:34px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;background:var(--white);color:var(--charcoal)}
+.btn-reset{height:34px;padding:0 14px;border:1px solid var(--border);border-radius:7px;background:var(--slate);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer}
+.btn-reset:hover{background:var(--border)}
+/* KPI grid */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:20px}
+.kpi-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;border-left:4px solid var(--border);position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.kpi-card::after{content:attr(data-icon);position:absolute;right:10px;bottom:4px;font-size:36px;opacity:.07}
+.kpi-lbl{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.kpi-val{font-family:'Exo 2',sans-serif;font-size:32px;font-weight:800;line-height:1.1;margin:5px 0 2px;color:var(--steel-dk)}
+.kpi-sub{font-size:11px;color:var(--muted)}
+.kpi-card.green{border-left-color:var(--green)}.kpi-card.green .kpi-val{color:var(--green-dk)}
+.kpi-card.red{border-left-color:var(--red)}.kpi-card.red .kpi-val{color:var(--red)}
+.kpi-card.amber{border-left-color:var(--amber)}.kpi-card.amber .kpi-val{color:var(--amber)}
+.kpi-card.purple{border-left-color:var(--purple)}.kpi-card.purple .kpi-val{color:var(--purple)}
+.kpi-card.blue{border-left-color:#3b82f6}.kpi-card.blue .kpi-val{color:#1d4ed8}
+/* Grid layout */
+.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.main-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:900px){.main-grid,.main-grid-3{grid-template-columns:1fr}}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.card-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.card-hd-bar{width:4px;height:18px;border-radius:2px;flex-shrink:0}
+.card-ttl{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk)}
+.card-body{padding:16px 18px}
+/* Bar chart */
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bar-lbl{font-size:12px;font-weight:600;color:var(--charcoal);width:60px;flex-shrink:0;text-align:right}
+.bar-track{flex:1;background:var(--slate);border-radius:4px;height:20px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .6s ease;display:flex;align-items:center;padding-left:6px}
+.bar-pct{font-size:11px;font-weight:700;color:#fff}
+/* Donut */
+.donut-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.donut-svg{flex-shrink:0}
+.donut-legend{display:flex;flex-direction:column;gap:6px}
+.donut-item{display:flex;align-items:center;gap:8px;font-size:12px}
+.donut-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+/* Action progress */
+.progress-bar{height:12px;background:var(--slate);border-radius:6px;overflow:hidden;margin:6px 0}
+.progress-fill{height:100%;border-radius:6px;transition:width .6s}
+/* Module cards */
+.module-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:20px}
+.module-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;border-top:3px solid var(--border);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.module-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.module-icon{font-size:24px;margin-bottom:8px}
+.module-name{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk);margin-bottom:10px}
+.module-stats{display:flex;gap:12px;flex-wrap:wrap}
+.module-stat{text-align:center}
+.module-stat-val{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:var(--steel-dk)}
+.module-stat-lbl{font-size:10px;color:var(--muted)}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE</div>
+    <div class="ph-title">📊 Tableau de bord général SSE</div>
+    <div class="ph-sub">Vue consolidée de tous les modules · Mis à jour en temps réel</div>
+  </div>
+  <div style="position:relative;z-index:1;font-size:12px;color:var(--steel-lt)" id="last-update"></div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn active">📊 Tableau de bord général</button>
+  <button class="nav-btn" onclick="window.location.href='SharePoint_Code_Incorpore_SSE.html'">📋 TB Audits</button>
+  <button class="nav-btn" onclick="window.location.href='Tableau_Bord_Accidents_SSE.html'">🚑 TB Accidents</button>
+  <button class="nav-btn" onclick="window.location.href='Tableau_Bord_Causeries_SSE.html'">💬 TB Causeries</button>
+  <button class="nav-btn" onclick="window.location.href='Tableau_Bord_FNC_SSE.html'">📋 TB FNC</button>
+</div>
+
+<div class="wrapper">
+  <!-- Filtres -->
+  <div class="filter-bar">
+    <label>Filtres :</label>
+    <select class="fld-sel" id="f-site" onchange="applyFilters()">
+      <option value="">Tous les sites</option>
+      <option value="38">38</option><option value="41">41</option>
+      <option value="89">89</option><option value="47">47</option>
+      <option value="37">37</option><option value="17">17</option>
+      <option value="72">72</option><option value="72bis">72bis</option>
+    </select>
+    <select class="fld-sel" id="f-periode" onchange="applyFilters()">
+      <option value="">Toute période</option>
+      <option value="30">30 derniers jours</option>
+      <option value="90">3 derniers mois</option>
+      <option value="180">6 derniers mois</option>
+      <option value="365">12 derniers mois</option>
+      <option value="year">Année en cours</option>
+    </select>
+    <button class="btn-reset" onclick="resetFilters()">✕ Réinitialiser</button>
+    <span style="margin-left:auto;font-size:12px;color:var(--muted)" id="filter-info"></span>
+  </div>
+
+  <!-- KPIs globaux -->
+  <div class="kpi-grid">
+    <div class="kpi-card green" data-icon="📋"><div class="kpi-lbl">Audits réalisés</div><div class="kpi-val" id="kpi-audits">—</div><div class="kpi-sub">Score moy. <span id="kpi-score">—</span></div></div>
+    <div class="kpi-card red" data-icon="🚑"><div class="kpi-lbl">Faits accidentels</div><div class="kpi-val" id="kpi-accidents">—</div><div class="kpi-sub"><span id="kpi-arret">—</span> avec arrêt</div></div>
+    <div class="kpi-card amber" data-icon="💬"><div class="kpi-lbl">Causeries</div><div class="kpi-val" id="kpi-causeries">—</div><div class="kpi-sub"><span id="kpi-participants">—</span> participants</div></div>
+    <div class="kpi-card purple" data-icon="📋"><div class="kpi-lbl">FNC ouvertes</div><div class="kpi-val" id="kpi-fnc">—</div><div class="kpi-sub"><span id="kpi-fnc-cloture">—</span> clôturées</div></div>
+    <div class="kpi-card blue" data-icon="⚡"><div class="kpi-lbl">Actions en cours</div><div class="kpi-val" id="kpi-actions">—</div><div class="kpi-sub">Taux retard : <span id="kpi-retard">—</span></div></div>
+  </div>
+
+  <!-- Plan d'actions -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-hd"><div class="card-hd-bar" style="background:#3b82f6"></div><div class="card-ttl">📋 Plan d'actions — Avancement global</div></div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Taux d'avancement moyen</div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-avancement" style="background:#3b82f6;width:0%"></div></div>
+          <div style="font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#1d4ed8" id="prog-avancement-val">—</div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Actions efficaces</div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-efficace" style="background:var(--green);width:0%"></div></div>
+          <div style="font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:var(--green-dk)" id="prog-efficace-val">—</div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Taux de retard</div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-retard" style="background:var(--red);width:0%"></div></div>
+          <div style="font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:var(--red)" id="prog-retard-val">—</div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Répartition par origine</div>
+          <div id="actions-origine" style="font-size:12px;margin-top:6px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <!-- Scores audits par site -->
+    <div class="card">
+      <div class="card-hd"><div class="card-hd-bar" style="background:var(--green)"></div><div class="card-ttl">📋 Score SSE par site — Dernier audit</div></div>
+      <div class="card-body" id="chart-audits-site"><div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Chargement...</div></div>
+    </div>
+    <!-- Accidents par type -->
+    <div class="card">
+      <div class="card-hd"><div class="card-hd-bar" style="background:var(--red)"></div><div class="card-ttl">🚑 Accidents par type</div></div>
+      <div class="card-body" id="chart-accidents-type"><div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Chargement...</div></div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <!-- FNC par statut -->
+    <div class="card">
+      <div class="card-hd"><div class="card-hd-bar" style="background:var(--purple)"></div><div class="card-ttl">📋 FNC par type</div></div>
+      <div class="card-body" id="chart-fnc-type"><div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Chargement...</div></div>
+    </div>
+    <!-- Causeries par thème -->
+    <div class="card">
+      <div class="card-hd"><div class="card-hd-bar" style="background:var(--amber)"></div><div class="card-ttl">💬 Causeries par thème</div></div>
+      <div class="card-body" id="chart-causeries-theme"><div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Chargement...</div></div>
+    </div>
+  </div>
+
+  <!-- Accès rapide aux modules -->
+  <div class="module-grid">
+    <div class="module-card" style="border-top-color:var(--green)" onclick="window.location.href='SharePoint_Code_Incorpore_SSE.html'">
+      <div class="module-icon">📋</div>
+      <div class="module-name">Tableau de bord Audits</div>
+      <div class="module-stats">
+        <div class="module-stat"><div class="module-stat-val" id="mod-audits">—</div><div class="module-stat-lbl">Audits</div></div>
+        <div class="module-stat"><div class="module-stat-val" id="mod-score">—</div><div class="module-stat-lbl">Score moy.</div></div>
+      </div>
+    </div>
+    <div class="module-card" style="border-top-color:var(--red)" onclick="window.location.href='Tableau_Bord_Accidents_SSE.html'">
+      <div class="module-icon">🚑</div>
+      <div class="module-name">Tableau de bord Accidents</div>
+      <div class="module-stats">
+        <div class="module-stat"><div class="module-stat-val" id="mod-accidents">—</div><div class="module-stat-lbl">Déclarations</div></div>
+        <div class="module-stat"><div class="module-stat-val" id="mod-jours">—</div><div class="module-stat-lbl">Jours d'arrêt</div></div>
+      </div>
+    </div>
+    <div class="module-card" style="border-top-color:var(--amber)" onclick="window.location.href='Tableau_Bord_Causeries_SSE.html'">
+      <div class="module-icon">💬</div>
+      <div class="module-name">Tableau de bord Causeries</div>
+      <div class="module-stats">
+        <div class="module-stat"><div class="module-stat-val" id="mod-causeries">—</div><div class="module-stat-lbl">Causeries</div></div>
+        <div class="module-stat"><div class="module-stat-val" id="mod-part">—</div><div class="module-stat-lbl">Participants</div></div>
+      </div>
+    </div>
+    <div class="module-card" style="border-top-color:var(--purple)" onclick="window.location.href='Tableau_Bord_FNC_SSE.html'">
+      <div class="module-icon">📋</div>
+      <div class="module-name">Tableau de bord FNC</div>
+      <div class="module-stats">
+        <div class="module-stat"><div class="module-stat-val" id="mod-fnc">—</div><div class="module-stat-lbl">FNC total</div></div>
+        <div class="module-stat"><div class="module-stat-val" id="mod-fnc-open">—</div><div class="module-stat-lbl">Ouvertes</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+let ALL={audits:[],accidents:[],causeries:[],fncs:[],actions:[]};
+
+function jsonpGet(action){
+  return new Promise(function(resolve,reject){
+    var cb='_cb'+Date.now()+Math.random().toString(36).slice(2);
+    window[cb]=function(d){delete window[cb];var el=document.getElementById('_js_'+cb);if(el)el.remove();resolve(d);};
+    var s=document.createElement('script');s.id='_js_'+cb;
+    s.src=GSHEET_URL+'?action='+action+'&callback='+cb;
+    s.onerror=function(){reject(new Error('failed'));};
+    document.head.appendChild(s);
+  });
+}
+
+function filterByPeriod(items, dateField, days){
+  if(!days)return items;
+  var now=new Date();
+  var cutoff;
+  if(days==='year'){
+    cutoff=new Date(now.getFullYear(),0,1);
+  } else {
+    cutoff=new Date(now-Number(days)*86400000);
+  }
+  return items.filter(function(item){
+    var d=new Date(item[dateField]||'');
+    return d>=cutoff;
+  });
+}
+
+function filterBySite(items, siteField, site){
+  if(!site)return items;
+  return items.filter(function(item){return String(item[siteField]||'')=== site;});
+}
+
+function applyFilters(){
+  var site=document.getElementById('f-site').value;
+  var periode=document.getElementById('f-periode').value;
+
+  var audits=ALL.audits;
+  var accidents=ALL.accidents;
+  var causeries=ALL.causeries;
+  var fncs=ALL.fncs;
+  var actions=ALL.actions;
+
+  if(site){
+    audits=filterBySite(audits,'site',site);
+    accidents=filterBySite(accidents,'site',site);
+    causeries=filterBySite(causeries,'site',site);
+    fncs=filterBySite(fncs,'site',site);
+    actions=filterBySite(actions,'site',site);
+  }
+  if(periode){
+    audits=filterByPeriod(audits,'date',periode);
+    accidents=filterByPeriod(accidents,'date',periode);
+    causeries=filterByPeriod(causeries,'date',periode);
+    fncs=filterByPeriod(fncs,'date',periode);
+  }
+
+  var info=[];
+  if(site)info.push('Site '+site);
+  if(periode){
+    var labels={'30':'30 jours','90':'3 mois','180':'6 mois','365':'12 mois','year':'Année en cours'};
+    info.push(labels[periode]||periode);
+  }
+  document.getElementById('filter-info').textContent=info.length?'Filtre : '+info.join(' · '):'';
+
+  renderAll(audits,accidents,causeries,fncs,actions);
+}
+
+function resetFilters(){
+  document.getElementById('f-site').value='';
+  document.getElementById('f-periode').value='';
+  document.getElementById('filter-info').textContent='';
+  renderAll(ALL.audits,ALL.accidents,ALL.causeries,ALL.fncs,ALL.actions);
+}
+
+function renderAll(audits,accidents,causeries,fncs,actions){
+  // KPIs
+  var scores=audits.map(function(a){return Number(a.total);}).filter(function(v){return !isNaN(v)&&v>0;});
+  var avgScore=scores.length?Math.round(scores.reduce(function(a,b){return a+b;},0)/scores.length):null;
+  document.getElementById('kpi-audits').textContent=audits.length;
+  document.getElementById('kpi-score').textContent=avgScore!==null?avgScore+'%':'—';
+  document.getElementById('kpi-accidents').textContent=accidents.length;
+  document.getElementById('kpi-arret').textContent=accidents.filter(function(a){return a.type==='Accident avec arrêt';}).length;
+  var totalPart=causeries.reduce(function(acc,c){return acc+(c.participants?(c.participants.split(',').filter(Boolean).length):0);},0);
+  document.getElementById('kpi-causeries').textContent=causeries.length;
+  document.getElementById('kpi-participants').textContent=totalPart;
+  var fncOpen=fncs.filter(function(f){return f.statut!=='Clôturé';}).length;
+  var fncClos=fncs.filter(function(f){return f.statut==='Clôturé';}).length;
+  document.getElementById('kpi-fnc').textContent=fncOpen;
+  document.getElementById('kpi-fnc-cloture').textContent=fncClos;
+
+  // Actions stats
+  var actOpen=actions.filter(function(a){return Number(a.avancement||0)<100||a.efficace!=='oui';});
+  var now=new Date();
+  var actRetard=actOpen.filter(function(a){return a.delai&&new Date(a.delai)<now;});
+  var avgAv=actions.length?Math.round(actions.reduce(function(acc,a){return acc+Number(a.avancement||0);},0)/actions.length):0;
+  var pctEfficace=actions.length?Math.round(actions.filter(function(a){return a.efficace==='oui';}).length/actions.length*100):0;
+  var pctRetard=actOpen.length?Math.round(actRetard.length/actOpen.length*100):0;
+  document.getElementById('kpi-actions').textContent=actOpen.length;
+  document.getElementById('kpi-retard').textContent=pctRetard+'%';
+  document.getElementById('prog-avancement').style.width=avgAv+'%';
+  document.getElementById('prog-avancement-val').textContent=avgAv+'%';
+  document.getElementById('prog-efficace').style.width=pctEfficace+'%';
+  document.getElementById('prog-efficace-val').textContent=pctEfficace+'%';
+  document.getElementById('prog-retard').style.width=pctRetard+'%';
+  document.getElementById('prog-retard-val').textContent=pctRetard+'%';
+
+  // Actions par origine
+  var origines={Audits:0,Accidents:0,FNC:0,Autre:0};
+  actions.forEach(function(a){
+    var id=String(a.auditId||'');
+    if(id.startsWith('ACC-'))origines.Accidents++;
+    else if(id.startsWith('FNC-'))origines.FNC++;
+    else if(id)origines.Audits++;
+    else origines.Autre++;
+  });
+  var origHtml='';
+  var origColors={Audits:'var(--green)',Accidents:'var(--red)',FNC:'var(--purple)',Autre:'var(--muted)'};
+  Object.keys(origines).forEach(function(k){
+    if(origines[k]>0)origHtml+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="width:8px;height:8px;border-radius:50%;background:'+origColors[k]+';flex-shrink:0"></span><span>'+k+' : <strong>'+origines[k]+'</strong></span></div>';
+  });
+  document.getElementById('actions-origine').innerHTML=origHtml||'<span style="color:var(--muted)">Aucune action</span>';
+
+  // Module stats
+  document.getElementById('mod-audits').textContent=audits.length;
+  document.getElementById('mod-score').textContent=avgScore!==null?avgScore+'%':'—';
+  document.getElementById('mod-accidents').textContent=accidents.length;
+  var joursArret=accidents.reduce(function(acc,a){return acc+Number(a.duree||0);},0);
+  document.getElementById('mod-jours').textContent=joursArret;
+  document.getElementById('mod-causeries').textContent=causeries.length;
+  document.getElementById('mod-part').textContent=totalPart;
+  document.getElementById('mod-fnc').textContent=fncs.length;
+  document.getElementById('mod-fnc-open').textContent=fncOpen;
+
+  // Chart: scores audits par site
+  renderBarChart('chart-audits-site', audits, 'site', 'total', 'var(--green)', '%', true);
+  // Chart: accidents par type
+  renderCountChart('chart-accidents-type', accidents, 'type', 'var(--red)');
+  // Chart: FNC par type
+  renderCountChart('chart-fnc-type', fncs, 'type', 'var(--purple)');
+  // Chart: causeries par theme
+  renderCountChart('chart-causeries-theme', causeries, 'theme', 'var(--amber)');
+}
+
+function renderBarChart(elId, items, groupField, valueField, color, suffix, lastOnly){
+  var el=document.getElementById(elId);
+  if(!items.length){el.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Aucune donnée</div>';return;}
+  
+  // Group by site, keep last value per site
+  var groups={};
+  items.forEach(function(item){
+    var key=item[groupField]||'—';
+    if(!groups[key]||lastOnly)groups[key]=Number(item[valueField]||0);
+  });
+  
+  var max=Math.max.apply(null,Object.values(groups).filter(function(v){return v>0;}))||100;
+  var html='';
+  var SITES=["17","37","38","41","47","72","72bis","89"];
+  var keys=SITES.filter(function(s){return groups[s]!==undefined;});
+  // Add any other keys not in SITES
+  Object.keys(groups).forEach(function(k){if(keys.indexOf(k)<0)keys.push(k);});
+  
+  keys.forEach(function(key){
+    var val=groups[key]||0;
+    var pct=Math.round(val/max*100);
+    var cls=val>=80?'var(--green)':val>=50?'#f59e0b':'#ef4444';
+    html+='<div class="bar-row">';
+    html+='<div class="bar-lbl">'+key+'</div>';
+    html+='<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+cls+'"><span class="bar-pct">'+val+(suffix||'')+'</span></div></div>';
+    html+='</div>';
+  });
+  el.innerHTML=html||'<div style="text-align:center;color:var(--muted);font-size:13px">Aucune donnée</div>';
+}
+
+function renderCountChart(elId, items, groupField, color){
+  var el=document.getElementById(elId);
+  if(!items.length){el.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Aucune donnée</div>';return;}
+  
+  var counts={};
+  items.forEach(function(item){
+    var key=item[groupField]||'Non défini';
+    counts[key]=(counts[key]||0)+1;
+  });
+  
+  var sorted=Object.entries(counts).sort(function(a,b){return b[1]-a[1];});
+  var max=sorted[0][1];
+  
+  var colors=['#6d28d9','#dc2626','#d97706','#16a34a','#2563eb','#db2777','#0891b2','#65a30d'];
+  var html='';
+  sorted.forEach(function(entry,i){
+    var pct=Math.round(entry[1]/max*100);
+    var c=colors[i%colors.length];
+    var label=entry[0].length>28?entry[0].substring(0,28)+'...':entry[0];
+    html+='<div class="bar-row">';
+    html+='<div style="font-size:11px;font-weight:600;color:var(--charcoal);width:130px;flex-shrink:0;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+entry[0]+'">'+label+'</div>';
+    html+='<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+c+'"><span class="bar-pct">'+entry[1]+'</span></div></div>';
+    html+='</div>';
+  });
+  el.innerHTML=html;
+}
+
+async function init(){
+  document.getElementById('last-update').textContent='Mise à jour : '+new Date().toLocaleTimeString('fr-FR');
+  
+  var results=await Promise.allSettled([
+    jsonpGet('getAll'),
+    jsonpGet('getAccidents'),
+    jsonpGet('getCauseries'),
+    jsonpGet('getFNCs'),
+    jsonpGet('getActions')
+  ]);
+
+  if(results[0].status==='fulfilled'){
+    ALL.audits=(results[0].value.data||[]).map(function(r){
+      var scores={};try{scores=JSON.parse(r[4]||'{}');}catch(e){}
+      return{id:r[0],site:String(r[1]),auditeur:r[2],date:String(r[3]||'').split('T')[0],scores:scores,total:r[5]};
+    });
+  }
+  if(results[1].status==='fulfilled'){
+    ALL.accidents=(results[1].value.data||[]).map(function(r){
+      return{id:r[0],date:String(r[1]||'').split('T')[0],site:String(r[2]),victime:r[3],type:r[5],duree:r[10]};
+    });
+  }
+  if(results[2].status==='fulfilled'){
+    ALL.causeries=(results[2].value.data||[]).map(function(r){
+      return{id:r[0],date:String(r[1]||'').split('T')[0],site:String(r[2]),theme:r[5],participants:r[7]};
+    });
+  }
+  if(results[3].status==='fulfilled'){
+    ALL.fncs=(results[3].value.data||[]).map(function(r){
+      return{id:r[0],site:String(r[4]||''),date:String(r[5]||'').split('T')[0],type:r[3],statut:r[7]||'Ouvert'};
+    });
+  }
+  if(results[4].status==='fulfilled'){
+    ALL.actions=(results[4].value.data||[]).map(function(r){
+      return{id:r[0],auditId:r[1],site:String(r[2]),delai:r[9],avancement:Number(r[10]||0),efficace:r[12]};
+    });
+  }
+
+  renderAll(ALL.audits,ALL.accidents,ALL.causeries,ALL.fncs,ALL.actions);
+}
+
+init();
+</script>

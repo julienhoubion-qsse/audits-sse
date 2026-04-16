@@ -1,0 +1,245 @@
+<!-- SSE — Tableau de bord FNC -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --purple:#7c3aed;--purple-lt:#ede9fe;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10);--shadow-md:0 6px 28px rgba(46,69,88,.16)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--purple)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#c4b5fd;margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:#fff;border-bottom-color:rgba(107,191,31,.5)}
+.nav-btn.active{color:#fff!important;border-bottom-color:#6BBF1F!important}
+.wrapper{max-width:1200px;margin:0 auto;padding:22px 24px 48px}
+.filter-bar{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 20px;margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.filter-bar label{font-size:12px;font-weight:700;color:var(--steel-dk);text-transform:uppercase;letter-spacing:.5px}
+.fld-sel{height:34px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;background:var(--white);color:var(--charcoal)}
+.btn-reset{height:34px;padding:0 14px;border:1px solid var(--border);border-radius:7px;background:var(--slate);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.kpi-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;border-left:4px solid var(--purple);position:relative;overflow:hidden;transition:transform .15s}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.kpi-card::after{content:attr(data-icon);position:absolute;right:10px;bottom:4px;font-size:36px;opacity:.07}
+.kpi-lbl{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.kpi-val{font-family:'Exo 2',sans-serif;font-size:32px;font-weight:800;line-height:1.1;margin:5px 0 2px}
+.kpi-sub{font-size:11px;color:var(--muted)}
+.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:800px){.main-grid{grid-template-columns:1fr}}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.card-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.card-hd-bar{width:4px;height:18px;border-radius:2px;flex-shrink:0;background:var(--purple)}
+.card-ttl{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk)}
+.card-body{padding:16px 18px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bar-lbl{font-size:12px;font-weight:600;color:var(--charcoal);width:150px;flex-shrink:0;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;background:var(--slate);border-radius:4px;height:22px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px}
+.bar-val{font-size:11px;font-weight:700;color:#fff}
+/* Statut progress */
+.statut-bar{display:flex;height:24px;border-radius:8px;overflow:hidden;margin:10px 0}
+.statut-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;transition:width .6s;white-space:nowrap;overflow:hidden}
+.timeline-bar{display:flex;gap:3px;align-items:flex-end;height:80px;margin-top:10px}
+.tl-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.tl-bar{width:100%;border-radius:3px 3px 0 0;min-height:2px}
+.tl-lbl{font-size:9px;color:var(--muted);white-space:nowrap}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE</div>
+    <div class="ph-title">📋 Tableau de bord — FNC / Remontées opérationnelles</div>
+    <div class="ph-sub">Suivi des non-conformités et remontées</div>
+  </div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn" onclick="window.location.href='Tableau_Bord_General_SSE.html'">📊 TB Général</button>
+  <button class="nav-btn active">📋 TB FNC</button>
+  <button class="nav-btn" onclick="window.location.href='Formulaire_FNC_SSE.html'">➕ Saisir</button>
+  <button class="nav-btn" onclick="window.location.href='Bibliotheque_FNC_SSE.html'">📂 Bibliothèque</button>
+</div>
+
+<div class="wrapper">
+  <div class="filter-bar">
+    <label>Filtres :</label>
+    <select class="fld-sel" id="f-site" onchange="applyFilters()">
+      <option value="">Tous les sites</option>
+      <option value="38">38</option><option value="41">41</option>
+      <option value="89">89</option><option value="47">47</option>
+      <option value="37">37</option><option value="17">17</option>
+      <option value="72">72</option><option value="72bis">72bis</option>
+    </select>
+    <select class="fld-sel" id="f-periode" onchange="applyFilters()">
+      <option value="">Toute période</option>
+      <option value="30">30 derniers jours</option>
+      <option value="90">3 derniers mois</option>
+      <option value="180">6 derniers mois</option>
+      <option value="365">12 derniers mois</option>
+      <option value="year">Année en cours</option>
+    </select>
+    <button class="btn-reset" onclick="resetFilters()">✕ Réinitialiser</button>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card" data-icon="📋"><div class="kpi-lbl">Total FNC</div><div class="kpi-val" id="kpi-total" style="color:var(--purple)">—</div></div>
+    <div class="kpi-card" style="border-left-color:#dc2626" data-icon="🔴"><div class="kpi-lbl">Ouvertes</div><div class="kpi-val" id="kpi-ouvert" style="color:#dc2626">—</div></div>
+    <div class="kpi-card" style="border-left-color:#3b82f6" data-icon="🔵"><div class="kpi-lbl">En cours</div><div class="kpi-val" id="kpi-encours" style="color:#3b82f6">—</div></div>
+    <div class="kpi-card" style="border-left-color:var(--green)" data-icon="✅"><div class="kpi-lbl">Clôturées</div><div class="kpi-val" id="kpi-cloture" style="color:var(--green-dk)">—</div></div>
+    <div class="kpi-card" style="border-left-color:#d97706" data-icon="📅"><div class="kpi-lbl">Taux de clôture</div><div class="kpi-val" id="kpi-taux" style="color:#d97706">—</div></div>
+  </div>
+
+  <!-- Statut global -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-ttl">Répartition par statut</div></div>
+    <div class="card-body">
+      <div class="statut-bar" id="statut-bar"></div>
+      <div style="display:flex;gap:16px;font-size:12px;margin-top:6px" id="statut-legend"></div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="card">
+      <div class="card-hd"><div class="card-hd-bar"></div><div class="card-ttl">FNC par type</div></div>
+      <div class="card-body" id="chart-type"></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-hd-bar"></div><div class="card-ttl">FNC par site</div></div>
+      <div class="card-body" id="chart-site"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-ttl">Évolution mensuelle</div></div>
+    <div class="card-body" id="chart-timeline"></div>
+  </div>
+</div>
+
+<script>
+const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+let ALL_FNC=[];
+
+function jsonpGet(action){
+  return new Promise(function(resolve,reject){
+    var cb='_cb'+Date.now()+Math.random().toString(36).slice(2);
+    window[cb]=function(d){delete window[cb];var el=document.getElementById('_js_'+cb);if(el)el.remove();resolve(d);};
+    var s=document.createElement('script');s.id='_js_'+cb;
+    s.src=GSHEET_URL+'?action='+action+'&callback='+cb;
+    s.onerror=function(){reject(new Error('failed'));};
+    document.head.appendChild(s);
+  });
+}
+
+function filterData(items){
+  var site=document.getElementById('f-site').value;
+  var periode=document.getElementById('f-periode').value;
+  var result=items;
+  if(site)result=result.filter(function(f){return String(f.site)===site;});
+  if(periode){
+    var now=new Date();
+    var cutoff=periode==='year'?new Date(now.getFullYear(),0,1):new Date(now-Number(periode)*86400000);
+    result=result.filter(function(f){return new Date(f.date)>=cutoff;});
+  }
+  return result;
+}
+
+function applyFilters(){render(filterData(ALL_FNC));}
+function resetFilters(){document.getElementById('f-site').value='';document.getElementById('f-periode').value='';render(ALL_FNC);}
+
+function render(data){
+  var total=data.length;
+  var ouvert=data.filter(function(f){return f.statut==='Ouvert';}).length;
+  var encours=data.filter(function(f){return f.statut==='En cours';}).length;
+  var cloture=data.filter(function(f){return f.statut==='Clôturé';}).length;
+  var taux=total?Math.round(cloture/total*100):0;
+
+  document.getElementById('kpi-total').textContent=total;
+  document.getElementById('kpi-ouvert').textContent=ouvert;
+  document.getElementById('kpi-encours').textContent=encours;
+  document.getElementById('kpi-cloture').textContent=cloture;
+  document.getElementById('kpi-taux').textContent=taux+'%';
+
+  // Statut bar
+  var sb=document.getElementById('statut-bar');
+  var sl=document.getElementById('statut-legend');
+  if(total>0){
+    var pO=Math.round(ouvert/total*100);
+    var pE=Math.round(encours/total*100);
+    var pC=100-pO-pE;
+    sb.innerHTML=(pO>0?'<div class="statut-seg" style="width:'+pO+'%;background:#dc2626">'+ouvert+'</div>':'')
+      +(pE>0?'<div class="statut-seg" style="width:'+pE+'%;background:#3b82f6">'+encours+'</div>':'')
+      +(pC>0?'<div class="statut-seg" style="width:'+pC+'%;background:var(--green)">'+cloture+'</div>':'');
+    sl.innerHTML='<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#dc2626"></span>Ouvert ('+ouvert+')</span>'
+      +'<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#3b82f6"></span>En cours ('+encours+')</span>'
+      +'<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:var(--green)"></span>Clôturé ('+cloture+')</span>';
+  } else {
+    sb.innerHTML='<div style="width:100%;background:var(--border);height:100%"></div>';
+    sl.innerHTML='';
+  }
+
+  // Par type
+  var typeCounts={};
+  data.forEach(function(f){var t=f.type||'Non défini';typeCounts[t]=(typeCounts[t]||0)+1;});
+  var sortedType=Object.entries(typeCounts).sort(function(a,b){return b[1]-a[1];});
+  var maxT=sortedType.length?sortedType[0][1]:1;
+  var typeColors=['#7c3aed','#6d28d9','#4c1d95','#8b5cf6','#a78bfa','#c4b5fd','#ede9fe'];
+  var typeHtml=sortedType.map(function(e,i){
+    var pct=Math.round(e[1]/maxT*100);
+    var lbl=e[0].length>22?e[0].substring(0,22)+'...':e[0];
+    return '<div class="bar-row"><div class="bar-lbl" title="'+e[0]+'">'+lbl+'</div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+typeColors[i%typeColors.length]+'"><span class="bar-val">'+e[1]+'</span></div></div></div>';
+  }).join('');
+  document.getElementById('chart-type').innerHTML=typeHtml||'<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Aucune donnée</div>';
+
+  // Par site
+  var siteCounts={};
+  data.forEach(function(f){siteCounts[f.site]=(siteCounts[f.site]||0)+1;});
+  var SITES=["17","37","38","41","47","72","72bis","89"];
+  var maxS=Math.max.apply(null,Object.values(siteCounts))||1;
+  var siteHtml='';
+  SITES.forEach(function(s){
+    if(!siteCounts[s])return;
+    var pct=Math.round(siteCounts[s]/maxS*100);
+    siteHtml+='<div class="bar-row"><div class="bar-lbl">Site '+s+'</div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:var(--purple)"><span class="bar-val">'+siteCounts[s]+'</span></div></div></div>';
+  });
+  document.getElementById('chart-site').innerHTML=siteHtml||'<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Aucune donnée</div>';
+
+  // Timeline
+  var now=new Date();
+  var months=[];
+  for(var m=11;m>=0;m--){
+    var d=new Date(now.getFullYear(),now.getMonth()-m,1);
+    months.push({year:d.getFullYear(),month:d.getMonth(),label:(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getFullYear().toString().slice(2),count:0});
+  }
+  data.forEach(function(f){
+    var d=new Date(f.date);
+    months.forEach(function(m){if(m.year===d.getFullYear()&&m.month===d.getMonth())m.count++;});
+  });
+  var maxM=Math.max.apply(null,months.map(function(m){return m.count;}))||1;
+  var tlHtml='<div class="timeline-bar">';
+  months.forEach(function(m){
+    var h=Math.max(2,Math.round(m.count/maxM*70));
+    tlHtml+='<div class="tl-col"><div class="tl-bar" style="height:'+h+'px;background:'+(m.count>0?'var(--purple)':'var(--border)')+'"></div><div class="tl-lbl">'+m.label+'</div></div>';
+  });
+  tlHtml+='</div>';
+  document.getElementById('chart-timeline').innerHTML=tlHtml;
+}
+
+async function init(){
+  try{
+    var d=await jsonpGet('getFNCs');
+    ALL_FNC=(d.data||[]).map(function(r){
+      return{id:r[0],site:String(r[4]||''),date:String(r[5]||'').split('T')[0],type:r[3],statut:r[7]||'Ouvert'};
+    });
+    render(ALL_FNC);
+  }catch(e){console.warn(e);}
+}
+init();
+</script>
