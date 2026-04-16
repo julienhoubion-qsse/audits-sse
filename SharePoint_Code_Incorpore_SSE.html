@@ -282,7 +282,7 @@ function render(){
   const sorted=SITES.map(s=>{const a=lat[s];return{site:s,score:a?avg(a.scores):null}}).sort((a,b)=>{if(a.score===null&&b.score===null)return 0;if(a.score===null)return 1;if(b.score===null)return-1;return b.score-a.score;});
   document.getElementById('bar-chart').innerHTML=sorted.map(d=>{
     const pct=d.score,c=pct!==null?sc(pct):'null',w=pct||0;
-    return`<div class="bar-row"><div class="bar-lbl">${d.site}</div><div class="bar-track"><div class="bar-fill ${c}" style="width:${w}%">${pct!==null?`<span class="bar-pct">${pct}%</span>`:''}</div></div>${bdg(pct)}</div>`;
+    return`<div class="bar-row"><div class="bar-lbl">${d.site}</div><div class="bar-track"><div class="bar-fill ${c}" style="width:${w}%">${pct!==null?'`<span class="bar-pct">'+(pct)+'%</span>`':''}</div></div>${bdg(pct)}</div>`;
   }).join('');
 
   // Trends
@@ -316,7 +316,7 @@ function render(){
   document.getElementById('theme-chart').innerHTML=SECTIONS.map(t=>{
     const vals=Object.values(lat).filter(a=>a.scores[t.key]!==null).map(a=>a.scores[t.key]);
     const m=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):null;
-    return`<div class="bar-row"><div class="bar-lbl" style="width:110px;font-size:11px">${t.icon} ${t.label}</div><div class="bar-track"><div class="bar-fill ${m!==null?sc(m):'null'}" style="width:${m||0}%">${m!==null?`<span class="bar-pct">${m}%</span>`:''}</div></div></div>`;
+    return`<div class="bar-row"><div class="bar-lbl" style="width:110px;font-size:11px">${t.icon} ${t.label}</div><div class="bar-track"><div class="bar-fill ${m!==null?sc(m):'null'}" style="width:${m||0}%">${m!==null?'`<span class="bar-pct">'+(m)+'%</span>`':''}</div></div></div>`;
   }).join('');
 
   // Radar

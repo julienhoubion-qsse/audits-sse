@@ -184,11 +184,11 @@ function render(){
           <div class="detail-item"><div class="detail-lbl">Thème</div><div class="detail-val">${c.theme||'—'}</div></div>
           <div class="detail-item"><div class="detail-lbl">Participants réseau</div><div class="detail-val">${nbPart}</div></div>
         </div>
-        ${c.description?`<div class="detail-lbl" style="margin-bottom:6px">Description</div><div class="desc-box">${c.description}</div>`:''}
-        ${c.participants?`<div class="participants-box"><div class="detail-lbl" style="margin-bottom:5px">👥 Participants réseau</div><div style="font-size:12px;color:var(--charcoal)">${c.participants}</div></div>`:''}
-        ${c.participantsHors?`<div class="participants-box" style="background:var(--steel-xlt)"><div class="detail-lbl" style="margin-bottom:5px">👥 Participants hors réseau</div><div style="font-size:12px;color:var(--charcoal)">${c.participantsHors.replace(/\n/g,', ')}</div></div>`:''}
-        ${c.remarques?`<div class="detail-lbl" style="margin-bottom:6px">Remarques des participants</div><div class="desc-box" style="background:#fffbeb;border:1px solid #fcd34d">${c.remarques}</div>`:''}
-        ${c.lien?`<div class="lien-box"><span style="font-size:18px">📎</span><div style="flex:1"><div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:2px">Support de causerie</div><a href="${c.lien}" target="_blank" style="font-size:12px;color:var(--steel-dk);word-break:break-all">Ouvrir le document →</a></div></div>`:''}
+        ${c.description?'`<div class="detail-lbl" style="margin-bottom:6px">Description</div><div class="desc-box">'+(c.description)+'</div>`':''}
+        ${c.participants?'`<div class="participants-box"><div class="detail-lbl" style="margin-bottom:5px">👥 Participants réseau</div><div style="font-size:12px;color:var(--charcoal)">'+(c.participants)+'</div></div>`':''}
+        ${c.participantsHors?'`<div class="participants-box" style="background:var(--steel-xlt)"><div class="detail-lbl" style="margin-bottom:5px">👥 Participants hors réseau</div><div style="font-size:12px;color:var(--charcoal)">'+(c.participantsHors.replace(/\n/g,', '))+'</div></div>`':''}
+        ${c.remarques?'`<div class="detail-lbl" style="margin-bottom:6px">Remarques des participants</div><div class="desc-box" style="background:#fffbeb;border:1px solid #fcd34d">'+(c.remarques)+'</div>`':''}
+        ${c.lien?'`<div class="lien-box"><span style="font-size:18px">📎</span><div style="flex:1"><div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:2px">Support de causerie</div><a href="'+(c.lien)+'" target="_blank" style="font-size:12px;color:var(--steel-dk);word-break:break-all">Ouvrir le document →</a></div></div>`':''}
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
           <button class="btn btn-danger btn-sm" onclick="delCauserie('${c.id}')">🗑️ Supprimer</button>
         </div>

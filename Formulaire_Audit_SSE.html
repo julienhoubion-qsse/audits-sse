@@ -336,13 +336,13 @@ function tog(si){
 }
 function setSt(si,ci,st){
   SS[si][ci]=SS[si][ci]===st?null:st;
-  ['C','NC','NA'].forEach(s=>document.getElementById(`b-${si}-${ci}-${s}`).className='sbtn'+(SS[si][ci]===s?` sel-${s}`:''));
+  ['C','NC','NA'].forEach(s=>document.getElementById(`b-${si}-${ci}-${s}`).className='sbtn'+(SS[si][ci]===s?' sel-'+s:''));
   updBadge(si);updSum();
 }
 function setAll(si,st){
   SECTIONS[si].criteria.forEach((_,ci)=>{
     SS[si][ci]=st;
-    ['C','NC','NA'].forEach(s=>document.getElementById(`b-${si}-${ci}-${s}`).className='sbtn'+(s===st?` sel-${s}`:''));
+    ['C','NC','NA'].forEach(s=>document.getElementById(`b-${si}-${ci}-${s}`).className='sbtn'+(s===st?' sel-'+s:''));
   });
   updBadge(si);updSum();
 }

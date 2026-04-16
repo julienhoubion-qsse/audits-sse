@@ -350,7 +350,7 @@ function render(){
       </div>
       <div class="action-body" id="ab-${a.id}">
         <div style="font-size:12px;color:var(--muted);margin-bottom:8px"><strong>Origine :</strong> ${a.origin}</div>
-        ${a.commentaire?`<div style="font-size:12px;color:var(--charcoal);margin-bottom:8px;padding:8px;background:var(--slate);border-radius:6px">💬 ${a.commentaire}</div>`:''}
+        ${a.commentaire?'`<div style="font-size:12px;color:var(--charcoal);margin-bottom:8px;padding:8px;background:var(--slate);border-radius:6px">💬 '+(a.commentaire)+'</div>`':''}
         ${a.efficace==='oui'?'<div style="padding:6px 10px;background:var(--ok-bg);color:var(--ok-tc);border-radius:6px;font-size:12px;font-weight:600;margin-bottom:8px">✅ Action jugée efficace</div>':''}
         ${a.efficace==='non'?'<div style="padding:6px 10px;background:var(--bad-bg);color:var(--bad-tc);border-radius:6px;font-size:12px;font-weight:600;margin-bottom:8px">❌ Action jugée non efficace</div>':''}
         <div style="display:flex;gap:8px;flex-wrap:wrap">
