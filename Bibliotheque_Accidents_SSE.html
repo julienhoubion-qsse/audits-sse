@@ -193,7 +193,7 @@ function render(){
 
   const el=document.getElementById('acc-list');
   if(!lib.length){
-    el.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">'+(ACCIDENTS.length===0?'Aucune déclaration enregistrée':'Aucun résultat')+'</div><div style="font-size:12px;margin-top:4px">'+(ACCIDENTS.length===0?'Commencez par déclarer un fait accidentel.':'Modifiez vos filtres.')+'</div>'+(ACCIDENTS.length===0?'<br><br><button class="btn btn-primary" onclick="window.location.href=\'Declaration_Accident_SSE.html\'">🚑 Nouvelle déclaration</button>':'')+'</div>';
+    el.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">'+(ACCIDENTS.length===0?'Aucune déclaration enregistrée':'Aucun résultat')+'</div><div style="font-size:12px;margin-top:4px">'+(ACCIDENTS.length===0?'Commencez par déclarer un fait accidentel.':'Modifiez vos filtres.')+'</div>'+(ACCIDENTS.length===0?'<br><br><button class="btn btn-primary" onclick="window.location.href=String.fromCharCode(39)+String.fromCharCode(39)">🚑 Nouvelle déclaration</button>':'')+'</div>';
     return;
   }
 
