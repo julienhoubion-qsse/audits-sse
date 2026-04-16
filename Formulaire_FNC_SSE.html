@@ -372,7 +372,7 @@ function resetForm(){
   document.getElementById('f-redacteur').value='';
   document.getElementById('f-site').value='';
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
-let immCount=0;
+immCount=0;
   document.getElementById('f-description').value='';
   document.querySelectorAll('.statut-btn').forEach(b=>b.className='statut-btn');
   document.querySelector('[data-statut="Ouvert"]').classList.add('selected-open');
