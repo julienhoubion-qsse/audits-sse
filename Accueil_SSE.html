@@ -261,63 +261,68 @@ function scoreClass(s){
 }
 
 async function loadData(){
-  try{
-    // Audits
-    const auditData=await jsonpGet('getAll');
-    const audits=(auditData.data||[]).map(row=>({
-      id:row[0],site:String(row[1]),auditeur:row[2],
-      date:String(row[3]||'').split('T')[0],
-      total:row[5]
-    }));
-    document.getElementById('s-audits').textContent=audits.length;
-    const scores=audits.map(a=>Number(a.total)).filter(v=>!isNaN(v)&&v>0);
-    document.getElementById('s-score').textContent=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length)+'%':'—';
-    document.getElementById('s-sites').textContent=new Set(audits.map(a=>a.site)).size;
+  // Lancer tous les appels en parallèle
+  const [auditRes, actRes, accRes, cauRes] = await Promise.allSettled([
+    jsonpGet('getAll'),
+    jsonpGet('getActions'),
+    jsonpGet('getAccidents'),
+    jsonpGet('getCauseries')
+  ]);
 
-    // Recent audits
-    const recent=audits.slice(-5).reverse();
-    const el=document.getElementById('recent-list');
-    if(!recent.length){
-      el.innerHTML='<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">Aucun audit enregistré</div>';
-    } else {
-      el.innerHTML=recent.map(a=>{
-        const sc=a.total?Number(a.total):null;
-        const cls=scoreClass(sc);
-        const dateStr=a.date?new Date(a.date).toLocaleDateString('fr-FR'):'—';
-        return`<div class="recent-item" onclick="window.location.href='Bibliotheque_Audits_SSE.html'">
-          <span class="recent-icon">📋</span>
-          <div class="recent-body">
-            <div class="recent-title">Site ${a.site} — ${a.auditeur||'—'}</div>
-            <div class="recent-meta">📅 ${dateStr}</div>
-          </div>
-          <span class="score-badge ${cls}">${sc!==null&&sc!==''?sc+'%':'—'}</span>
-        </div>`;
-      }).join('');
-    }
-  }catch(e){console.warn('Audits error:',e);}
+  // Audits
+  if(auditRes.status==='fulfilled'){
+    try{
+      const audits=(auditRes.value.data||[]).map(row=>({
+        id:row[0],site:String(row[1]),auditeur:row[2],
+        date:String(row[3]||'').split('T')[0],total:row[5]
+      }));
+      document.getElementById('s-audits').textContent=audits.length;
+      const scores=audits.map(a=>Number(a.total)).filter(v=>!isNaN(v)&&v>0);
+      document.getElementById('s-score').textContent=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length)+'%':'—';
+      document.getElementById('s-sites').textContent=new Set(audits.map(a=>a.site)).size;
+      const recent=audits.slice(-5).reverse();
+      const el=document.getElementById('recent-list');
+      if(!recent.length){
+        el.innerHTML='<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">Aucun audit enregistré</div>';
+      } else {
+        el.innerHTML=recent.map(function(a){
+          var sc=a.total?Number(a.total):null;
+          var cls=scoreClass(sc);
+          var dateStr=a.date?new Date(a.date).toLocaleDateString('fr-FR'):'—';
+          return '<div class="recent-item" onclick="window.location.href='Bibliotheque_Audits_SSE.html'">'
+            +'<span class="recent-icon">📋</span>'
+            +'<div class="recent-body">'
+            +'<div class="recent-title">Site '+a.site+' — '+(a.auditeur||'—')+'</div>'
+            +'<div class="recent-meta">📅 '+dateStr+'</div>'
+            +'</div>'
+            +'<span class="score-badge '+cls+'">'+(sc!==null&&sc!==''?sc+'%':'—')+'</span>'
+            +'</div>';
+        }).join('');
+      }
+    }catch(e){console.warn('Audits error:',e);}
+  }
 
-  try{
-    // Actions
-    const actData=await jsonpGet('getActions');
-    const actions=(actData.data||[]);
-    const enCours=actions.filter(r=>Number(r[10]||0)<100||r[12]!=='oui').length;
-    document.getElementById('s-actions').textContent=enCours;
-  }catch(e){console.warn('Actions error:',e);}
+  // Actions
+  if(actRes.status==='fulfilled'){
+    try{
+      const actions=(actRes.value.data||[]);
+      const enCours=actions.filter(r=>Number(r[10]||0)<100||r[12]!=='oui').length;
+      document.getElementById('s-actions').textContent=enCours;
+    }catch(e){}
+  }
 
-  try{
-    // Accidents
-    const accData=await jsonpGet('getAccidents');
-    document.getElementById('s-accidents').textContent=(accData.data||[]).length;
-  }catch(e){
+  // Accidents
+  if(accRes.status==='fulfilled'){
+    document.getElementById('s-accidents').textContent=(accRes.value.data||[]).length;
+  } else {
     document.getElementById('s-accidents').textContent='0';
   }
 
-  try{
-    // Causeries
-    const cauData=await jsonpGet('getCauseries');
+  // Causeries
+  if(cauRes.status==='fulfilled'){
     const cauEl=document.getElementById('s-causeries');
-    if(cauEl)cauEl.textContent=(cauData.data||[]).length;
-  }catch(e){}
+    if(cauEl)cauEl.textContent=(cauRes.value.data||[]).length;
+  }
 }
 
 loadData();
