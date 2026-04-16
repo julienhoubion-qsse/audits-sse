@@ -165,7 +165,7 @@ function buildRelatedActions(accId){
       +'<div style="font-size:11px;color:var(--muted);margin-top:2px">👤 '+(a.responsable||'—')+' · '+pct+'%</div></div>'
       +badge+'</div>';
   }).join('');
-  return'<div style="margin-top:12px"><div style="font-family:'Exo 2',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--steel-dk);margin-bottom:8px">📋 Actions en cours ('+related.length+')</div>'+rows+'</div>';
+  return'<div style="margin-top:12px"><div style="font-family:&quot;Exo 2&quot;,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--steel-dk);margin-bottom:8px">📋 Actions en cours ('+related.length+')</div>'+rows+'</div>';
 }
 function render(){
   const site=document.getElementById('f-site').value;
