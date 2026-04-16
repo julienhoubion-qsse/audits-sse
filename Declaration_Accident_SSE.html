@@ -227,6 +227,10 @@ let actionCount=0;
 
 // Init date
 document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+// Mode édition
+const urlParams=new URLSearchParams(window.location.search);
+const editId=urlParams.get('edit');
+if(editId) loadAccidentForEdit(editId);
 
 function selectType(btn){
   document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));
@@ -268,6 +272,46 @@ function addAction(){
 function removeAction(idx){
   const el=document.getElementById('action-item-'+idx);
   if(el)el.remove();
+}
+
+function jsonpGet(action){
+  return new Promise((resolve,reject)=>{
+    const cb='_cb'+Date.now()+Math.random().toString(36).slice(2);
+    window[cb]=function(d){delete window[cb];const el=document.getElementById('_js_'+cb);if(el)el.remove();resolve(d);};
+    const s=document.createElement('script');s.id='_js_'+cb;
+    s.src=GSHEET_URL+'?action='+action+'&callback='+cb;
+    s.onerror=()=>reject(new Error('failed'));
+    document.head.appendChild(s);
+  });
+}
+
+async function loadAccidentForEdit(id){
+  try{
+    const d=await jsonpGet('getAccidents');
+    const acc=(d.data||[]).find(row=>String(row[0])===String(id));
+    if(!acc){alert('Déclaration non trouvée');return;}
+    // Remplir le formulaire
+    document.getElementById('f-date').value=String(acc[1]||'').split('T')[0];
+    document.getElementById('f-site').value=String(acc[2]||'');
+    document.getElementById('f-victime').value=acc[3]||'';
+    document.getElementById('f-siege').value=acc[4]||'';
+    document.getElementById('f-activite').value=acc[6]||'';
+    document.getElementById('f-description').value=acc[7]||'';
+    document.getElementById('f-causes').value=acc[8]||'';
+    document.getElementById('f-lien').value=acc[9]||'';
+    document.getElementById('f-duree').value=acc[10]||'';
+    document.getElementById('f-fin-arret').value=String(acc[11]||'').split('T')[0];
+    // Sélectionner le type
+    const type=acc[5]||'';
+    document.querySelectorAll('.type-btn').forEach(btn=>{
+      if(btn.dataset.type===type) selectType(btn);
+    });
+    // Stocker l'id pour la mise à jour
+    window._editAccId=id;
+    // Changer le bouton
+    const btn=document.querySelector('.btn-danger[onclick="saveDeclaration()"]');
+    if(btn)btn.textContent='💾 Mettre à jour la déclaration';
+  }catch(e){alert('Erreur chargement: '+e.message);}
 }
 
 async function saveDeclaration(){
@@ -321,6 +365,11 @@ async function saveDeclaration(){
 
   showToast('Enregistrement en cours...',false);
   try{
+    // Si mode édition, supprimer l'ancienne déclaration d'abord
+    if(window._editAccId){
+      declaration.id=window._editAccId;
+      await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'deleteAccident',id:window._editAccId})});
+    }
     // Sauvegarder la déclaration
     await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveAccident',data:declaration})});
     // Sauvegarder les actions
@@ -345,6 +394,10 @@ function resetForm(){
   selectedType='';
   document.getElementById('arret-card').style.display='none';
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+// Mode édition
+const urlParams=new URLSearchParams(window.location.search);
+const editId=urlParams.get('edit');
+if(editId) loadAccidentForEdit(editId);
   document.getElementById('f-site').value='';
   document.getElementById('f-victime').value='';
   document.getElementById('f-siege').value='';

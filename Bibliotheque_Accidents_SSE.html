@@ -242,6 +242,7 @@ function render(){
       html+='<a href="'+a.lien+'" target="_blank" style="font-size:12px;color:#2E4558;word-break:break-all">Ouvrir le document →</a></div></div>';
     }
     html+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">';
+    html+='<button class="btn btn-blue btn-sm" data-id="'+a.id+'" onclick="editAcc(this.dataset.id)">✏️ Modifier</button>';
     html+='<button class="btn btn-primary btn-sm" data-id="'+a.id+'" data-site="'+a.site+'" data-date="'+a.date+'" data-type="'+(a.type||'')+'" data-victime="'+(a.victime||'')+'" onclick="createActionFromAccBtn(this)">➕ Créer une action</button>';
     html+='<button class="btn btn-danger btn-sm" data-id="'+a.id+'" onclick="delAcc(this.dataset.id)">🗑️ Supprimer</button>';
     html+='</div></div></div>';
@@ -254,6 +255,9 @@ function tog(id){
   if(b)b.classList.toggle('open');
 }
 
+function editAcc(id){
+  window.location.href='Declaration_Accident_SSE.html?edit='+id;
+}
 function createActionFromAccBtn(btn){
   createActionFromAcc(btn.dataset.id,btn.dataset.site,btn.dataset.date,btn.dataset.type,btn.dataset.victime);
 }
