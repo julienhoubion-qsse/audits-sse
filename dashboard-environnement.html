@@ -1,0 +1,131 @@
+<!-- le Groupe RSE — Dashboard Environnement & Climat -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --vert:#97BE0D;--vert-dk:#7A9B00;--vert-lt:#F4F9E6;--vert-glow:rgba(151,190,13,.10);
+  --gris:#344B57;--gris-lt:#4A6575;--gris-pale:#5E7D8C;
+  --dark:#1C2B33;--body:#445566;--muted:#8899A5;--border:#DAE1E6;--bg:#F5F7F9;--white:#FFF;
+  --danger:#D9534F;--warn:#E8913A;
+  --radius:12px;--shadow:0 2px 12px rgba(0,0,0,.05);--shadow-lg:0 8px 32px rgba(0,0,0,.08)
+}
+body{font-family:'Plus Jakarta Sans','Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--body);line-height:1.65;margin:0;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-weight:700;color:var(--dark);line-height:1.25}
+a{color:var(--gris);text-decoration:none}a:hover{color:var(--vert)}
+img{max-width:100%;display:block}
+
+.nav{background:var(--dark);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nav-brand img{height:30px;filter:brightness(1.1);background:rgba(255,255,255,.92);border-radius:4px;padding:3px 6px}
+.nav-brand span{font-size:12px;font-weight:600;color:rgba(255,255,255,.55)}
+.nav-brand em{font-style:normal;color:var(--vert)}
+.nav-links{display:flex;gap:2px}.nav-links a{color:rgba(255,255,255,.5);font-size:12px;font-weight:500;padding:7px 12px;border-radius:7px}.nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,.08)}.nav-links a.active{color:var(--vert)}
+@media(max-width:768px){.nav-links{display:none}.nav{padding:0 16px}}
+
+.hero{background:linear-gradient(160deg,var(--dark),var(--gris) 55%,var(--gris-lt));padding:52px 28px 60px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-100px;right:-80px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(151,190,13,.07),transparent 70%);pointer-events:none}
+.hero-inner{max-width:960px;margin:0 auto;position:relative;z-index:1}
+.hero-badge{display:inline-block;background:rgba(151,190,13,.12);border:1px solid rgba(151,190,13,.2);border-radius:18px;padding:4px 14px;font-size:10px;font-weight:700;color:var(--vert);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:20px}
+.hero h1{font-size:clamp(26px,4vw,40px);color:#fff;margin-bottom:12px}.hero h1 em{font-style:normal;color:var(--vert)}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.5);max-width:580px;margin-bottom:32px}
+.hero-stats{display:flex;gap:14px;flex-wrap:wrap}
+.hero-stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius);padding:12px 18px}
+.hero-stat strong{display:block;font-size:24px;font-weight:800;color:var(--vert);line-height:1.1}
+.hero-stat small{font-size:10px;color:rgba(255,255,255,.35);font-weight:500}
+
+.section{max-width:1000px;margin:0 auto;padding:40px 20px}
+.section-hd{text-align:center;margin-bottom:32px}.section-hd h2{font-size:22px;margin-bottom:4px}.section-hd p{color:var(--muted);font-size:13px}
+
+.pillars{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.pcard{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .25s}.pcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--vert)}
+.pcard-top{height:5px}.pcard-body{padding:24px 20px}
+.pcard-icon{font-size:28px;margin-bottom:12px}.pcard-body h3{font-size:15px;margin-bottom:5px}.pcard-body p{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6}
+.pcard-links{display:flex;gap:6px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:5px 12px;border-radius:7px;border:1px solid transparent;cursor:pointer;font-family:inherit;text-decoration:none;transition:all .2s}
+.btn-p{background:var(--vert);color:#fff;border-color:var(--vert)}.btn-p:hover{background:var(--vert-dk);color:#fff}
+.btn-o{border-color:var(--border);color:var(--gris)}.btn-o:hover{border-color:var(--vert);color:var(--vert);background:var(--vert-glow)}
+.btn-g{color:var(--gris-pale);padding:5px 8px}.btn-g:hover{color:var(--vert)}
+
+.downloads{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:16px}
+.dl{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px;transition:all .2s}.dl:hover{border-color:var(--vert);box-shadow:var(--shadow)}
+.dl-ic{width:38px;height:38px;border-radius:8px;background:var(--vert-lt);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.dl-info{flex:1}.dl-info strong{font-size:12px;display:block;color:var(--dark)}.dl-info small{font-size:10px;color:var(--muted)}
+.dl-btn{color:var(--vert);font-size:10px;font-weight:700}
+
+.policy-hero{padding:44px 28px 32px;position:relative;overflow:hidden}
+.policy-hero-inner{max-width:780px;margin:0 auto;position:relative;z-index:1}
+.pol-meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.pol-ref{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--vert)}
+.pol-date{font-size:10px;color:var(--muted)}
+.policy-hero h1{font-size:26px;margin-bottom:5px}
+.pol-sub{font-size:14px;color:var(--muted);font-weight:500}
+
+.doc{max-width:780px;margin:0 auto;padding:0 20px 48px}
+.doc-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.preamble{margin:24px 28px;padding:18px 20px;background:var(--bg);border-left:4px solid var(--vert);border-radius:0 var(--radius) var(--radius) 0}
+.preamble-lbl{font-size:10px;font-weight:700;color:var(--vert);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px}
+.preamble p{font-size:13px;color:var(--gris);line-height:1.8}
+.engs{padding:6px 28px 28px}.engs h2{font-size:17px;padding-bottom:10px;border-bottom:2px solid var(--border);margin-bottom:20px}
+.eng{display:flex;gap:14px;padding:18px 0;border-bottom:1px solid #F0F2F4}.eng:last-child{border-bottom:none}
+.eng-n{width:32px;height:32px;border-radius:8px;background:var(--vert-lt);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:13px;color:var(--vert-dk)}
+.eng-c h3{font-size:14px;margin-bottom:5px}.eng-c p{font-size:12.5px;color:var(--gris-lt);line-height:1.8}
+.sig{margin:20px 28px 28px;padding:20px;background:var(--dark);border-radius:var(--radius);color:#fff}
+.sig-lbl{font-size:9px;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+.sig p{font-size:12px;color:rgba(255,255,255,.65);margin-bottom:14px}
+.sig-ft{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.sig-nm{font-size:12px;font-weight:600}.sig-rl{font-size:10px;color:rgba(255,255,255,.3)}.sig-dt{font-size:10px;color:rgba(255,255,255,.25);text-align:right}
+.doc-ft{text-align:center;padding:16px 28px;border-top:1px solid var(--border);font-size:10px;color:var(--muted)}
+
+.dash-hd{background:var(--dark);padding:24px 28px;border-bottom:3px solid var(--vert)}
+.dash-hd-in{max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.dash-hd h1{font-size:20px;color:#fff}.dash-hd h1 em{font-style:normal;color:var(--vert)}
+.yr-pills{display:flex;gap:4px}.yr-pills span{padding:4px 10px;border-radius:6px;font-size:10px;font-weight:600;color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.1)}.yr-pills span.active{background:var(--vert);color:#fff;border-color:var(--vert)}
+.dash-body{max-width:1000px;margin:0 auto;padding:24px 20px 48px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.kpi{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:all .2s}.kpi:hover{box-shadow:var(--shadow)}
+.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.kpi-lbl{font-size:11px;font-weight:600;color:var(--muted);max-width:130px;line-height:1.4}
+.kpi-spark{width:64px;height:28px;flex-shrink:0}
+.kpi-val{font-size:28px;font-weight:800;color:var(--dark);line-height:1;margin-bottom:5px}
+.kpi-u{font-size:13px;font-weight:600;color:var(--muted);margin-left:2px}
+.kpi-tr{font-size:10px;font-weight:700}.kpi-vs{font-size:9px;color:var(--muted);margin-left:4px}
+.kpi-tg{display:inline-block;margin-top:6px;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:600}
+.kpi-tg.ok{background:#D1FAE5;color:#065F46}.kpi-tg.pend{background:#FEF3C7;color:#92400E}
+.ch-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}.ch-row.full{grid-template-columns:1fr}
+.ch-box{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.ch-box h3{font-size:12px;font-weight:700;color:var(--dark);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+@media(max-width:700px){.ch-row{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+
+.nav-bot{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:6px 20px 40px;max-width:1000px;margin:0 auto}
+.nav-bot a{font-size:10px;font-weight:600;color:var(--gris-pale);padding:5px 12px;border-radius:7px;border:1px solid var(--border);text-decoration:none;transition:all .2s;white-space:nowrap}.nav-bot a:hover{border-color:var(--vert);color:var(--vert);background:var(--vert-glow)}.nav-bot a.active{background:var(--vert);color:#fff;border-color:var(--vert)}
+.site-ft{text-align:center;padding:24px 20px;border-top:1px solid var(--border)}.site-ft p{font-size:11px;color:var(--muted)}.site-ft p+p{font-size:10px;color:#B0BCC4;margin-top:2px}
+@media print{.nav,.nav-bot,.btn,.pcard-links,.yr-pills,.site-ft{display:none!important}body{background:#fff}.doc-card,.kpi,.ch-box{box-shadow:none;border:1px solid #ddd}}
+</style>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand"><span style="font-family:'Exo 2',sans-serif;font-size:16px;font-weight:800;color:#fff">🌿 RSE</span><span>Engagements <em>RSE</em></span></a>
+  <div class="nav-links"><a href="index.html">Accueil</a><a href="environnement.html">🌍 Environnement</a><a href="social.html">👥 Social</a><a href="ethique.html">⚖️ Éthique</a><a href="innovation.html">🚀 Innovation</a></div>
+</nav>
+
+<div class="dash-hd" style="border-bottom-color:#4E7D0A"><div class="dash-hd-in">
+  <h1>🌍 Dashboard <em>Environnement & Climat</em></h1>
+  <div class="yr-pills"><span>2024</span><span>2025</span><span class="active">2026</span></div>
+</div></div>
+<div class="dash-body">
+  <div style="margin-bottom:14px;display:flex;gap:6px;flex-wrap:wrap"><a href="environnement.html" class="btn btn-o">📄 Politique</a><a href="index.html" class="btn btn-g">← Accueil</a><button onclick="window.print()" class="btn btn-g">🖨️ Imprimer</button></div>
+  <div class="kpi-grid"><div class="kpi"><div class="kpi-top"><span class="kpi-lbl">Taux valorisation VHU</span><svg viewBox="0 0 59 28" class="kpi-spark"><polyline points="3,6.02608202608203 31,5.931581931581935 59,5.81818181818182" fill="none" stroke="#4E7D0A" stroke-width="2" stroke-linecap="round"/></svg></div><div class="kpi-val">96.2<span class="kpi-u">%</span></div><div><span class="kpi-tr" style="color:#4E7D0A">↑ 0.6</span><span class="kpi-vs">vs 2025</span></div><div class="kpi-tg ok">Cible: 95% ✓</div></div>
+    <div class="kpi"><div class="kpi-top"><span class="kpi-lbl">Déconstruction PRE</span><svg viewBox="0 0 59 28" class="kpi-spark"><polyline points="3,8.462809917355376 31,7.1404958677686 59,5.81818181818182" fill="none" stroke="#4E7D0A" stroke-width="2" stroke-linecap="round"/></svg></div><div class="kpi-val">55<span class="kpi-u">%</span></div><div><span class="kpi-tr" style="color:#4E7D0A">↑ 4</span><span class="kpi-vs">vs 2025</span></div><div class="kpi-tg ok">Cible: 51% ✓</div></div>
+    <div class="kpi"><div class="kpi-top"><span class="kpi-lbl">PRE vendues</span><svg viewBox="0 0 59 28" class="kpi-spark"><polyline points="3,11.365177195685671 31,8.899845916795071 59,5.81818181818182" fill="none" stroke="#4E7D0A" stroke-width="2" stroke-linecap="round"/></svg></div><div class="kpi-val">118<span class="kpi-u">k</span></div><div><span class="kpi-tr" style="color:#4E7D0A">↑ 20</span><span class="kpi-vs">vs 2025</span></div></div>
+    <div class="kpi"><div class="kpi-top"><span class="kpi-lbl">Émissions évitées S4</span><svg viewBox="0 0 59 28" class="kpi-spark"><polyline points="3,12.007736943907158 31,9.299806576402322 59,5.81818181818182" fill="none" stroke="#4E7D0A" stroke-width="2" stroke-linecap="round"/></svg></div><div class="kpi-val">18 800<span class="kpi-u">tCO₂e</span></div><div><span class="kpi-tr" style="color:#4E7D0A">↑ 3600</span><span class="kpi-vs">vs 2025</span></div></div></div>
+  <div class="ch-row"><div class="ch-box"><h3>Bilan carbone (tCO₂e)</h3><svg viewBox="0 0 500 256" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto"><line x1="38" y1="202" x2="488" y2="202" stroke="#E2E8F0" stroke-width="1"/><text x="34" y="205" text-anchor="end" fill="#8899A5" font-size="8.5">0</text><line x1="38" y1="154" x2="488" y2="154" stroke="#E2E8F0" stroke-width="1"/><text x="34" y="157" text-anchor="end" fill="#8899A5" font-size="8.5">1239</text><line x1="38" y1="106" x2="488" y2="106" stroke="#E2E8F0" stroke-width="1"/><text x="34" y="109" text-anchor="end" fill="#8899A5" font-size="8.5">2478</text><line x1="38" y1="58" x2="488" y2="58" stroke="#E2E8F0" stroke-width="1"/><text x="34" y="61" text-anchor="end" fill="#8899A5" font-size="8.5">3717</text><line x1="38" y1="10" x2="488" y2="10" stroke="#E2E8F0" stroke-width="1"/><text x="34" y="13" text-anchor="end" fill="#8899A5" font-size="8.5">4956</text><rect x="71" y="170.2324455205811" width="26" height="31.767554479418887" rx="2" fill="#D9534F" opacity=".88"/><text x="84" y="167.2324455205811" text-anchor="middle" fill="#D9534F" font-size="8.5" font-weight="700">820</text><rect x="100" y="188.8280871670702" width="26" height="13.171912832929781" rx="2" fill="#E8913A" opacity=".88"/><text x="113" y="185.8280871670702" text-anchor="middle" fill="#E8913A" font-size="8.5" font-weight="700">340</text><rect x="129" y="39.288135593220346" width="26" height="162.71186440677965" rx="2" fill="#5E7D8C" opacity=".88"/><text x="142" y="36.288135593220346" text-anchor="middle" fill="#5E7D8C" font-size="8.5" font-weight="700">4200</text><text x="113" y="225" text-anchor="middle" fill="#5E7D8C" font-size="9.5" font-weight="600">2024</text><rect x="221" y="171.7820823244552" width="26" height="30.217917675544797" rx="2" fill="#D9534F" opacity=".88"/><text x="234" y="168.7820823244552" text-anchor="middle" fill="#D9534F" font-size="8.5" font-weight="700">780</text><rect x="250" y="190.76513317191282" width="26" height="11.234866828087167" rx="2" fill="#E8913A" opacity=".88"/><text x="263" y="187.76513317191282" text-anchor="middle" fill="#E8913A" font-size="8.5" font-weight="700">290</text><rect x="279" y="45.09927360774819" width="26" height="156.9007263922518" rx="2" fill="#5E7D8C" opacity=".88"/><text x="292" y="42.09927360774819" text-anchor="middle" fill="#5E7D8C" font-size="8.5" font-weight="700">4050</text><text x="263" y="225" text-anchor="middle" fill="#5E7D8C" font-size="9.5" font-weight="600">2025</text><rect x="371" y="174.49394673123487" width="26" height="27.506053268765132" rx="2" fill="#D9534F" opacity=".88"/><text x="384" y="171.49394673123487" text-anchor="middle" fill="#D9534F" font-size="8.5" font-weight="700">710</text><rect x="400" y="192.70217917675544" width="26" height="9.297820823244551" rx="2" fill="#E8913A" opacity=".88"/><text x="413" y="189.70217917675544" text-anchor="middle" fill="#E8913A" font-size="8.5" font-weight="700">240</text><rect x="429" y="52.847457627118644" width="26" height="149.15254237288136" rx="2" fill="#5E7D8C" opacity=".88"/><text x="442" y="49.847457627118644" text-anchor="middle" fill="#5E7D8C" font-size="8.5" font-weight="700">3850</text><text x="413" y="225" text-anchor="middle" fill="#5E7D8C" font-size="9.5" font-weight="600">2026</text><rect x="38" y="236" width="9" height="9" rx="2" fill="#D9534F"/><text x="52" y="244" fill="#445566" font-size="9.5">Scope 1</text><rect x="198" y="236" width="9" height="9" rx="2" fill="#E8913A"/><text x="212" y="244" fill="#445566" font-size="9.5">Scope 2</text><rect x="358" y="236" width="9" height="9" rx="2" fill="#5E7D8C"/><text x="372" y="244" fill="#445566" font-size="9.5">Scope 3</text></svg></div><div class="ch-box"><h3>Destination matières 2026</h3><svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;height:auto"><path d="M110 22A78 78 0 0 1 180.5765100923495 66.78921525792433L153.43169851836893 79.5625940048765A48 48 0 0 0 110 52Z" fill="#97BE0D" opacity=".88"/><path d="M180.5765100923495 66.78921525792433A78 78 0 1 1 35.81759172897803 75.89667443875408L64.34928721783263 85.16718427000251A48 48 0 1 0 153.43169851836893 79.5625940048765Z" fill="#4E7D0A" opacity=".88"/><path d="M35.81759172897803 75.89667443875408A78 78 0 0 1 81.28628489059513 27.47743410071638L92.33002147113547 55.37072867736393A48 48 0 0 0 64.34928721783263 85.16718427000251Z" fill="#E8913A" opacity=".88"/><path d="M81.28628489059513 27.47743410071638A78 78 0 0 1 109.99999999999999 22L109.99999999999999 52A48 48 0 0 0 92.33002147113547 55.37072867736393Z" fill="#D9534F" opacity=".88"/><text x="110" y="98" text-anchor="middle" fill="#1C2B33" font-size="18" font-weight="800">100</text><text x="110" y="112" text-anchor="middle" fill="#8899A5" font-size="8">total</text><rect x="240" y="24" width="9" height="9" rx="2" fill="#97BE0D"/><text x="254" y="33" fill="#1C2B33" font-size="10" font-weight="600">18%</text><text x="254" y="45" fill="#8899A5" font-size="8.5">Réemploi</text><rect x="240" y="60" width="9" height="9" rx="2" fill="#4E7D0A"/><text x="254" y="69" fill="#1C2B33" font-size="10" font-weight="600">62%</text><text x="254" y="81" fill="#8899A5" font-size="8.5">Recyclage</text><rect x="240" y="96" width="9" height="9" rx="2" fill="#E8913A"/><text x="254" y="105" fill="#1C2B33" font-size="10" font-weight="600">14%</text><text x="254" y="117" fill="#8899A5" font-size="8.5">Valorisation</text><rect x="240" y="132" width="9" height="9" rx="2" fill="#D9534F"/><text x="254" y="141" fill="#1C2B33" font-size="10" font-weight="600">6%</text><text x="254" y="153" fill="#8899A5" font-size="8.5">Élimination</text></svg></div></div>
+  <div class="ch-row full"><div class="ch-box"><h3>Émissions évitées Scope 4</h3><svg viewBox="0 0 500 256" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto"><line x1="38" y1="202" x2="488" y2="202" stroke="#E2E8F0" stroke-width="1"/><text x="34" y="205" text-anchor="end" fill="#8899A5" font-size="8.5">0</text><line x1="38" y1="154" x2="488" y2="154" stroke="#E2E8F0" stroke-width="1"/><text x="34" y="157" text-anchor="end" fill="#8899A5" font-size="8.5">3393</text><line x1="38" y1="106" x2="488" y2="106" stroke="#E2E8F0" stroke-width="1"/><text x="34" y="109" text-anchor="end" fill="#8899A5" font-size="8.5">6785</text><line x1="38" y1="58" x2="488" y2="58" stroke="#E2E8F0" stroke-width="1"/><text x="34" y="61" text-anchor="end" fill="#8899A5" font-size="8.5">10178</text><line x1="38" y1="10" x2="488" y2="10" stroke="#E2E8F0" stroke-width="1"/><text x="34" y="13" text-anchor="end" fill="#8899A5" font-size="8.5">13570</text><rect x="85.5" y="125.59616801768607" width="26" height="76.40383198231393" rx="2" fill="#4E7D0A" opacity=".88"/><text x="98.5" y="122.59616801768607" text-anchor="middle" fill="#4E7D0A" font-size="8.5" font-weight="700">5400</text><rect x="114.5" y="102.95799557848196" width="26" height="99.04200442151804" rx="2" fill="#97BE0D" opacity=".88"/><text x="127.5" y="99.95799557848196" text-anchor="middle" fill="#97BE0D" font-size="8.5" font-weight="700">7000</text><text x="113" y="225" text-anchor="middle" fill="#5E7D8C" font-size="9.5" font-weight="600">2024</text><rect x="235.5" y="114.27708179808401" width="26" height="87.72291820191599" rx="2" fill="#4E7D0A" opacity=".88"/><text x="248.5" y="111.27708179808401" text-anchor="middle" fill="#4E7D0A" font-size="8.5" font-weight="700">6200</text><rect x="264.5" y="74.6602800294768" width="26" height="127.3397199705232" rx="2" fill="#97BE0D" opacity=".88"/><text x="277.5" y="71.6602800294768" text-anchor="middle" fill="#97BE0D" font-size="8.5" font-weight="700">9000</text><text x="263" y="225" text-anchor="middle" fill="#5E7D8C" font-size="9.5" font-weight="600">2025</text><rect x="385.5" y="98.71333824613117" width="26" height="103.28666175386883" rx="2" fill="#4E7D0A" opacity=".88"/><text x="398.5" y="95.71333824613117" text-anchor="middle" fill="#4E7D0A" font-size="8.5" font-weight="700">7300</text><rect x="414.5" y="39.288135593220346" width="26" height="162.71186440677965" rx="2" fill="#97BE0D" opacity=".88"/><text x="427.5" y="36.288135593220346" text-anchor="middle" fill="#97BE0D" font-size="8.5" font-weight="700">11500</text><text x="413" y="225" text-anchor="middle" fill="#5E7D8C" font-size="9.5" font-weight="600">2026</text><rect x="38" y="236" width="9" height="9" rx="2" fill="#4E7D0A"/><text x="52" y="244" fill="#445566" font-size="9.5">Transport réseau</text><rect x="198" y="236" width="9" height="9" rx="2" fill="#97BE0D"/><text x="212" y="244" fill="#445566" font-size="9.5">Réemploi PRE</text></svg></div></div>
+  <nav class="nav-bot" style="margin-top:20px"><a href="dashboard-environnement.html" class="active">🌍 Environnement</a>
+      <a href="dashboard-social.html">👥 Social</a>
+      <a href="dashboard-ethique.html">⚖️ Éthique</a>
+      <a href="dashboard-innovation.html">🚀 Innovation</a></nav>
+</div>
+<div class="site-ft">
+  <p>le Groupe Automobile Recycling — Filiale de The Future Is Neutral (Renault Group &amp; Suez)</p>
+  <p>80 rue Condorcet, 38096 Villefontaine</p>
+</div>
