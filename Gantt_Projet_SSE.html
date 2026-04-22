@@ -60,6 +60,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 .gantt-bar:hover{filter:brightness(1.1)}
 .gantt-bar-action{background:var(--blue)}
 .gantt-bar-task{background:#8b5cf6}
+.gantt-bar-phase{background:#0f172a;opacity:.85;border-radius:3px}
 .gantt-bar-milestone{background:#d97706;border-radius:50%;width:20px;height:20px;padding:0;justify-content:center}
 /* Today marker */
 .col-header-wrap{display:flex;flex-direction:column;justify-content:flex-end;height:100%}
@@ -190,6 +191,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 <script>
 const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
 var projetId=new URLSearchParams(window.location.search).get('projet');
+var phases=[];
 var currentZoom='quarter';
 var projet=null;
 var actions=[];
@@ -343,6 +345,8 @@ function renderGantt(){
     if(item.type==='task'){
       labelsHtml+='<button class="task-btn task-btn-edit" data-id="'+item.id+'" onclick="editTask(this.dataset.id)" title="Modifier">✏</button>';
       labelsHtml+='<button class="task-btn task-btn-del" data-id="'+item.id+'" onclick="delTask(this.dataset.id)" title="Supprimer">✕</button>';
+    } else if(item.type==='phase'){
+      labelsHtml+='<span style="font-size:9px;background:#0f172a;color:#fff;padding:2px 6px;border-radius:10px">PHASE</span>';
     }
     labelsHtml+='</div>';
     labelsHtml+='</div>';
@@ -350,7 +354,7 @@ function renderGantt(){
     // Bar
     var x=getX(item.start);
     var w=getW(item.start,item.end);
-    var barClass=item.type==='action'?'gantt-bar-action':'gantt-bar-task';
+    var barClass=item.type==='action'?'gantt-bar-action':(item.type==='phase'?'gantt-bar-phase':'gantt-bar-task');
     var color=item.color||(item.type==='action'?'#1d4ed8':'#8b5cf6');
     var pct=item.avancement||0;
     barsHtml+='<div class="gantt-bar-row'+(isAlt?' alt':'')+'" style="width:'+totalW+'px">';
@@ -371,6 +375,18 @@ function renderGantt(){
 
 function getAllItems(){
   var items=[];
+  // Phases du projet
+  phases.forEach(function(ph,idx){
+    if(!ph.debut||!ph.fin)return;
+    items.push({
+      id:'phase-'+idx,type:'phase',
+      label:ph.nom||('Phase '+(idx+1)),
+      phase:'',livrable:'',
+      start:ph.debut,end:ph.fin,
+      avancement:0,
+      color:'#0f172a'
+    });
+  });
   // Actions liées au projet
   actions.forEach(function(a){
     if(!a.dateDebut||!a.delai)return;
@@ -480,6 +496,7 @@ async function init(){
     var p=(results[0].value.data||[]).find(function(r){return String(r[0])===String(projetId);});
     if(p){
       projet={id:p[0],nom:p[1],dateDebut:String(p[5]||'').split('T')[0],dateFin:String(p[6]||'').split('T')[0]};
+      try{phases=JSON.parse(p[13]||'[]');}catch(ex){phases=[];}
       document.getElementById('gantt-project-name').textContent='📊 Gantt — '+projet.nom;
       document.getElementById('gantt-dates').textContent=new Date(projet.dateDebut).toLocaleDateString('fr-FR')+' → '+new Date(projet.dateFin).toLocaleDateString('fr-FR');
       ganttStart=new Date(projet.dateDebut);

@@ -207,6 +207,16 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
     </div>
   </div>
 
+  <!-- Phases du projet -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Phases du projet</div></div>
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Définissez les grandes phases du projet. Elles apparaîtront dans le planning Gantt.</p>
+      <div id="phases-list"></div>
+      <button onclick="addPhase()" style="background:var(--blue-lt);color:var(--blue);border:1px solid #93c5fd;height:32px;padding:0 14px;font-size:12px;font-weight:700;border-radius:7px;cursor:pointer">➕ Ajouter une phase</button>
+    </div>
+  </div>
+
   <!-- Lien document -->
   <div class="card">
     <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Document projet</div></div>
@@ -299,6 +309,42 @@ function getRasciData(){
   return data;
 }
 
+var phaseCount=0;
+
+function addPhase(nom,debut,fin){
+  phaseCount++;
+  var idx=phaseCount;
+  var div=document.createElement('div');
+  div.id='phase-'+idx;
+  div.style.cssText='background:var(--slate);border-radius:7px;padding:12px;margin-bottom:8px;border:1px solid var(--border)';
+  div.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+    +'<span style="font-size:12px;font-weight:700;color:var(--steel-dk)">Phase '+idx+'</span>'
+    +'<button data-idx="'+idx+'" onclick="document.getElementById('phase-'+this.dataset.idx).remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px">&#x2715;</button>'
+    +'</div>'
+    +'<div class="fld" style="margin-bottom:8px">'
+    +'<label class="fld-lbl">Nom de la phase</label>'
+    +'<input type="text" class="fld-inp" id="ph-nom-'+idx+'" placeholder="Ex: Phase 1 — Diagnostic, Déploiement..." value="'+(nom||'')+'" style="height:34px">'
+    +'</div>'
+    +'<div class="form-row">'
+    +'<div class="fld"><label class="fld-lbl">Date de début</label><input type="date" class="fld-inp" id="ph-deb-'+idx+'" value="'+(debut||'')+'" style="height:34px"></div>'
+    +'<div class="fld"><label class="fld-lbl">Date de fin</label><input type="date" class="fld-inp" id="ph-fin-'+idx+'" value="'+(fin||'')+'" style="height:34px"></div>'
+    +'</div>';
+  document.getElementById('phases-list').appendChild(div);
+}
+
+function getPhases(){
+  var phases=[];
+  for(var i=1;i<=phaseCount;i++){
+    var nomEl=document.getElementById('ph-nom-'+i);
+    if(!nomEl)continue;
+    var nom=nomEl.value.trim();
+    var deb=document.getElementById('ph-deb-'+i).value;
+    var fin=document.getElementById('ph-fin-'+i).value;
+    if(nom||deb||fin)phases.push({nom:nom,debut:deb,fin:fin});
+  }
+  return phases;
+}
+
 async function saveProjet(){
   if(!selectedType){showToast('Veuillez sélectionner un type de projet',false);return;}
   var nom=document.getElementById('f-nom').value.trim();
@@ -321,6 +367,7 @@ async function saveProjet(){
     commentaires:document.getElementById('f-commentaires').value.trim(),
     rasci:JSON.stringify(getRasciData()),
     lien:document.getElementById('f-lien').value.trim(),
+    phases:JSON.stringify(getPhases()),
     createdAt:new Date().toISOString()
   };
   showToast('Enregistrement en cours...',false);
@@ -349,6 +396,8 @@ function resetForm(){
   document.getElementById('f-lien').value='';
   document.getElementById('rasci-body').innerHTML='';
   rasciCount=0;
+  document.getElementById('phases-list').innerHTML='';
+  phaseCount=0;
 }
 
 // Mode édition
@@ -380,6 +429,13 @@ async function loadProjetForEdit(id){
     document.getElementById('f-objectifs').value=p[8]||'';
     document.getElementById('f-commentaires').value=p[9]||'';
     document.getElementById('f-lien').value=p[10]||'';
+    // Phases
+    document.getElementById('phases-list').innerHTML='';
+    phaseCount=0;
+    try{
+      var phases=JSON.parse(p[13]||'[]');
+      phases.forEach(function(ph){addPhase(ph.nom,ph.debut,ph.fin);});
+    }catch(ex){}
     document.querySelectorAll('.type-btn').forEach(function(btn){if(btn.dataset.type===p[3])selectType(btn);});
     document.querySelectorAll('.statut-btn').forEach(function(btn){if(btn.dataset.statut===p[7])selectStatut(btn);});
     // RASCI
