@@ -227,7 +227,306 @@ const STORAGE={
 </script>
 <div class="toast" id="toast"></div>
 <script>
-const SECTIONS=[{"key": "duerp", "label": "DUERP", "icon": "📋", "ref": "Art. L.4121-3 CT | Décret 2001-1016 | Loi 2021-1018", "criteria": ["Le DUERP existe sur le site", "Le DUERP a été mis à jour il y a moins d'1 an", "Le DUERP est rédigé sur la trame Groupe", "Le contenu du DUERP est cohérent avec la réalité du terrain", "Un PAPRIPACT ou plan d'actions est formalisé et suivi"]}, {"key": "plan_prev", "label": "Plan Prévention", "icon": "🤝", "ref": "Art. R.4512-1 à R.4512-16 CT | Décret 92-158", "criteria": ["La liste des entreprises extérieures concernées est connue", "Les plans de prévention sont réalisés avant chaque intervention", "Les plans de prévention sont signés par les représentants légaux", "Les plans de prévention sont conservés sur site et diffusés", "Les plans de prévention sont mis à jour en cas de modification", "Un protocole de sécurité est établi pour le chargement/déchargement"]}, {"key": "accueil", "label": "Accueil SSE", "icon": "👷", "ref": "Art. L.4141-2 CT | Art. R.4141-1 à R.4141-20", "criteria": ["Un livret d'accueil sécurité est remis à chaque nouveau salarié", "Un accueil SSE formalisé est réalisé avant la prise de poste", "Un QCM ou test de compréhension est effectué à l'issue de l'accueil", "La fiche d'accueil signée est archivée dans le dossier du salarié", "Les risques spécifiques au poste sont présentés lors de l'accueil", "Les consignes incendie et évacuation sont expliquées lors de l'accueil", "Les EPI obligatoires sont remis et expliqués lors de l'accueil", "Les intérimaires et CDD bénéficient également d'un accueil SSE", "Un accueil spécifique est prévu pour les postes à risque (SIR)", "Le responsable de site valide la réalisation de l'accueil", "Les accueils réalisés sont enregistrés et traçables"]}, {"key": "formation", "label": "Formation Habilitation", "icon": "🎓", "ref": "Art. L.4141-1 CT | Décret 98-1084 | Décret 2010-1018", "criteria": ["Un plan de formation SSE est établi et mis à jour annuellement", "Les formations obligatoires sont réalisées dans les délais réglementaires", "Les habilitations électriques sont à jour pour tous les salariés concernés", "Les CACES sont valides pour tous les conducteurs d'engins", "Les habilitations travail en hauteur sont validées et archivées", "Les habilitations levage sont à jour et correspondent aux équipements", "Les formations sont renouvelées après changement de poste ou d'équipement", "Les formations sont renouvelées après absence prolongée ou accident", "Les attestations et certificats de formation sont archivés", "Un registre des habilitations est tenu à jour et accessible sur site", "Les habilitations B0L/B1L/B2L pour véhicules électriques sont validées"]}, {"key": "accident", "label": "Accident Travail", "icon": "🚑", "ref": "Art. L.441-1 et R.441-2 CSS | Art. R.4121-1 CT", "criteria": ["La procédure de gestion des accidents est affichée et connue de tous", "Tout accident du travail est déclaré à la CPAM dans les 48 heures", "Un registre des accidents du travail et soins est tenu à jour", "Une analyse des causes est réalisée après chaque accident", "Les presqu'accidents et situations dangereuses sont déclarés et analysés", "Des actions correctives et préventives sont définies et suivies", "Le retour d'expérience est partagé avec les équipes concernées", "Les indicateurs accidents (TF, TG) sont calculés et communiqués", "La boîte à pharmacie est accessible, complète et vérifiée régulièrement", "Les Sauveteurs Secouristes du Travail (SST) sont formés et à jour", "Les numéros d'urgence (15, 18) sont affichés de manière visible"]}, {"key": "vgp", "label": "Vérifications VGP", "icon": "🔧", "ref": "Art. R.4322-1 CT | Arrêté 01/03/2004 | Décret 88-1056", "criteria": ["Un tableau de suivi des vérifications périodiques est tenu à jour", "Les ponts élévateurs véhicules sont contrôlés annuellement (organisme agréé)", "Les équipements de levage (élingues, sangles, palans) contrôlés annuellement", "Les chariots élévateurs et gerbeurs sont contrôlés tous les 6 mois", "Les installations électriques sont contrôlées annuellement (organisme agréé)", "Les extincteurs et RIA sont contrôlés annuellement (organisme agréé)", "Les disjoncteurs différentiels sont testés tous les 6 mois (bouton TEST)", "Les portes automatiques et portails motorisés contrôlés tous les 6 mois", "Les compresseurs sont soumis aux inspections périodiques (IP/RP)", "Les échelles, escabeaux et gardes-corps sont vérifiés annuellement", "Les rapports de contrôle sont archivés et les écarts levés dans les délais"]}, {"key": "epi", "label": "Vêtements EPI", "icon": "🦺", "ref": "Art. L.4121-1 CT | Règlement UE 2016/425 | Art. R.4321-4", "criteria": ["La liste des EPI obligatoires par poste est établie et à jour", "Les EPI sont fournis gratuitement par l'employeur à tous les salariés", "Les salariés sont formés à l'utilisation et à l'entretien des EPI", "Le port des EPI est contrôlé régulièrement par les responsables", "Les EPI défectueux sont retirés du service et remplacés immédiatement", "Les vêtements de travail sont fournis conformément à la convention collective", "Les chaussures de sécurité sont adaptées aux risques identifiés par poste", "Les EPI sont conformes aux normes EN et portent le marquage CE", "Un registre de distribution des EPI est tenu à jour", "Les EPI sont stockés dans des conditions adéquates (accessibles, propres)", "Le choix des EPI est fondé sur l'évaluation des risques (DUERP)"]}, {"key": "vhe", "label": "VHE", "icon": "⚡", "ref": "NF C18-550 | Art. R.4544-9 CT | ICPE 2712-1", "criteria": ["Les salariés intervenant sur VHE sont habilités (B0L, B1L, B2L — NF C18-550)", "Les procédures de traitement d'un VHE sont disponibles et connues", "Une ZST et ZST renforcée sont aménagées sur zone imperméable, identifiée", "Des zones de stockage dédiées aux batteries lithium-ion sont aménagées", "Un système de détection incendie est en place dans les zones de stockage VHE", "Les moyens d'extinction adaptés aux feux électriques/lithium sont disponibles", "Les véhicules électriques sont identifiés et signalés dès leur entrée sur site", "Un suivi des flux entrants/sortants de batteries est réalisé", "Des rondes de surveillance sont effectuées dans les zones de stockage VHE", "Les EPI spécifiques HT (gants isolants, écrans faciaux) sont disponibles", "Les prescriptions ICPE 2712-1 relatives aux VHE sont respectées"]}, {"key": "incendie", "label": "Risque Incendie", "icon": "🔥", "ref": "Art. R.4227-1 à R.4227-57 CT | ICPE 2712-1", "criteria": ["Un Plan de Défense Incendie (PDI) est établi, affiché et connu des salariés", "Les issues de secours sont libérées, signalées et accessibles en permanence", "Des exercices d'évacuation incendie sont réalisés au moins une fois par an", "Les extincteurs sont en nombre suffisant, signalés et en bon état", "Un registre de sécurité incendie est tenu à jour sur le site", "Les salariés sont formés à la manipulation des extincteurs", "Des rondes de surveillance incendie sont réalisées conformément au PDI", "Les matériaux combustibles sont séparés des sources d'inflammation", "Les zones de stockage de liquides inflammables respectent les prescriptions ICPE", "L'éclairage de secours est vérifié tous les 6 mois (test bouchon)", "Les conduites à tenir en cas d'incendie sont affichées et connues de tous"]}, {"key": "dechets", "label": "Déchets Fluides", "icon": "♻️", "ref": "Code Environnement L.541-1 | ICPE 2712/2714 | Arrêté BSDD", "criteria": ["Un plan de gestion des déchets est établi et mis à jour sur le site", "Les déchets dangereux (huiles, batteries, filtres, liquides) sont triés et étiquetés", "Les déchets sont stockés dans des contenants adaptés et en bon état", "Les BSDD des déchets dangereux sont archivés 5 ans", "Les prestataires de collecte des déchets sont agréés et identifiés", "Les cuves et récipients de fluides sont en bon état et étanches", "Des rétentions adaptées sont en place sous les zones de stockage fluides", "Les écoulements accidentels sont pris en charge immédiatement avec absorbants", "Un registre de suivi des déchets produits est tenu à jour", "Les salariés sont sensibilisés aux procédures de tri et gestion des déchets", "Les obligations ICPE liées aux déchets et fluides sont respectées"]}];
+const SECTIONS=[
+  {
+    "key": "accueil",
+    "label": "Accueil sécurité",
+    "icon": "👷",
+    "criteria": [
+      "L’accueil sécurité présente les règles, consignes et comportements attendus sur le site",
+      "L’accueil sécurité informe sur les risques pour la santé et la sécurité du salarié",
+      "L’accueil sécurité précise les moyens de prévention et les procédures d’urgence à suivre",
+      "Chaque salarié est formé aux gestes, postures, procédures et équipements propres à son poste",
+      "La formation sécurité est renouvelée en cas de changement de poste, de nouvelle technologie ou de reprise après absence prolongée",
+      "Arrivée d\'un nouveau salarié dans les 3 derniers mois",
+      "Appel à l\'interim dans les 3 derniers mois",
+      "Chaque nouveau collaborateur bénéficie d’un accueil sécurité dès son arrivée"
+    ]
+  },
+  {
+    "key": "attitude",
+    "label": "Attitude, droits et devoirs",
+    "icon": "🤝",
+    "criteria": [
+      "Le salarié adopte une attitude interrogative : analyse de son environnement avant de commencer à travailler",
+      "Le droit d’alerte est exercé correctement (signalement immédiat d’un danger)"
+    ]
+  },
+  {
+    "key": "controle_reg",
+    "label": "Contrôle réglementaire des installations et équipements",
+    "icon": "🔧",
+    "criteria": [
+      "Le matériel possède une étiquette ou un registre de contrôle à jour",
+      "La date de dernière inspection est conforme aux exigences",
+      "Le matériel est en bon état : pas de défaut visible (usure, jeu, fuite, fissure…)",
+      "Aucun matériel périmé, modifié ou potentiellement dangereux n’est utilisé",
+      "Analyse rapide du poste de travail avant de commencer",
+      "Signalement immédiat de toute anomalie ou doute"
+    ]
+  },
+  {
+    "key": "eco",
+    "label": "Engagement éco-responsable",
+    "icon": "♻️",
+    "criteria": [
+      "Des indicateurs de suivi environnemental sont mis en place (consommations, déchets, énergie, eau).",
+      "Les consommations d’électricité et de gaz sont suivies mensuellement.",
+      "Une consigne est établie en cas de déversements accidentels (huiles, carburants, fluides)"
+    ]
+  },
+  {
+    "key": "epi",
+    "label": "EPI",
+    "icon": "🦺",
+    "criteria": [
+      "Pantalon de travail",
+      "Gilet haute visibilité pour aller sur le parc",
+      "Chaussures de sécurité",
+      "Gants mécanicien/manutention selon le poste",
+      "Lunettes de protection/visière",
+      "Bouchon d\'oreilles/ Casques protection auditive",
+      "Casquette de sécurité",
+      "Visière et gants d\'électricien (démontage batterie)"
+    ]
+  },
+  {
+    "key": "equipements",
+    "label": "Equipements",
+    "icon": "⚙️",
+    "criteria": [
+      "Les carters de protection des machines sont présents et en bon état (pas de retrait, pas de modification).",
+      "Aucune machine n’est utilisée si un carter est manquant ou défectueux (mise hors service et signalisation).",
+      "Les consignes de consignation sont connues et respectées par l’opérateur.",
+      "Les risques liés aux machines ont été identifiés (électrisation, écrasement, happement, brûlure, incendie…).",
+      "Fontaine de lavage des pièce présente avec EPI à porter",
+      "Les portes automatiques sont en bon état, sans trou.",
+      "Garde-corps sécurisés",
+      "Matériel \"maison\" limité à des chariots/étagères",
+      "Installation d\'une nouvelle machine dans les 3 derniers mois"
+    ]
+  },
+  {
+    "key": "exploitation",
+    "label": "Exploitation",
+    "icon": "🏭",
+    "criteria": [
+      "Il existe une salle de repos qui est tenue propre et disponible pour les salariés",
+      "Le site dispose d\'un plan des zones mis à jour et modifiable facilement",
+      "Les espaces de travail sont propres et non encombrées",
+      "Il n\'y a pas de bouilloires/micro-ondes aux postes de travail",
+      "Les zones de stockage de véhicules ne sont pas surchargées",
+      "Le platin n\'est empilé que sur 2 hauteurs (3m max)",
+      "Attitude interrogative des salariés",
+      "Déplacement des véhicules sur chariot ok (visibilité, vitesse adaptée, alarme de recul)",
+      "Manutention des charges lourdes réalisées à 2 ou avec aide mécanique",
+      "Absence d\'outil à point chaud (meuleuse, chalumeau)",
+      "Absence de branchements électriques sauvages",
+      "Consignes claires pour la pince hydraulique",
+      "Des mesures de bruits sont réalisées régulièrement au poste de démontage/démonte pneu",
+      "Les réservoirs sont vidangés avec un matériel de perforation étanche",
+      "Il y a une cuve pour les carburants : gasoil/essence/carburant souillé",
+      "Il n\'y a pas de transvasement manuel de carburant d\'un bidon à une cuve",
+      "Il existe une pompe pour passer le carburant du bidon à la cuve.",
+      "Le carburant souillé est évacué avec les déchets dangereux.",
+      "Il y a un contrôle qualité du carburant avant déversement dans les cuves.",
+      "Les véhicules sont systématiquement dépollués avant démontage des pièces mécaniques",
+      "Garde-corps mezzanine en bon état"
+    ]
+  },
+  {
+    "key": "gestion_d_un_acciden",
+    "label": "Gestion d’un accident du travail",
+    "icon": "📋",
+    "criteria": [
+      "Tout accident du travail, même bénin, est déclaré à la Sécurité sociale dans les délais légaux (48h CDI / 24h intérimaires)",
+      "En cas d\'accident, le salarié informe immédiatement son responsable",
+      "Un registre des accidents bénins est tenu conformément à l’article L.441-4 du Code de la sécurité sociale",
+      "Les services RH et QSSE sont immédiatement informés en cas d’accident",
+      "Une analyse des causes et un plan d’action sont systématiquement réalisés après un accident de travail",
+      "Une alerte accident est diffusée à l’ensemble des sites",
+      "Le suivi du plan d’actions issu de l\'analyse des causes est documenté et vérifié"
+    ]
+  },
+  {
+    "key": "icpe",
+    "label": "ICPE",
+    "icon": "📋",
+    "criteria": [
+      "Le site dispose d\'un plan des réseaux à jour",
+      "Pompage des séparateurs hydrocarbures annuel",
+      "Il y a un poteau incendie à moins de 100m de tout point du site",
+      "Analyse des rejets EP annuelle"
+    ]
+  },
+  {
+    "key": "manutention",
+    "label": "Manutentions manuelles & Postures de travail",
+    "icon": "💪",
+    "criteria": [
+      "Les aides à la manutention sont disponibles aux postes de démontage des pièces lourdes",
+      "Pas de transport de pièces encombrantes dans les escaliers",
+      "Pas de transport de pièces supérieures à 10kg dans les escaliers.",
+      "Vérification des conditions de sécurité du matériel (palans, chariots, etc.)",
+      "Formation Gestes et Postures du personnel il y a moins de 5 ans.",
+      "Maintenance préventive des équipements de manutention"
+    ]
+  },
+  {
+    "key": "obligation_de_l_empl",
+    "label": "Obligation de l’employeur",
+    "icon": "📋",
+    "criteria": [
+      "Un Document Unique d’Évaluation des Risques Professionnels (DUERP) est en place et prend en compte tous les postes de travail",
+      "Le DUERP est mis à jour au moins une fois par an,  à chaque modification importante et en cas d\'accident de travail",
+      "Les formations sont documentées et tracées (liste des participants, dates, sujets abordés)",
+      "Les missions nécessitant une habilitation sont clairement identifiées",
+      "Les formations électriques sont à jour pour chacun des salariés concerné.",
+      "Les formations chariot sont à jour",
+      "Les salariés habilités ont été formés, évalués et jugés aptes à exercer en sécurité",
+      "Il existe un plan de prévention réactualisé chaque année pour tous les intervenants extérieurs.",
+      "Il existe un protocole de chargement pour les entreprises de transport des déchets",
+      "Les autorisations de conduite chariot de l\'employeur sont à jour",
+      "Les autorisations électriques de l\'employeur sont à jour"
+    ]
+  },
+  {
+    "key": "organisation",
+    "label": "Organisation",
+    "icon": "🗂️",
+    "criteria": [
+      "Il existe des routines régulières de rangement des espaces de travail",
+      "Présence d\'un chef d\'équipe/atelier",
+      "Polyvalence des opérateurs",
+      "Les équipes sont complètes"
+    ]
+  },
+  {
+    "key": "outils",
+    "label": "Outils à main et électroportatifs",
+    "icon": "🔨",
+    "criteria": [
+      "Le salarié est formé et/ou sensibilisé à l’utilisation des outils à main et électroportatifs",
+      "L’état des outils est vérifié avant utilisation",
+      "Chaque outil est utilisé uniquement pour la fonction prévue",
+      "Les Cutter à disposition (expédition) sont à lame auto rétractable",
+      "Le salarié adopte une posture correcte et sécurisée",
+      "L’environnement de travail est propre, dégagé et sécurisé"
+    ]
+  },
+  {
+    "key": "parc",
+    "label": "Parc véhicules",
+    "icon": "🚗",
+    "criteria": [
+      "Le site possède un plan de circulation à jour",
+      "La signalisation « Piétons » est respectée par les opérateurs.",
+      "L\'état du béton du parc est correct, pas de trop nombreux nids de poule",
+      "Les sols et chemins de circulation sont dégagés (pas d’encombrement, pas d’obstacles).",
+      "Aucun objet ne gêne ou n’obstrue la vue lors du déplacement.",
+      "Les déplacements se font sans téléphone et sans distraction.",
+      "Il existe une signalétique spécifique pour le picking sur site.",
+      "Les zones dangereuses (circulation engins, levage, manœuvres) sont respectées et non traversées.",
+      "Signalisation des différentes zones de stockage claire"
+    ]
+  },
+  {
+    "key": "cmr",
+    "label": "Risque CMR",
+    "icon": "⚗️",
+    "criteria": [
+      "Il n\'y a pas de carburant à l\'air libre dans l\'atelier de démontage : réservoir chaudière, chariot vidange",
+      "Le carburant par directement en cuve lors de la vidange du réservoir"
+    ]
+  },
+  {
+    "key": "incendie",
+    "label": "Risque incendie",
+    "icon": "🔥",
+    "criteria": [
+      "Les voies d’évacuation et issues de secours sont aménagées et maintenues en état",
+      "Les accès et voies de circulation pompiers sont dégagées et connues",
+      "Les extincteurs, RIA, alarmes et systèmes de détection sont présents et vérifiés périodiquement",
+      "Il existe un plan d\'évacuation avec la localisation des extincteurs et des déclencheurs d\'alarme à jour",
+      "Les salariés sont formés à la manipulation des extincteurs et aux conduites à tenir en cas d’incendie",
+      "Le plan d\'évacuation est affiché aux différents postes de travail et dans l\'accueil visiteurs.",
+      "Un plan de défense incendie est mis à jour et à disposition des salariés.",
+      "Le process de mise sur rétention du site est connu.",
+      "Le matériel de mise sur rétention est en état de fonctionnement.",
+      "Un registre de sécurité consignant les contrôles, exercices et vérifications réglementaires est disponible",
+      "Les zones de stockage des déchets sont identifiées et propres",
+      "Il n\'y a pas de déchets isolés sur le site",
+      "La zone ATEX est identifiée",
+      "Les rondes de surveillances sont effectuées tous les jours. Le plan et la liste d\'émargement sont disponibles.",
+      "Le stockage des produits chimiques en bidons est correct : rétentions/compatibilités",
+      "Affichage des pictogrammes de danger et explication des risques",
+      "Les matières combustibles sont séparées des sources d’inflammation",
+      "Des exercices d’évacuation sont organisés tous les 6 mois.",
+      "La réactivité et la coordination des salariés sont évaluées lors des exercices"
+    ]
+  },
+  {
+    "key": "routier",
+    "label": "Risque routier et Transport",
+    "icon": "🛣️",
+    "criteria": [
+      "Bon état de fonctionnement du véhicule / engin",
+      "Respect du poids maximal du véhicule",
+      "Permis de conduire valide",
+      "Le salarié signale immédiatement toute situation dangereuse rencontrée sur la route ou sur site",
+      "Tout incident, presque-accident ou anomalie est remonté via le formulaire adapté (retour d’expérience)",
+      "Le salarié respecte le code de la route (vitesse, panneaux, port de la ceinture, règles du site)",
+      "Les équipements, outils et charges sont correctement rangés (et sanglés)"
+    ]
+  },
+  {
+    "key": "stockage",
+    "label": "Stockage pièces détachées",
+    "icon": "📦",
+    "criteria": [
+      "Les escabeaux sont en bon état",
+      "Les racks de stockage sont en bon état",
+      "Les pieds des racks de stockages sont protégés par des sabots",
+      "Le stock mort de pièces détachées est jeté une fois par an",
+      "Un inventaire du stock est réalisé une fois par an"
+    ]
+  },
+  {
+    "key": "dechets",
+    "label": "Tri, gestion des déchets et des fluides",
+    "icon": "♻️",
+    "criteria": [
+      "Les déchets sont collectés et évacués par des filières agréées avec BSD à jour",
+      "Le registre des déchets est tenu à jour et conforme à la réglementation en vigueur.",
+      "Les grilles d\'évacuation sont nettoyées tous les 6 mois",
+      "Les rétentions d\'huiles sont pompées et nettoyées tous les 2 mois ?",
+      "Les bordereaux de suivi des déchets (BSD) sont correctement renseignés, archivés et disponibles pour consultation.",
+      "Les prestataires de traitement disposent d’agréments et de certifications valides",
+      "Les produits dangereux et fluides sont stockés en rétention étanche, de capacité suffisante, correctement étiquetés et protégé",
+      "Des contrôles réguliers sont effectués pour détecter fuites ou dégradations éventuelles",
+      "AdBlue evacué comme déchet dangereux ?",
+      "Pompage des rétentions huiles et carburant",
+      "La Check-list ADR est remplie par un salarié formé à l\'ADR."
+    ]
+  },
+  {
+    "key": "vhe",
+    "label": "Véhicules électriques et hybrides",
+    "icon": "⚡",
+    "criteria": [
+      "Zone de Stockage Temporaire (ZST) pour VE existante avec signalétique",
+      "La dépose des batteries VE/VH est faite par un salarié habilité B2XL + formation dépose",
+      "Les câbles orange de la chaine de traction sont débranchés et non coupés lorsque les prises IP2X sont en bon état.",
+      "Des EPI isolants + outils isolants sont disponibles pour les salariés habilités B2XL lors de la dépose de la batterie",
+      "Les batteries VE/VH usagées sont stockées dans un espace sécurisé : zone de 5m autour ou murs REI120",
+      "VE/VH identifié par sticker aux différentes étapes de traitement : dépluggé/hors tension/dangereux",
+      "Film plastique sur vitres, pare-brise, hayons cassés pour les VE/VH",
+      "Système de détection incendie",
+      "La structure du batiment est au moins R60",
+      "Les toitures et couvertures de toiture répondent à la classe BROOF (t3)"
+    ]
+  }
+];
 const SITES=["38", "41", "89", "47", "37", "17", "72", "72bis"];
 let SS={};
 
