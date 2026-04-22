@@ -587,7 +587,7 @@ function init(){
     d.innerHTML=`
       <div class="sec-hd" onclick="tog(${si})">
         <div class="sec-hd-l"><span class="sec-icon">${sec.icon}</span>
-          <div><div class="sec-name">${sec.label}</div><div class="sec-ref">${sec.ref}</div></div>
+          <div><div class="sec-name">${sec.label}</div>${sec.ref?'<div class="sec-ref">'+sec.ref+'</div>':''}</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
           <span class="sec-score" id="sb-${si}">0/${sec.criteria.length}</span>
