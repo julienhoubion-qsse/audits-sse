@@ -311,6 +311,10 @@ function getRasciData(){
 
 var phaseCount=0;
 
+function removePhase(btn){
+  var row=btn.closest('[id^="phase-"]');
+  if(row)row.remove();
+}
 function addPhase(nom,debut,fin){
   phaseCount++;
   var idx=phaseCount;
@@ -319,7 +323,7 @@ function addPhase(nom,debut,fin){
   div.style.cssText='background:var(--slate);border-radius:7px;padding:12px;margin-bottom:8px;border:1px solid var(--border)';
   div.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
     +'<span style="font-size:12px;font-weight:700;color:var(--steel-dk)">Phase '+idx+'</span>'
-    +'<button data-idx="'+idx+'" onclick="document.getElementById('phase-'+this.dataset.idx).remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px">&#x2715;</button>'
+    +'<button data-idx="'+idx+'" onclick="removePhase(this)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px">&#x2715;</button>'
     +'</div>'
     +'<div class="fld" style="margin-bottom:8px">'
     +'<label class="fld-lbl">Nom de la phase</label>'
