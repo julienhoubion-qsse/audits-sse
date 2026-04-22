@@ -1,0 +1,404 @@
+<!-- SSE — Charte Projet -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --blue:#1d4ed8;--blue-lt:#dbeafe;--blue-xlt:#eff6ff;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--blue)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#93c5fd;margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:#fff;border-bottom-color:rgba(107,191,31,.5)}
+.nav-btn.active{color:#fff!important;border-bottom-color:#6BBF1F!important}
+.wrapper{max-width:920px;margin:0 auto;padding:28px 24px 60px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:20px}
+.card-hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-hd-bar{width:4px;height:20px;background:var(--blue);border-radius:2px;flex-shrink:0}
+.card-title{font-family:'Exo 2',sans-serif;font-size:14px;font-weight:700;color:var(--steel-dk)}
+.card-body{padding:20px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:600px){.form-row,.form-row-3{grid-template-columns:1fr}}
+.fld{display:flex;flex-direction:column;gap:5px}
+.fld-lbl{font-size:12px;font-weight:700;color:var(--steel-dk);text-transform:uppercase;letter-spacing:.5px}
+.fld-req{color:#dc2626;margin-left:2px}
+.fld-sel,.fld-inp{height:38px;border:1px solid var(--border);border-radius:7px;padding:0 12px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--white);color:var(--charcoal);transition:border-color .15s}
+.fld-sel:focus,.fld-inp:focus,.fld-txt:focus{outline:none;border-color:var(--blue)}
+.fld-txt{border:1px solid var(--border);border-radius:7px;padding:10px 12px;font-family:'Nunito Sans',sans-serif;font-size:13px;resize:vertical;min-height:80px;transition:border-color .15s;width:100%}
+/* Type selector */
+.type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:4px}
+.type-btn{border:2px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .15s;background:var(--white);text-align:left}
+.type-btn:hover{border-color:var(--blue-lt);background:var(--blue-xlt)}
+.type-btn.selected{border-color:var(--blue);background:var(--blue-lt)}
+.type-btn .type-icon{font-size:20px;display:block;margin-bottom:4px}
+.type-btn .type-label{font-family:'Exo 2',sans-serif;font-size:11px;font-weight:700;color:var(--steel-dk)}
+.type-btn.strategic{border-color:#d97706}
+.type-btn.strategic.selected{border-color:#d97706;background:#fef3c7}
+/* RASCI table */
+.rasci-table{width:100%;border-collapse:collapse;font-size:12px}
+.rasci-table th{background:var(--steel-dk);color:#fff;padding:8px 10px;text-align:left;font-weight:600}
+.rasci-table th:not(:first-child){text-align:center;width:60px}
+.rasci-table td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.rasci-table td:not(:first-child){text-align:center}
+.rasci-table tr:hover td{background:var(--slate)}
+.rasci-check{width:18px;height:18px;cursor:pointer;accent-color:var(--blue)}
+.rasci-add{display:flex;gap:8px;margin-top:10px;align-items:center}
+/* Statut */
+.statut-grid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.statut-btn{border:2px solid var(--border);border-radius:7px;padding:7px 14px;cursor:pointer;font-size:12px;font-weight:700;background:var(--white);transition:all .15s}
+.statut-btn.sel-encours{border-color:#3b82f6;background:#dbeafe;color:#1e3a8a}
+.statut-btn.sel-termine{border-color:var(--green);background:var(--ok-bg,#D6F0A8);color:var(--green-dk)}
+.statut-btn.sel-suspendu{border-color:#d97706;background:#fef3c7;color:#92400e}
+.statut-btn.sel-planifie{border-color:#8b5cf6;background:#ede9fe;color:#5b21b6}
+/* Btn */
+.btn{height:38px;padding:0 20px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-sm{height:32px;padding:0 12px;font-size:12px}
+.form-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.codir-badge{display:inline-flex;align-items:center;gap:6px;background:#fef3c7;border:1px solid #fcd34d;color:#92400e;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;margin-top:6px}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE</div>
+    <div class="ph-title">🗂️ Charte de projet</div>
+    <div class="ph-sub">Enregistrement et suivi de projet</div>
+  </div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn" onclick="window.location.href='Bibliotheque_Projets_SSE.html'">📂 Bibliothèque projets</button>
+  <button class="nav-btn active">🗂️ Nouveau projet</button>
+</div>
+
+<div class="wrapper">
+
+  <!-- Type de projet -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Type de projet <span style="color:#dc2626">*</span></div></div>
+    <div class="card-body">
+      <div class="type-grid">
+        <button class="type-btn strategic" data-type="Projet stratégique CODIR" onclick="selectType(this)">
+          <span class="type-icon">⭐</span>
+          <span class="type-label">Projet stratégique CODIR</span>
+        </button>
+        <button class="type-btn" data-type="Transformation" onclick="selectType(this)">
+          <span class="type-icon">🔄</span>
+          <span class="type-label">Transformation</span>
+        </button>
+        <button class="type-btn" data-type="Performance opérationnelle" onclick="selectType(this)">
+          <span class="type-icon">📈</span>
+          <span class="type-label">Performance opérationnelle</span>
+        </button>
+        <button class="type-btn" data-type="Projet SSE" onclick="selectType(this)">
+          <span class="type-icon">🛡️</span>
+          <span class="type-label">Projet SSE</span>
+        </button>
+        <button class="type-btn" data-type="Projet RSE" onclick="selectType(this)">
+          <span class="type-icon">🌿</span>
+          <span class="type-label">Projet RSE</span>
+        </button>
+        <button class="type-btn" data-type="Autre" onclick="selectType(this)">
+          <span class="type-icon">✏️</span>
+          <span class="type-label">Autre</span>
+        </button>
+      </div>
+      <div id="codir-badge" style="display:none"><div class="codir-badge">⭐ Projet suivi en CODIR — Visibilité direction</div></div>
+      <div id="type-libre-fld" style="display:none;margin-top:10px">
+        <input type="text" class="fld-inp" id="f-type-libre" placeholder="Précisez le type de projet..." style="width:100%">
+      </div>
+    </div>
+  </div>
+
+  <!-- Infos générales -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Informations générales</div></div>
+    <div class="card-body">
+      <div class="fld" style="margin-bottom:14px">
+        <label class="fld-lbl">Nom du projet <span class="fld-req">*</span></label>
+        <input type="text" class="fld-inp" id="f-nom" placeholder="Intitulé du projet...">
+      </div>
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Chef de projet <span class="fld-req">*</span></label>
+          <input type="text" class="fld-inp" id="f-chef" placeholder="Nom Prénom">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Site(s) concerné(s)</label>
+          <select class="fld-sel" id="f-site">
+            <option value="">— Sélectionner —</option>
+            <option value="38">38</option><option value="41">41</option>
+            <option value="89">89</option><option value="47">47</option>
+            <option value="37">37</option><option value="17">17</option>
+            <option value="72">72</option><option value="72bis">72bis</option>
+            <option value="Réseau">Réseau (tous sites)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row-3">
+        <div class="fld">
+          <label class="fld-lbl">Date de début <span class="fld-req">*</span></label>
+          <input type="date" class="fld-inp" id="f-date-debut">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Date de fin prévue <span class="fld-req">*</span></label>
+          <input type="date" class="fld-inp" id="f-date-fin">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Statut</label>
+          <div class="statut-grid">
+            <button class="statut-btn sel-planifie" data-statut="Planifié" onclick="selectStatut(this)">🔵 Planifié</button>
+            <button class="statut-btn" data-statut="En cours" onclick="selectStatut(this)">🟢 En cours</button>
+            <button class="statut-btn" data-statut="Suspendu" onclick="selectStatut(this)">🟠 Suspendu</button>
+            <button class="statut-btn" data-statut="Terminé" onclick="selectStatut(this)">✅ Terminé</button>
+          </div>
+        </div>
+      </div>
+      <div class="fld" style="margin-bottom:14px">
+        <label class="fld-lbl">Objectifs du projet <span class="fld-req">*</span></label>
+        <textarea class="fld-txt" id="f-objectifs" placeholder="Décrivez les objectifs et le périmètre du projet..."></textarea>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Commentaires</label>
+        <textarea class="fld-txt" id="f-commentaires" placeholder="Notes, contexte, contraintes particulières..." style="min-height:60px"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- RASCI -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Contributeurs — Matrice RASCI</div></div>
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px">
+        <strong>R</strong> = Responsible (réalise) &nbsp;·&nbsp;
+        <strong>A</strong> = Accountable (décide) &nbsp;·&nbsp;
+        <strong>S</strong> = Support (aide) &nbsp;·&nbsp;
+        <strong>C</strong> = Consulted (consulté) &nbsp;·&nbsp;
+        <strong>I</strong> = Informed (informé)
+      </p>
+      <table class="rasci-table" id="rasci-table">
+        <thead>
+          <tr>
+            <th>Contributeur</th>
+            <th>R</th><th>A</th><th>S</th><th>C</th><th>I</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="rasci-body"></tbody>
+      </table>
+      <div class="rasci-add">
+        <input type="text" class="fld-inp" id="rasci-new-name" placeholder="Nom du contributeur..." style="flex:1">
+        <button class="btn btn-sm" style="background:var(--blue-lt);color:var(--blue);border:1px solid #93c5fd" onclick="addRasci()">➕ Ajouter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lien document -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-bar"></div><div class="card-title">Document projet</div></div>
+    <div class="card-body">
+      <div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:14px 16px">
+        <div class="fld-lbl">📎 Lien vers la charte ou document projet</div>
+        <input type="url" class="fld-inp" id="f-lien" placeholder="https://drive.google.com/..." style="margin-top:8px;width:100%">
+        <div style="font-size:12px;color:#92400e;margin-top:6px">💡 Déposez votre document dans Google Drive et collez le lien ici.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-foot">
+    <button class="btn btn-ghost" onclick="resetForm()">🔄 Réinitialiser</button>
+    <button class="btn btn-primary" onclick="saveProjet()">💾 Enregistrer le projet</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+let selectedType='';
+let selectedStatut='Planifié';
+let rasciData=[];
+let rasciCount=0;
+
+document.getElementById('f-date-debut').value=new Date().toISOString().split('T')[0];
+
+function selectType(btn){
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedType=btn.dataset.type;
+  document.getElementById('codir-badge').style.display=selectedType==='Projet stratégique CODIR'?'block':'none';
+  document.getElementById('type-libre-fld').style.display=selectedType==='Autre'?'block':'none';
+}
+
+function selectStatut(btn){
+  document.querySelectorAll('.statut-btn').forEach(b=>{
+    b.className='statut-btn';
+  });
+  selectedStatut=btn.dataset.statut;
+  var cls={Planifié:'sel-planifie','En cours':'sel-encours',Suspendu:'sel-suspendu',Terminé:'sel-termine'};
+  btn.classList.add(cls[selectedStatut]||'sel-encours');
+}
+
+function addRasci(name,r,a,s,c,i){
+  rasciCount++;
+  var idx=rasciCount;
+  var nom=name||(document.getElementById('rasci-new-name').value.trim());
+  if(!nom&&!name)return;
+  document.getElementById('rasci-new-name').value='';
+
+  var tr=document.createElement('tr');
+  tr.id='rasci-row-'+idx;
+  var checks=['R','A','S','C','I'].map(function(role){
+    var checked=(role==='R'&&r)||(role==='A'&&a)||(role==='S'&&s)||(role==='C'&&c)||(role==='I'&&i)?'checked':'';
+    return '<td><input type="checkbox" class="rasci-check" data-idx="'+idx+'" data-role="'+role+'" '+checked+'></td>';
+  }).join('');
+  tr.innerHTML='<td><strong style="font-size:13px">'+nom+'</strong><br><span style="font-size:10px;color:var(--muted)" id="rasci-roles-'+idx+'"></span></td>'+checks+'<td><button onclick="document.getElementById(\'rasci-row-'+idx+'\').remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px">✕</button></td>';
+  document.getElementById('rasci-body').appendChild(tr);
+  updateRasciLabel(idx);
+
+  // Add event listeners
+  tr.querySelectorAll('.rasci-check').forEach(function(cb){
+    cb.addEventListener('change',function(){updateRasciLabel(idx);});
+  });
+}
+
+function updateRasciLabel(idx){
+  var row=document.getElementById('rasci-row-'+idx);
+  if(!row)return;
+  var roles=[];
+  row.querySelectorAll('.rasci-check:checked').forEach(function(cb){roles.push(cb.dataset.role);});
+  var lbl=document.getElementById('rasci-roles-'+idx);
+  if(lbl)lbl.textContent=roles.length?roles.join(', '):'Aucun rôle';
+}
+
+function getRasciData(){
+  var data=[];
+  document.querySelectorAll('#rasci-body tr').forEach(function(tr){
+    var nom=tr.querySelector('strong');
+    if(!nom)return;
+    var entry={nom:nom.textContent,roles:{}};
+    tr.querySelectorAll('.rasci-check').forEach(function(cb){
+      entry.roles[cb.dataset.role]=cb.checked;
+    });
+    data.push(entry);
+  });
+  return data;
+}
+
+async function saveProjet(){
+  if(!selectedType){showToast('Veuillez sélectionner un type de projet',false);return;}
+  var nom=document.getElementById('f-nom').value.trim();
+  var chef=document.getElementById('f-chef').value.trim();
+  var dateDebut=document.getElementById('f-date-debut').value;
+  var dateFin=document.getElementById('f-date-fin').value;
+  var objectifs=document.getElementById('f-objectifs').value.trim();
+  if(!nom||!chef||!dateDebut||!dateFin||!objectifs){
+    showToast('Nom, chef de projet, dates et objectifs sont obligatoires',false);return;
+  }
+  var typeLibre=document.getElementById('f-type-libre').value.trim();
+  var data={
+    id:Date.now(),
+    nom,chef,
+    type:selectedType==='Autre'&&typeLibre?typeLibre:selectedType,
+    site:document.getElementById('f-site').value,
+    dateDebut,dateFin,
+    statut:selectedStatut,
+    objectifs,
+    commentaires:document.getElementById('f-commentaires').value.trim(),
+    rasci:JSON.stringify(getRasciData()),
+    lien:document.getElementById('f-lien').value.trim(),
+    createdAt:new Date().toISOString()
+  };
+  showToast('Enregistrement en cours...',false);
+  try{
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveProjet',data})});
+    showToast('Projet enregistré !',true);
+    setTimeout(function(){window.location.href='Bibliotheque_Projets_SSE.html';},1800);
+  }catch(e){showToast('Erreur: '+e.message,false);}
+}
+
+function resetForm(){
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));
+  selectedType='';
+  document.getElementById('codir-badge').style.display='none';
+  document.getElementById('type-libre-fld').style.display='none';
+  document.getElementById('f-nom').value='';
+  document.getElementById('f-chef').value='';
+  document.getElementById('f-site').value='';
+  document.getElementById('f-date-debut').value=new Date().toISOString().split('T')[0];
+  document.getElementById('f-date-fin').value='';
+  document.querySelectorAll('.statut-btn').forEach(b=>b.className='statut-btn');
+  document.querySelector('[data-statut="Planifié"]').classList.add('sel-planifie');
+  selectedStatut='Planifié';
+  document.getElementById('f-objectifs').value='';
+  document.getElementById('f-commentaires').value='';
+  document.getElementById('f-lien').value='';
+  document.getElementById('rasci-body').innerHTML='';
+  rasciCount=0;
+}
+
+// Mode édition
+var urlParams=new URLSearchParams(window.location.search);
+var editId=urlParams.get('edit');
+if(editId)loadProjetForEdit(editId);
+
+function jsonpGet(action){
+  return new Promise(function(resolve,reject){
+    var cb='_cb'+Date.now()+Math.random().toString(36).slice(2);
+    window[cb]=function(d){delete window[cb];var el=document.getElementById('_js_'+cb);if(el)el.remove();resolve(d);};
+    var s=document.createElement('script');s.id='_js_'+cb;
+    s.src=GSHEET_URL+'?action='+action+'&callback='+cb;
+    s.onerror=function(){reject(new Error('failed'));};
+    document.head.appendChild(s);
+  });
+}
+
+async function loadProjetForEdit(id){
+  try{
+    var d=await jsonpGet('getProjets');
+    var p=(d.data||[]).find(function(r){return String(r[0])===String(id);});
+    if(!p){alert('Projet non trouvé');return;}
+    document.getElementById('f-nom').value=p[1]||'';
+    document.getElementById('f-chef').value=p[2]||'';
+    document.getElementById('f-site').value=p[4]||'';
+    document.getElementById('f-date-debut').value=String(p[5]||'').split('T')[0];
+    document.getElementById('f-date-fin').value=String(p[6]||'').split('T')[0];
+    document.getElementById('f-objectifs').value=p[8]||'';
+    document.getElementById('f-commentaires').value=p[9]||'';
+    document.getElementById('f-lien').value=p[10]||'';
+    document.querySelectorAll('.type-btn').forEach(function(btn){if(btn.dataset.type===p[3])selectType(btn);});
+    document.querySelectorAll('.statut-btn').forEach(function(btn){if(btn.dataset.statut===p[7])selectStatut(btn);});
+    // RASCI
+    try{
+      var rasci=JSON.parse(p[11]||'[]');
+      rasci.forEach(function(item){
+        addRasci(item.nom,item.roles.R,item.roles.A,item.roles.S,item.roles.C,item.roles.I);
+      });
+    }catch(ex){}
+    window._editProjetId=id;
+    var btn=document.querySelector('.btn-primary[onclick="saveProjet()"]');
+    if(btn)btn.textContent='💾 Mettre à jour le projet';
+    showToast('Projet chargé',true);
+  }catch(e){alert('Erreur: '+e.message);}
+}
+
+function showToast(msg,ok){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=ok?'var(--green-dk)':'var(--steel-dk)';
+  t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3000);
+}
+</script>

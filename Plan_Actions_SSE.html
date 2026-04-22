@@ -182,6 +182,20 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
           <input type="date" class="fld-inp" id="m-delai" style="height:36px">
         </div>
       </div>
+      <div class="form-row" id="m-projet-fields" style="display:none">
+        <div class="fld">
+          <label class="fld-lbl">Date de début</label>
+          <input type="date" class="fld-inp" id="m-date-debut" style="height:36px">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Phase du projet</label>
+          <input class="fld-inp" id="m-phase" placeholder="Ex: Phase 1 — Diagnostic" style="height:36px">
+        </div>
+      </div>
+      <div class="fld" id="m-livrable-fld" style="display:none;margin-bottom:10px">
+        <label class="fld-lbl">Livrable</label>
+        <input class="fld-inp" id="m-livrable" placeholder="Ex: Rapport, Outil, Formation..." style="height:36px">
+      </div>
 
       <div class="fld" style="margin-bottom:10px">
         <label class="fld-lbl">Avancement : <span id="m-avancement-val" style="color:var(--green-dk);font-weight:700">0%</span></label>
@@ -378,7 +392,13 @@ function openNewModal(auditId,site,auditDate,sectionKey,criteriaIdx,origin){
   document.getElementById('m-section-key').value=sectionKey||'';
   document.getElementById('m-criteria-idx').value=criteriaIdx!=null?criteriaIdx:'';
   document.getElementById('m-origin').value=origin||'';
+  var isProjet=(origin||'').includes('Projet') || (auditId||'').startsWith('PROJ-');
+  document.getElementById('m-projet-fields').style.display=isProjet?'grid':'none';
+  document.getElementById('m-livrable-fld').style.display=isProjet?'block':'none';
   document.getElementById('m-origin').value=origin||'';
+  var isProjet=(origin||'').includes('Projet') || (auditId||'').startsWith('PROJ-');
+  document.getElementById('m-projet-fields').style.display=isProjet?'grid':'none';
+  document.getElementById('m-livrable-fld').style.display=isProjet?'block':'none';
   document.getElementById('m-description').value='';
   document.getElementById('m-responsable').value='';
   document.getElementById('m-delai').value='';
@@ -401,6 +421,12 @@ function editAction(id){
   document.getElementById('m-section-key').value=a.sectionKey;
   document.getElementById('m-criteria-idx').value=a.criteriaIdx;
   document.getElementById('m-origin').value=a.origin||'';
+  var isP=(a.origin||'').includes('Projet')||(String(a.auditId||'')).startsWith('PROJ-');
+  document.getElementById('m-projet-fields').style.display=isP?'grid':'none';
+  document.getElementById('m-livrable-fld').style.display=isP?'block':'none';
+  document.getElementById('m-date-debut').value=a.dateDebut||'';
+  document.getElementById('m-phase').value=a.phase||'';
+  document.getElementById('m-livrable').value=a.livrable||'';
   document.getElementById('m-description').value=a.description||'';
   document.getElementById('m-responsable').value=a.responsable||'';
   document.getElementById('m-delai').value=a.delai||'';

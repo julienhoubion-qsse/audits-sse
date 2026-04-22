@@ -1,0 +1,306 @@
+<!-- SSE — Bibliothèque Projets -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --blue:#1d4ed8;--blue-lt:#dbeafe;--blue-xlt:#eff6ff;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10);--shadow-md:0 6px 28px rgba(46,69,88,.16)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--blue)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#93c5fd;margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:#fff;border-bottom-color:rgba(107,191,31,.5)}
+.nav-btn.active{color:#fff!important;border-bottom-color:#6BBF1F!important}
+.wrapper{max-width:1200px;margin:0 auto;padding:22px 24px 48px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;background:var(--slate);border-bottom:1px solid var(--border)}
+.fld-sel,.fld-inp{height:34px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;background:var(--white);color:var(--charcoal)}
+.btn{height:34px;padding:0 16px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-danger{background:#fee2e2;color:#dc2626;border:1px solid #fca5a5}
+.btn-green{background:var(--green-lt);color:var(--green-dk);border:1px solid var(--green)}
+.btn-sm{height:28px;padding:0 10px;font-size:11px}
+.stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.stat-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 18px;flex:1;min-width:120px;text-align:center}
+.stat-val{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:800;color:var(--steel-dk)}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+/* Project card */
+.proj-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;border-left:4px solid var(--blue)}
+.proj-card.type-strategic{border-left-color:#d97706}
+.proj-card.statut-termine{border-left-color:var(--green)}
+.proj-card.statut-suspendu{border-left-color:#d97706}
+.proj-hd{padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.proj-type{font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;white-space:nowrap}
+.type-strat{background:#fef3c7;color:#92400e}
+.type-other{background:var(--blue-xlt);color:var(--blue)}
+.proj-body-info{flex:1}
+.proj-nom{font-size:14px;font-weight:700;color:var(--charcoal)}
+.proj-meta{font-size:11px;color:var(--muted);margin-top:3px;display:flex;gap:10px;flex-wrap:wrap}
+.statut-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px}
+.s-planifie{background:#ede9fe;color:#5b21b6}
+.s-encours{background:var(--blue-lt);color:var(--blue)}
+.s-suspendu{background:#fef3c7;color:#92400e}
+.s-termine{background:var(--green-lt);color:var(--green-dk)}
+/* Progress */
+.prog-bar{height:6px;background:var(--slate);border-radius:3px;overflow:hidden;margin-top:6px;width:100%}
+.prog-fill{height:100%;border-radius:3px;background:var(--blue);transition:width .4s}
+.proj-body{padding:14px 16px;border-top:1px solid var(--border);display:none}
+.proj-body.open{display:block}
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:12px}
+.detail-item{background:var(--slate);border-radius:7px;padding:10px 12px}
+.detail-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:3px}
+.detail-val{font-size:13px;color:var(--charcoal);font-weight:600}
+.desc-box{background:var(--slate);border-radius:7px;padding:12px;font-size:13px;color:var(--charcoal);margin-bottom:10px;line-height:1.6}
+/* RASCI mini */
+.rasci-mini{font-size:11px}
+.rasci-mini table{width:100%;border-collapse:collapse}
+.rasci-mini th{background:var(--steel-dk);color:#fff;padding:5px 8px;text-align:left;font-size:10px}
+.rasci-mini th:not(:first-child){text-align:center;width:30px}
+.rasci-mini td{padding:5px 8px;border-bottom:1px solid var(--border);font-size:11px}
+.rasci-mini td:not(:first-child){text-align:center}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-title{font-family:'Exo 2',sans-serif;font-size:16px;font-weight:700;color:var(--steel-dk);margin-bottom:6px}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE</div>
+    <div class="ph-title">📂 Bibliothèque des projets</div>
+    <div class="ph-sub">Suivi de tous les projets en cours et archivés</div>
+  </div>
+  <div style="position:relative;z-index:1">
+    <button class="btn btn-primary" onclick="window.location.href='Formulaire_Projet_SSE.html'">➕ Nouveau projet</button>
+  </div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn" onclick="window.location.href='Formulaire_Projet_SSE.html'">🗂️ Nouveau projet</button>
+  <button class="nav-btn active">📂 Bibliothèque projets</button>
+  <button class="nav-btn" onclick="window.location.href='Plan_Actions_SSE.html'">📋 Plan d'actions</button>
+</div>
+
+<div class="wrapper">
+  <div class="stats-row">
+    <div class="stat-card" style="border-top:3px solid var(--blue)"><div class="stat-val" id="st-total" style="color:var(--blue)">—</div><div class="stat-lbl">Projets total</div></div>
+    <div class="stat-card" style="border-top:3px solid #d97706"><div class="stat-val" id="st-strat" style="color:#d97706">—</div><div class="stat-lbl">Stratégiques CODIR</div></div>
+    <div class="stat-card" style="border-top:3px solid var(--green)"><div class="stat-val" id="st-encours" style="color:var(--green-dk)">—</div><div class="stat-lbl">En cours</div></div>
+    <div class="stat-card"><div class="stat-val" id="st-termine">—</div><div class="stat-lbl">Terminés</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <select class="fld-sel" id="f-type" onchange="render()">
+        <option value="">Tous types</option>
+        <option value="Projet stratégique CODIR">⭐ Stratégique CODIR</option>
+        <option value="Transformation">🔄 Transformation</option>
+        <option value="Performance opérationnelle">📈 Performance opérationnelle</option>
+        <option value="Projet SSE">🛡️ Projet SSE</option>
+        <option value="Projet RSE">🌿 Projet RSE</option>
+      </select>
+      <select class="fld-sel" id="f-statut" onchange="render()">
+        <option value="">Tous statuts</option>
+        <option value="Planifié">🔵 Planifié</option>
+        <option value="En cours">🟢 En cours</option>
+        <option value="Suspendu">🟠 Suspendu</option>
+        <option value="Terminé">✅ Terminé</option>
+      </select>
+      <select class="fld-sel" id="f-site" onchange="render()">
+        <option value="">Tous les sites</option>
+        <option value="38">38</option><option value="41">41</option>
+        <option value="89">89</option><option value="47">47</option>
+        <option value="37">37</option><option value="17">17</option>
+        <option value="72">72</option><option value="72bis">72bis</option>
+        <option value="Réseau">Réseau</option>
+      </select>
+      <input class="fld-inp" id="f-search" placeholder="Rechercher nom, chef de projet..." oninput="render()" style="min-width:200px">
+    </div>
+    <div style="padding:16px" id="proj-list">
+      <div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title">Chargement...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+let PROJETS=[];
+let ACTIONS_ALL=[];
+
+function jsonpGet(action){
+  return new Promise(function(resolve,reject){
+    var cb='_cb'+Date.now()+Math.random().toString(36).slice(2);
+    window[cb]=function(d){delete window[cb];var el=document.getElementById('_js_'+cb);if(el)el.remove();resolve(d);};
+    var s=document.createElement('script');s.id='_js_'+cb;
+    s.src=GSHEET_URL+'?action='+action+'&callback='+cb;
+    s.onerror=function(){reject(new Error('failed'));};
+    document.head.appendChild(s);
+  });
+}
+
+function statutBadge(s){
+  var cls={Planifié:'s-planifie','En cours':'s-encours',Suspendu:'s-suspendu',Terminé:'s-termine'};
+  var icons={Planifié:'🔵','En cours':'🟢',Suspendu:'🟠',Terminé:'✅'};
+  return '<span class="statut-badge '+(cls[s]||'s-planifie')+'">'+(icons[s]||'')+' '+s+'</span>';
+}
+
+function getProgression(projetId){
+  var acts=ACTIONS_ALL.filter(function(a){return String(a.auditId)==='PROJ-'+String(projetId);});
+  if(!acts.length)return 0;
+  return Math.round(acts.reduce(function(acc,a){return acc+Number(a.avancement||0);},0)/acts.length);
+}
+
+function render(){
+  var type=document.getElementById('f-type').value;
+  var statut=document.getElementById('f-statut').value;
+  var site=document.getElementById('f-site').value;
+  var search=document.getElementById('f-search').value.toLowerCase();
+
+  var lib=PROJETS.filter(function(p){
+    if(type&&p.type!==type)return false;
+    if(statut&&p.statut!==statut)return false;
+    if(site&&p.site!==site)return false;
+    if(search&&!((p.nom||'').toLowerCase().includes(search)||(p.chef||'').toLowerCase().includes(search)))return false;
+    return true;
+  }).sort(function(a,b){
+    // Stratégiques en premier
+    if(a.type==='Projet stratégique CODIR'&&b.type!=='Projet stratégique CODIR')return -1;
+    if(b.type==='Projet stratégique CODIR'&&a.type!=='Projet stratégique CODIR')return 1;
+    return b.dateDebut.localeCompare(a.dateDebut);
+  });
+
+  document.getElementById('st-total').textContent=PROJETS.length;
+  document.getElementById('st-strat').textContent=PROJETS.filter(function(p){return p.type==='Projet stratégique CODIR';}).length;
+  document.getElementById('st-encours').textContent=PROJETS.filter(function(p){return p.statut==='En cours';}).length;
+  document.getElementById('st-termine').textContent=PROJETS.filter(function(p){return p.statut==='Terminé';}).length;
+
+  var el=document.getElementById('proj-list');
+  if(!lib.length){
+    var empty='<div class="empty-state"><div class="empty-icon">📭</div>';
+    empty+='<div class="empty-title">'+(PROJETS.length===0?'Aucun projet enregistré':'Aucun résultat')+'</div>';
+    if(PROJETS.length===0)empty+='<br><br><button class="btn btn-primary" onclick="location.href=\'Formulaire_Projet_SSE.html\'">🗂️ Nouveau projet</button>';
+    empty+='</div>';
+    el.innerHTML=empty;
+    return;
+  }
+
+  el.innerHTML=lib.map(function(p){
+    var prog=getProgression(p.id);
+    var isStrat=p.type==='Projet stratégique CODIR';
+    var typeClass=isStrat?'type-strat':'type-other';
+    var cardClass=isStrat?'type-strategic':'';
+    if(p.statut==='Terminé')cardClass+=' statut-termine';
+    if(p.statut==='Suspendu')cardClass+=' statut-suspendu';
+    var dateDebStr=p.dateDebut?new Date(p.dateDebut).toLocaleDateString('fr-FR'):'—';
+    var dateFinStr=p.dateFin?new Date(p.dateFin).toLocaleDateString('fr-FR'):'—';
+    var nbActions=ACTIONS_ALL.filter(function(a){return String(a.auditId)==='PROJ-'+String(p.id);}).length;
+    var rasciRows='';
+    try{
+      var rasci=JSON.parse(p.rasci||'[]');
+      rasciRows=rasci.map(function(r){
+        return '<tr><td>'+r.nom+'</td>'
+          +'<td>'+(r.roles.R?'✓':'')+'</td>'
+          +'<td>'+(r.roles.A?'✓':'')+'</td>'
+          +'<td>'+(r.roles.S?'✓':'')+'</td>'
+          +'<td>'+(r.roles.C?'✓':'')+'</td>'
+          +'<td>'+(r.roles.I?'✓':'')+'</td></tr>';
+      }).join('');
+    }catch(ex){}
+
+    var html='';
+    html+='<div class="proj-card '+cardClass+'" id="pc-'+p.id+'">';
+    html+='<div class="proj-hd" data-id="'+p.id+'" onclick="tog(this.dataset.id)">';
+    if(isStrat)html+='<span style="font-size:20px">⭐</span>';
+    html+='<div class="proj-body-info">';
+    html+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+    html+='<div class="proj-nom">'+p.nom+'</div>';
+    html+='<span class="proj-type '+typeClass+'">'+p.type+'</span>';
+    if(isStrat)html+='<span style="background:#fef3c7;color:#92400e;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px">CODIR</span>';
+    html+='</div>';
+    html+='<div class="proj-meta">';
+    html+='<span>👤 '+p.chef+'</span>';
+    if(p.site)html+='<span>📍 Site '+p.site+'</span>';
+    html+='<span>📅 '+dateDebStr+' → '+dateFinStr+'</span>';
+    html+=statutBadge(p.statut);
+    html+='<span style="background:var(--slate);color:var(--muted);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px">⚡ '+nbActions+' action(s)</span>';
+    html+='</div>';
+    html+='<div class="prog-bar"><div class="prog-fill" style="width:'+prog+'%"></div></div>';
+    html+='</div>';
+    html+='<span style="color:var(--border);font-size:18px;flex-shrink:0">›</span>';
+    html+='</div>';
+    html+='<div class="proj-body" id="pb-'+p.id+'">';
+    html+='<div class="detail-grid">';
+    html+='<div class="detail-item"><div class="detail-lbl">Chef de projet</div><div class="detail-val">'+p.chef+'</div></div>';
+    html+='<div class="detail-item"><div class="detail-lbl">Type</div><div class="detail-val">'+p.type+'</div></div>';
+    html+='<div class="detail-item"><div class="detail-lbl">Progression</div><div class="detail-val">'+prog+'%</div></div>';
+    html+='<div class="detail-item"><div class="detail-lbl">Nb actions</div><div class="detail-val">'+nbActions+'</div></div>';
+    html+='</div>';
+    html+='<div class="detail-lbl" style="margin-bottom:6px">Objectifs</div>';
+    html+='<div class="desc-box">'+p.objectifs+'</div>';
+    if(p.commentaires)html+='<div class="detail-lbl" style="margin-bottom:6px">Commentaires</div><div class="desc-box" style="background:#fffbeb;border:1px solid #fcd34d">'+p.commentaires+'</div>';
+    if(rasciRows)html+='<div class="detail-lbl" style="margin-bottom:6px">Matrice RASCI</div><div class="rasci-mini" style="margin-bottom:10px"><table><thead><tr><th>Contributeur</th><th>R</th><th>A</th><th>S</th><th>C</th><th>I</th></tr></thead><tbody>'+rasciRows+'</tbody></table></div>';
+    if(p.lien)html+='<div style="background:#fef3c7;border-radius:7px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:18px">📎</span><div><div style="font-size:11px;font-weight:700;color:#d97706;margin-bottom:2px">Document projet</div><a href="'+p.lien+'" target="_blank" style="font-size:12px;color:var(--steel-dk)">Ouvrir →</a></div></div>';
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">';
+    html+='<button class="btn btn-primary btn-sm" data-id="'+p.id+'" onclick="openGantt(this.dataset.id)">📊 Gantt</button>';
+    html+='<button class="btn btn-green btn-sm" data-id="'+p.id+'" data-nom="'+p.nom+'" data-site="'+p.site+'" data-date="'+p.dateDebut+'" data-type="'+p.type+'" onclick="addActionProjet(this)">➕ Action</button>';
+    html+='<button class="btn btn-ghost btn-sm" data-id="'+p.id+'" onclick="editProjet(this.dataset.id)">✏️ Modifier</button>';
+    html+='<button class="btn btn-danger btn-sm" data-id="'+p.id+'" onclick="delProjet(this.dataset.id)">🗑️ Supprimer</button>';
+    html+='</div>';
+    html+='</div></div>';
+    return html;
+  }).join('');
+}
+
+function tog(id){var b=document.getElementById('pb-'+id);if(b)b.classList.toggle('open');}
+function editProjet(id){window.location.href='Formulaire_Projet_SSE.html?edit='+id;}
+function openGantt(id){window.location.href='Gantt_Projet_SSE.html?projet='+id;}
+function addActionProjet(btn){
+  var origin='🗂️ Projet — '+btn.dataset.type+' — '+btn.dataset.nom+(btn.dataset.site?' — Site '+btn.dataset.site:'');
+  var params=new URLSearchParams({auditId:'PROJ-'+btn.dataset.id,site:btn.dataset.site,auditDate:btn.dataset.date,sectionKey:'projet',criteriaIdx:0,origin:encodeURIComponent(origin)});
+  window.location.href='Plan_Actions_SSE.html?'+params.toString();
+}
+async function delProjet(id){
+  if(!confirm('Supprimer ce projet ?'))return;
+  try{
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'deleteProjet',id})});
+    PROJETS=PROJETS.filter(function(p){return String(p.id)!==String(id);});
+    render();
+  }catch(e){alert('Erreur: '+e.message);}
+}
+
+async function init(){
+  try{
+    var results=await Promise.allSettled([jsonpGet('getProjets'),jsonpGet('getActions')]);
+    if(results[1].status==='fulfilled'){
+      ACTIONS_ALL=(results[1].value.data||[]).map(function(r){
+        return{id:r[0],auditId:r[1],avancement:Number(r[10]||0)};
+      });
+    }
+    if(results[0].status==='fulfilled'){
+      PROJETS=(results[0].value.data||[]).map(function(r){
+        return{
+          id:r[0],nom:r[1],chef:r[2],type:r[3],site:String(r[4]||''),
+          dateDebut:String(r[5]||'').split('T')[0],
+          dateFin:String(r[6]||'').split('T')[0],
+          statut:r[7]||'Planifié',objectifs:r[8],
+          commentaires:r[9],lien:r[10],rasci:r[11],createdAt:r[12]
+        };
+      });
+      render();
+    }
+  }catch(e){
+    document.getElementById('proj-list').innerHTML='<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">Erreur de chargement</div></div>';
+  }
+}
+init();
+</script>
