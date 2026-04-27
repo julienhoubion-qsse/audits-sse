@@ -1,0 +1,820 @@
+<!-- SSE — GMAO Conformité réglementaire équipements -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --red:#dc2626;--red-lt:#fee2e2;--orange:#d97706;--orange-lt:#fef3c7;
+  --indigo:#4f46e5;--indigo-lt:#eef2ff;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10);--shadow-md:0 6px 28px rgba(46,69,88,.16)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--indigo)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#a5b4fc;margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:#fff;border-bottom-color:rgba(107,191,31,.5)}
+.nav-btn.active{color:#fff!important;border-bottom-color:#6BBF1F!important}
+.wrapper{max-width:1300px;margin:0 auto;padding:20px 24px 48px}
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.kpi-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;border-left:4px solid var(--border);position:relative;overflow:hidden;transition:transform .15s}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.kpi-card::after{content:attr(data-icon);position:absolute;right:8px;bottom:4px;font-size:32px;opacity:.08}
+.kpi-lbl{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.kpi-val{font-family:'Exo 2',sans-serif;font-size:28px;font-weight:800;line-height:1.1;margin:4px 0 2px}
+.kpi-sub{font-size:11px;color:var(--muted)}
+/* Filters */
+.filter-bar{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 16px;margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fld-sel,.fld-inp{height:34px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;background:var(--white);color:var(--charcoal)}
+.btn{height:34px;padding:0 14px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--indigo);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-sm{height:28px;padding:0 10px;font-size:11px}
+.btn-danger{background:var(--red-lt);color:var(--red);border:1px solid #fca5a5}
+.btn-green{background:var(--green-lt);color:var(--green-dk);border:1px solid var(--green)}
+/* Table */
+.table-wrap{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.gmao-table{width:100%;border-collapse:collapse;font-size:12px}
+.gmao-table thead th{background:var(--steel-dk);color:#fff;padding:10px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.gmao-table tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+.gmao-table tbody tr:hover{background:var(--slate)}
+.gmao-table tbody td{padding:10px 12px;vertical-align:middle}
+/* Status badges */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;white-space:nowrap}
+.badge-ok{background:var(--green-lt);color:var(--green-dk)}
+.badge-nc{background:var(--red-lt);color:var(--red)}
+.badge-att{background:var(--orange-lt);color:var(--orange)}
+.badge-exp{background:#fce7f3;color:#be185d}
+/* Échéance alertes */
+.due-ok{color:var(--green-dk);font-weight:600}
+.due-soon{color:var(--orange);font-weight:700}
+.due-overdue{color:var(--red);font-weight:700}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--white);border-radius:var(--radius);box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:680px;max-height:92vh;overflow-y:auto}
+.modal-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:1}
+.modal-title{font-family:'Exo 2',sans-serif;font-size:15px;font-weight:700;color:var(--steel-dk)}
+.modal-body{padding:16px 18px}
+.modal-foot{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--white)}
+.fld{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.fld-lbl{font-size:11px;font-weight:700;color:var(--steel-dk);text-transform:uppercase;letter-spacing:.5px}
+.fld-req{color:var(--red)}
+.m-inp,.m-sel{height:36px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--white);width:100%}
+.m-inp:focus,.m-sel:focus{outline:none;border-color:var(--indigo)}
+.m-txt{border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Nunito Sans',sans-serif;font-size:13px;resize:vertical;min-height:60px;width:100%}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:600px){.form-row,.form-row-3{grid-template-columns:1fr}}
+/* NC action box */
+.nc-box{background:var(--red-lt);border:1px solid #fca5a5;border-radius:8px;padding:14px;margin-top:4px;display:none}
+.nc-box.show{display:block}
+.nc-box-title{font-size:12px;font-weight:700;color:var(--red);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+/* Empty */
+.empty-state{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.empty-title{font-family:'Exo 2',sans-serif;font-size:16px;font-weight:700;color:var(--steel-dk);margin-bottom:6px}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE</div>
+    <div class="ph-title">🔩 GMAO — Conformité réglementaire équipements</div>
+    <div class="ph-sub">Suivi des vérifications périodiques et échéances réglementaires</div>
+  </div>
+  <div style="position:relative;z-index:1">
+    <button class="btn btn-primary" onclick="openModal()">➕ Ajouter un équipement</button>
+  </div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn active">🔩 GMAO</button>
+  <button class="nav-btn" onclick="window.location.href='Plan_Actions_SSE.html'">📋 Plan d'actions</button>
+</div>
+
+<div class="wrapper">
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi-card" style="border-left-color:var(--indigo)" data-icon="🔩"><div class="kpi-lbl">Équipements</div><div class="kpi-val" id="kpi-total" style="color:var(--indigo)">—</div><div class="kpi-sub">enregistrés</div></div>
+    <div class="kpi-card" style="border-left-color:var(--green)" data-icon="✅"><div class="kpi-lbl">Conformes</div><div class="kpi-val" id="kpi-ok" style="color:var(--green-dk)">—</div><div class="kpi-sub" id="kpi-taux">—</div></div>
+    <div class="kpi-card" style="border-left-color:var(--red)" data-icon="🚨"><div class="kpi-lbl">Non conformes</div><div class="kpi-val" id="kpi-nc" style="color:var(--red)">—</div><div class="kpi-sub">action requise</div></div>
+    <div class="kpi-card" style="border-left-color:var(--orange)" data-icon="⏰"><div class="kpi-lbl">Échéances &lt; 30j</div><div class="kpi-val" id="kpi-soon" style="color:var(--orange)">—</div><div class="kpi-sub">à planifier</div></div>
+    <div class="kpi-card" style="border-left-color:#be185d" data-icon="📅"><div class="kpi-lbl">Échéances dépassées</div><div class="kpi-val" id="kpi-overdue" style="color:#be185d">—</div><div class="kpi-sub">en retard</div></div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filter-bar">
+    <select class="fld-sel" id="f-site" onchange="render()">
+      <option value="">Tous les sites</option>
+      <option value="17">17</option><option value="37">37</option>
+      <option value="38">38</option><option value="41">41</option>
+      <option value="47">47</option><option value="72">72</option>
+      <option value="72bis">72bis</option><option value="89">89</option>
+    </select>
+    <select class="fld-sel" id="f-type" onchange="render()">
+      <option value="">Tous types</option>
+      <option value="Pont élévateur">🔧 Pont élévateur</option>
+      <option value="Chariot élévateur">🚜 Chariot élévateur</option>
+      <option value="Compresseur">💨 Compresseur</option>
+      <option value="Appareil de levage">⚓ Appareil de levage</option>
+      <option value="Extincteur">🧯 Extincteur</option>
+      <option value="RIA">💧 RIA</option>
+      <option value="Détecteur de fumée">🔈 Détecteur de fumée</option>
+      <option value="Installation électrique">⚡ Installation électrique</option>
+      <option value="Installation ICPE">🏭 Installation ICPE</option>
+      <option value="Autre">📋 Autre</option>
+    </select>
+    <select class="fld-sel" id="f-statut" onchange="render()">
+      <option value="">Tous statuts</option>
+      <option value="Conforme">✅ Conforme</option>
+      <option value="Non conforme">🚨 Non conforme</option>
+      <option value="En attente">⏳ En attente</option>
+    </select>
+    <select class="fld-sel" id="f-alerte" onchange="render()">
+      <option value="">Toutes échéances</option>
+      <option value="overdue">⛔ Dépassées</option>
+      <option value="soon">⚠️ &lt; 30 jours</option>
+      <option value="ok">✅ À jour</option>
+    </select>
+    <input class="fld-inp" id="f-search" placeholder="Rechercher désignation, n° série..." oninput="render()" style="min-width:200px">
+    <button class="btn btn-ghost" onclick="resetFilters()">✕ Réinitialiser</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <div style="overflow-x:auto">
+      <table class="gmao-table">
+        <thead>
+          <tr>
+            <th>Équipement</th>
+            <th>Site</th>
+            <th>N° série / ID</th>
+            <th>Type vérif.</th>
+            <th>Organisme</th>
+            <th>Dernière vérif.</th>
+            <th>Prochaine échéance</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="gmao-tbody">
+          <tr><td colspan="9" style="text-align:center;padding:40px;color:var(--muted)">Chargement...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" style="display:none" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-hd">
+      <span class="modal-title" id="modal-title">Nouvel équipement</span>
+      <button style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="m-id">
+
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Type d'équipement <span class="fld-req">*</span></label>
+          <select class="m-sel" id="m-type">
+            <option value="">— Sélectionner —</option>
+            <option value="Pont élévateur">🔧 Pont élévateur</option>
+            <option value="Chariot élévateur">🚜 Chariot élévateur</option>
+            <option value="Compresseur">💨 Compresseur</option>
+            <option value="Appareil de levage">⚓ Appareil de levage</option>
+            <option value="Extincteur">🧯 Extincteur</option>
+            <option value="RIA">💧 RIA</option>
+            <option value="Détecteur de fumée">🔈 Détecteur de fumée</option>
+            <option value="Installation électrique">⚡ Installation électrique</option>
+            <option value="Installation ICPE">🏭 Installation ICPE</option>
+            <option value="Autre">📋 Autre</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Site <span class="fld-req">*</span></label>
+          <select class="m-sel" id="m-site">
+            <option value="">— Sélectionner —</option>
+            <option value="17">17</option><option value="37">37</option>
+            <option value="38">38</option><option value="41">41</option>
+            <option value="47">47</option><option value="72">72</option>
+            <option value="72bis">72bis</option><option value="89">89</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fld">
+        <label class="fld-lbl">Désignation <span class="fld-req">*</span></label>
+        <input type="text" class="m-inp" id="m-designation" placeholder="Ex: Pont élévateur 2 colonnes — Atelier principal">
+      </div>
+
+      <div class="form-row-3">
+        <div class="fld">
+          <label class="fld-lbl">Marque</label>
+          <input type="text" class="m-inp" id="m-marque" placeholder="Ex: RAVAGLIOLI">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Modèle</label>
+          <input type="text" class="m-inp" id="m-modele" placeholder="Ex: KPN 355">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">N° de série / ID</label>
+          <input type="text" class="m-inp" id="m-serie" placeholder="Ex: SN-2023-001">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Date de mise en service</label>
+          <input type="date" class="m-inp" id="m-mise-service">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Type de vérification réglementaire</label>
+          <select class="m-sel" id="m-type-verif">
+            <option value="">— Sélectionner —</option>
+            <option value="VGP (Vérification Générale Périodique)">VGP</option>
+            <option value="Vérification périodique">Vérification périodique</option>
+            <option value="Contrôle ICPE">Contrôle ICPE</option>
+            <option value="Vérification réglementaire électrique">Vérif. électrique</option>
+            <option value="Contrôle incendie">Contrôle incendie</option>
+            <option value="Maintenance préventive">Maintenance préventive</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row-3">
+        <div class="fld">
+          <label class="fld-lbl">Périodicité <span class="fld-req">*</span></label>
+          <select class="m-sel" id="m-periodicite">
+            <option value="">— Sélectionner —</option>
+            <option value="1">Mensuelle</option>
+            <option value="3">Trimestrielle</option>
+            <option value="6">Semestrielle</option>
+            <option value="12">Annuelle</option>
+            <option value="24">Tous les 2 ans</option>
+            <option value="36">Tous les 3 ans</option>
+            <option value="60">Tous les 5 ans</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Dernière vérification</label>
+          <input type="date" class="m-inp" id="m-derniere-verif">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Prochaine échéance</label>
+          <input type="date" class="m-inp" id="m-prochaine">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Organisme vérificateur</label>
+          <input type="text" class="m-inp" id="m-organisme" placeholder="Ex: APAVE, DEKRA, Interne...">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Statut <span class="fld-req">*</span></label>
+          <select class="m-sel" id="m-statut" onchange="toggleNCBox()">
+            <option value="En attente">⏳ En attente</option>
+            <option value="Conforme">✅ Conforme</option>
+            <option value="Non conforme">🚨 Non conforme</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fld">
+        <label class="fld-lbl">Lien rapport / document</label>
+        <input type="url" class="m-inp" id="m-lien" placeholder="https://drive.google.com/...">
+      </div>
+
+      <div class="fld">
+        <label class="fld-lbl">Observations</label>
+        <textarea class="m-txt" id="m-observations" placeholder="Notes, remarques, contexte..."></textarea>
+      </div>
+
+      <!-- Action corrective obligatoire si NC -->
+      <div class="nc-box" id="nc-box">
+        <div class="nc-box-title">🚨 Non-conformité détectée — Action corrective obligatoire</div>
+        <div class="fld">
+          <label class="fld-lbl">Description de l'action corrective <span class="fld-req">*</span></label>
+          <textarea class="m-txt" id="m-action-desc" placeholder="Décrivez l'action corrective à mener..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="fld">
+            <label class="fld-lbl">Responsable <span class="fld-req">*</span></label>
+            <input type="text" class="m-inp" id="m-action-resp" placeholder="Nom Prénom">
+          </div>
+          <div class="fld">
+            <label class="fld-lbl">Délai <span class="fld-req">*</span></label>
+            <input type="date" class="m-inp" id="m-action-delai">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveEquipement()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Fiche équipement -->
+<div class="modal-overlay" id="fiche-modal" style="display:none" onclick="closeFicheOutside(event)">
+  <div class="modal" style="max-width:780px">
+    <div class="modal-hd">
+      <span class="modal-title" id="fiche-title">Fiche équipement</span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-ghost btn-sm" id="fiche-edit-btn" onclick="editFromFiche()">✏️ Modifier</button>
+        <button style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)" onclick="closeFiche()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body" id="fiche-body"></div>
+  </div>
+</div>
+
+<!-- Modal Ajout contrôle historique -->
+<div class="modal-overlay" id="controle-modal" style="display:none" onclick="closeControleOutside(event)">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-hd">
+      <span class="modal-title">Ajouter un contrôle</span>
+      <button style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)" onclick="closeControle()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="c-equip-id">
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Date du contrôle <span class="fld-req">*</span></label>
+          <input type="date" class="m-inp" id="c-date">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Organisme</label>
+          <input type="text" class="m-inp" id="c-organisme" placeholder="Ex: APAVE, DEKRA, Interne...">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fld">
+          <label class="fld-lbl">Résultat <span class="fld-req">*</span></label>
+          <select class="m-sel" id="c-resultat">
+            <option value="Conforme">✅ Conforme</option>
+            <option value="Non conforme">🚨 Non conforme</option>
+            <option value="Favorable avec réserves">⚠️ Favorable avec réserves</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Prochaine échéance</label>
+          <input type="date" class="m-inp" id="c-prochaine">
+        </div>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Lien rapport</label>
+        <input type="url" class="m-inp" id="c-lien" placeholder="https://drive.google.com/...">
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Observations</label>
+        <textarea class="m-txt" id="c-observations" placeholder="Remarques, écarts constatés..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeControle()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveControle()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+let EQUIPEMENTS=[];
+
+function jsonpGet(action){
+  return new Promise(function(resolve,reject){
+    var cb='_cb'+Date.now()+Math.random().toString(36).slice(2);
+    window[cb]=function(d){delete window[cb];var el=document.getElementById('_js_'+cb);if(el)el.remove();resolve(d);};
+    var s=document.createElement('script');s.id='_js_'+cb;
+    s.src=GSHEET_URL+'?action='+action+'&callback='+cb;
+    s.onerror=function(){reject(new Error('failed'));};
+    document.head.appendChild(s);
+  });
+}
+
+function getDueClass(dateStr){
+  if(!dateStr)return'';
+  var due=new Date(dateStr);due.setHours(0,0,0,0);
+  var now=new Date();now.setHours(0,0,0,0);
+  var diff=Math.floor((due-now)/86400000);
+  if(diff<0)return'overdue';
+  if(diff<=30)return'soon';
+  return'ok';
+}
+
+function formatDue(dateStr){
+  if(!dateStr)return'—';
+  var due=new Date(dateStr);
+  var now=new Date();now.setHours(0,0,0,0);
+  due.setHours(0,0,0,0);
+  var diff=Math.floor((due-now)/86400000);
+  var dateFormatted=due.toLocaleDateString('fr-FR');
+  if(diff<0)return'<span class="due-overdue">⛔ '+dateFormatted+' ('+Math.abs(diff)+' j de retard)</span>';
+  if(diff===0)return'<span class="due-soon">⚠️ Aujourd\'hui !</span>';
+  if(diff<=30)return'<span class="due-soon">⚠️ '+dateFormatted+' (J-'+diff+')</span>';
+  return'<span class="due-ok">'+dateFormatted+'</span>';
+}
+
+function statutBadge(s){
+  if(s==='Conforme')return'<span class="badge badge-ok">✅ Conforme</span>';
+  if(s==='Non conforme')return'<span class="badge badge-nc">🚨 Non conforme</span>';
+  return'<span class="badge badge-att">⏳ En attente</span>';
+}
+
+function toggleNCBox(){
+  var statut=document.getElementById('m-statut').value;
+  document.getElementById('nc-box').classList.toggle('show', statut==='Non conforme');
+}
+
+function resetFilters(){
+  document.getElementById('f-site').value='';
+  document.getElementById('f-type').value='';
+  document.getElementById('f-statut').value='';
+  document.getElementById('f-alerte').value='';
+  document.getElementById('f-search').value='';
+  render();
+}
+
+function render(){
+  var site=document.getElementById('f-site').value;
+  var type=document.getElementById('f-type').value;
+  var statut=document.getElementById('f-statut').value;
+  var alerte=document.getElementById('f-alerte').value;
+  var search=document.getElementById('f-search').value.toLowerCase();
+
+  var data=EQUIPEMENTS.filter(function(e){
+    if(site&&e.site!==site)return false;
+    if(type&&e.type!==type)return false;
+    if(statut&&e.statut!==statut)return false;
+    if(alerte){
+      var dc=getDueClass(e.prochaine);
+      if(alerte==='overdue'&&dc!=='overdue')return false;
+      if(alerte==='soon'&&dc!=='soon')return false;
+      if(alerte==='ok'&&dc!=='ok')return false;
+    }
+    if(search&&!((e.designation||'').toLowerCase().includes(search)||(e.serie||'').toLowerCase().includes(search)||(e.marque||'').toLowerCase().includes(search)))return false;
+    return true;
+  }).sort(function(a,b){
+    // Sort by: NC first, then overdue, then soon, then by prochaine date
+    var order={overdue:0,soon:1,ok:2,'':3};
+    var da=getDueClass(a.prochaine);var db=getDueClass(b.prochaine);
+    if(a.statut==='Non conforme'&&b.statut!=='Non conforme')return-1;
+    if(b.statut==='Non conforme'&&a.statut!=='Non conforme')return 1;
+    return(order[da]||3)-(order[db]||3);
+  });
+
+  // KPIs
+  var total=EQUIPEMENTS.length;
+  var ok=EQUIPEMENTS.filter(function(e){return e.statut==='Conforme';}).length;
+  var nc=EQUIPEMENTS.filter(function(e){return e.statut==='Non conforme';}).length;
+  var soon=EQUIPEMENTS.filter(function(e){return getDueClass(e.prochaine)==='soon';}).length;
+  var overdue=EQUIPEMENTS.filter(function(e){return getDueClass(e.prochaine)==='overdue';}).length;
+  document.getElementById('kpi-total').textContent=total;
+  document.getElementById('kpi-ok').textContent=ok;
+  document.getElementById('kpi-taux').textContent=total?Math.round(ok/total*100)+'% de conformité':'—';
+  document.getElementById('kpi-nc').textContent=nc;
+  document.getElementById('kpi-soon').textContent=soon;
+  document.getElementById('kpi-overdue').textContent=overdue;
+
+  var tbody=document.getElementById('gmao-tbody');
+  if(!data.length){
+    tbody.innerHTML='<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">'+(EQUIPEMENTS.length?'🔍':'🔩')+'</div><div class="empty-title">'+(EQUIPEMENTS.length?'Aucun résultat':'Aucun équipement enregistré')+'</div></div></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML=data.map(function(e){
+    var dc=getDueClass(e.prochaine);
+    var rowStyle=e.statut==='Non conforme'?'background:#fff5f5':dc==='overdue'?'background:#fff9f9':dc==='soon'?'background:#fffdf0':'';
+    return'<tr style="'+rowStyle+'">'
+      +'<td><div style="font-weight:700;font-size:13px">'+e.designation+'</div>'
+      +(e.marque?'<div style="font-size:11px;color:var(--muted)">'+e.marque+(e.modele?' · '+e.modele:'')+'</div>':'')
+      +'</td>'
+      +'<td><span style="font-family:\'Exo 2\',sans-serif;font-weight:700">Site '+e.site+'</span></td>'
+      +'<td style="font-size:11px;color:var(--muted)">'+(e.serie||'—')+'</td>'
+      +'<td style="font-size:11px">'+(e.typeVerif||'—')+'<br><span style="color:var(--muted)">'+(e.periodicite?'Tous les '+e.periodicite+' mois':'—')+'</span></td>'
+      +'<td style="font-size:11px">'+(e.organisme||'—')+'</td>'
+      +'<td style="font-size:11px">'+(e.derniereVerif?new Date(e.derniereVerif).toLocaleDateString('fr-FR'):'—')+'</td>'
+      +'<td>'+formatDue(e.prochaine)+'</td>'
+      +'<td>'+statutBadge(e.statut)+'</td>'
+      +'<td>'
+      +'<div style="display:flex;gap:4px;flex-wrap:wrap">'
+      +'<button class="btn btn-primary btn-sm" data-id="'+e.id+'" onclick="openFiche(this.dataset.id)" title="Fiche équipement">📄</button>'
+      +'<button class="btn btn-ghost btn-sm" data-id="'+e.id+'" onclick="editEquipement(this.dataset.id)" title="Modifier">✏️</button>'
+      +(e.lien?'<a href="'+e.lien+'" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none" title="Rapport">📎</a>':'')
+      +'<button class="btn btn-danger btn-sm" data-id="'+e.id+'" onclick="delEquipement(this.dataset.id)" title="Supprimer">🗑️</button>'
+      +'</div>'
+      +'</td>'
+      +'</tr>';
+  }).join('');
+}
+
+function openModal(eq){
+  document.getElementById('modal-title').textContent=eq?'Modifier l\'équipement':'Nouvel équipement';
+  document.getElementById('m-id').value=eq?eq.id:'';
+  document.getElementById('m-type').value=eq?eq.type:'';
+  document.getElementById('m-site').value=eq?eq.site:'';
+  document.getElementById('m-designation').value=eq?eq.designation:'';
+  document.getElementById('m-marque').value=eq?eq.marque:'';
+  document.getElementById('m-modele').value=eq?eq.modele:'';
+  document.getElementById('m-serie').value=eq?eq.serie:'';
+  document.getElementById('m-mise-service').value=eq?eq.miseService:'';
+  document.getElementById('m-type-verif').value=eq?eq.typeVerif:'';
+  document.getElementById('m-periodicite').value=eq?eq.periodicite:'';
+  document.getElementById('m-derniere-verif').value=eq?eq.derniereVerif:'';
+  document.getElementById('m-prochaine').value=eq?eq.prochaine:'';
+  document.getElementById('m-organisme').value=eq?eq.organisme:'';
+  document.getElementById('m-statut').value=eq?eq.statut:'En attente';
+  document.getElementById('m-lien').value=eq?eq.lien:'';
+  document.getElementById('m-observations').value=eq?eq.observations:'';
+  document.getElementById('m-action-desc').value='';
+  document.getElementById('m-action-resp').value='';
+  document.getElementById('m-action-delai').value='';
+  toggleNCBox();
+  document.getElementById('modal').style.display='flex';
+}
+
+function closeModal(){document.getElementById('modal').style.display='none';}
+function closeModalOutside(e){if(e.target===document.getElementById('modal'))closeModal();}
+
+function editEquipement(id){
+  var eq=EQUIPEMENTS.find(function(e){return String(e.id)===String(id);});
+  if(eq)openModal(eq);
+}
+
+async function saveEquipement(){
+  var type=document.getElementById('m-type').value;
+  var site=document.getElementById('m-site').value;
+  var designation=document.getElementById('m-designation').value.trim();
+  var periodicite=document.getElementById('m-periodicite').value;
+  var statut=document.getElementById('m-statut').value;
+
+  if(!type||!site||!designation||!periodicite){showToast('Type, site, désignation et périodicité sont obligatoires',false);return;}
+
+  if(statut==='Non conforme'){
+    var actionDesc=document.getElementById('m-action-desc').value.trim();
+    var actionResp=document.getElementById('m-action-resp').value.trim();
+    var actionDelai=document.getElementById('m-action-delai').value;
+    if(!actionDesc||!actionResp||!actionDelai){showToast('Action corrective obligatoire pour une NC',false);return;}
+  }
+
+  var existId=document.getElementById('m-id').value;
+  var data={
+    id:existId||Date.now(),
+    type,site,designation,
+    marque:document.getElementById('m-marque').value.trim(),
+    modele:document.getElementById('m-modele').value.trim(),
+    serie:document.getElementById('m-serie').value.trim(),
+    miseService:document.getElementById('m-mise-service').value,
+    typeVerif:document.getElementById('m-type-verif').value,
+    periodicite,
+    derniereVerif:document.getElementById('m-derniere-verif').value,
+    prochaine:document.getElementById('m-prochaine').value,
+    organisme:document.getElementById('m-organisme').value.trim(),
+    statut,
+    lien:document.getElementById('m-lien').value.trim(),
+    observations:document.getElementById('m-observations').value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+
+  showToast('Enregistrement...',false);
+  try{
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveEquipement',data})});
+
+    // Si NC, créer action dans plan d'actions
+    if(statut==='Non conforme'){
+      var actionDesc=document.getElementById('m-action-desc').value.trim();
+      var actionResp=document.getElementById('m-action-resp').value.trim();
+      var actionDelai=document.getElementById('m-action-delai').value;
+      var origin='🔩 GMAO — '+type+' — '+designation+' — Site '+site;
+      await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveAction',data:{
+        id:Date.now()+Math.random(),
+        auditId:'GMAO-'+data.id,
+        site,auditDate:new Date().toISOString().split('T')[0],
+        sectionKey:'gmao',criteriaIdx:0,
+        origin,
+        description:actionDesc,
+        responsable:actionResp,
+        delai:actionDelai,
+        avancement:0,commentaire:'',efficace:'',
+        createdAt:new Date().toISOString()
+      }})});
+    }
+
+    if(existId){
+      EQUIPEMENTS=EQUIPEMENTS.map(function(e){return String(e.id)===String(existId)?data:e;});
+    } else {
+      EQUIPEMENTS.push(data);
+    }
+
+    closeModal();
+    render();
+    showToast('Équipement enregistré !'+(statut==='Non conforme'?' · Action créée dans le plan d\'actions':''),true);
+  }catch(err){showToast('Erreur: '+err.message,false);}
+}
+
+async function delEquipement(id){
+  if(!confirm('Supprimer cet équipement ?'))return;
+  try{
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'deleteEquipement',id})});
+    EQUIPEMENTS=EQUIPEMENTS.filter(function(e){return String(e.id)!==String(id);});
+    render();
+    showToast('Équipement supprimé',true);
+  }catch(e){showToast('Erreur: '+e.message,false);}
+}
+
+function showToast(msg,ok){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=ok?'var(--green-dk)':'var(--steel-dk)';
+  t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);
+}
+
+var ficheEquipId=null;
+var HISTORIQUE={};// {equipId: [{date,organisme,resultat,prochaine,lien,observations}]}
+
+function openFiche(id){
+  ficheEquipId=id;
+  var eq=EQUIPEMENTS.find(function(e){return String(e.id)===String(id);});
+  if(!eq)return;
+  document.getElementById('fiche-title').textContent='📄 '+eq.designation;
+  document.getElementById('fiche-edit-btn').dataset.id=id;
+  renderFiche(eq);
+  document.getElementById('fiche-modal').style.display='flex';
+}
+function closeFiche(){document.getElementById('fiche-modal').style.display='none';}
+function closeFicheOutside(e){if(e.target===document.getElementById('fiche-modal'))closeFiche();}
+function editFromFiche(){closeFiche();var eq=EQUIPEMENTS.find(function(e){return String(e.id)===String(ficheEquipId);});if(eq)openModal(eq);}
+
+function renderFiche(eq){
+  var hist=HISTORIQUE[eq.id]||[];
+  var dc=getDueClass(eq.prochaine);
+  var dueLabel=eq.prochaine?new Date(eq.prochaine).toLocaleDateString('fr-FR'):'—';
+
+  var html='';
+  // Identité équipement
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">';
+  html+=fiche_item('Type',eq.type);
+  html+=fiche_item('Site','Site '+eq.site);
+  html+=fiche_item('Marque / Modèle',(eq.marque||'—')+(eq.modele?' · '+eq.modele:''));
+  html+=fiche_item('N° de série',eq.serie||'—');
+  html+=fiche_item('Mise en service',eq.miseService?new Date(eq.miseService).toLocaleDateString('fr-FR'):'—');
+  html+=fiche_item('Type de vérification',eq.typeVerif||'—');
+  html+=fiche_item('Périodicité',eq.periodicite?'Tous les '+eq.periodicite+' mois':'—');
+  html+=fiche_item('Organisme habituel',eq.organisme||'—');
+  html+='</div>';
+
+  // Statut et échéance
+  html+='<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">';
+  html+='<div style="flex:1;background:var(--slate);border-radius:8px;padding:12px 14px;text-align:center">';
+  html+='<div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px">STATUT ACTUEL</div>';
+  html+=statutBadge(eq.statut);
+  html+='</div>';
+  html+='<div style="flex:1;background:'+(dc==='overdue'?'#fff5f5':dc==='soon'?'#fffdf0':'var(--slate)')+';border-radius:8px;padding:12px 14px;text-align:center">';
+  html+='<div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px">PROCHAINE ÉCHÉANCE</div>';
+  html+=formatDue(eq.prochaine);
+  html+='</div>';
+  if(eq.lien){
+    html+='<a href="'+eq.lien+'" target="_blank" style="flex:1;background:var(--orange-lt);border-radius:8px;padding:12px 14px;text-align:center;text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">';
+    html+='<span style="font-size:20px">📎</span><span style="font-size:11px;font-weight:700;color:var(--orange)">Dernier rapport</span>';
+    html+='</a>';
+  }
+  html+='</div>';
+
+  if(eq.observations){
+    html+='<div style="background:var(--slate);border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:13px">'+eq.observations+'</div>';
+  }
+
+  // Historique des contrôles
+  html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">';
+  html+='<div style="font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk)">📋 Historique des contrôles</div>';
+  html+='<button class="btn btn-primary btn-sm" onclick="openControle(''+eq.id+'')">➕ Ajouter un contrôle</button>';
+  html+='</div>';
+
+  if(!hist.length){
+    html+='<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;background:var(--slate);border-radius:8px">Aucun contrôle enregistré</div>';
+  } else {
+    html+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">';
+    html+='<thead><tr style="background:var(--steel-dk);color:#fff">';
+    html+='<th style="padding:8px 10px;text-align:left">Date</th><th style="padding:8px 10px;text-align:left">Organisme</th><th style="padding:8px 10px;text-align:left">Résultat</th><th style="padding:8px 10px;text-align:left">Prochaine</th><th style="padding:8px 10px;text-align:left">Rapport</th><th style="padding:8px 10px;text-align:left">Observations</th></tr></thead>';
+    html+='<tbody>';
+    hist.slice().reverse().forEach(function(h){
+      var resColor=h.resultat==='Conforme'?'var(--green-dk)':h.resultat==='Non conforme'?'var(--red)':'var(--orange)';
+      html+='<tr style="border-bottom:1px solid var(--border)">';
+      html+='<td style="padding:8px 10px;font-weight:600">'+new Date(h.date).toLocaleDateString('fr-FR')+'</td>';
+      html+='<td style="padding:8px 10px;color:var(--muted)">'+( h.organisme||'—')+'</td>';
+      html+='<td style="padding:8px 10px"><span style="color:'+resColor+';font-weight:700">'+h.resultat+'</span></td>';
+      html+='<td style="padding:8px 10px">'+( h.prochaine?new Date(h.prochaine).toLocaleDateString('fr-FR'):'—')+'</td>';
+      html+='<td style="padding:8px 10px">'+(h.lien?'<a href="'+h.lien+'" target="_blank" style="color:var(--indigo);font-weight:600">📎 Ouvrir</a>':'—')+'</td>';
+      html+='<td style="padding:8px 10px;color:var(--muted);font-size:11px">'+( h.observations||'—')+'</td>';
+      html+='</tr>';
+    });
+    html+='</tbody></table></div>';
+  }
+
+  document.getElementById('fiche-body').innerHTML=html;
+}
+
+function fiche_item(label,val){
+  return'<div style="background:var(--slate);border-radius:7px;padding:9px 11px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:2px">'+label+'</div><div style="font-size:13px;font-weight:600;color:var(--charcoal)">'+val+'</div></div>';
+}
+
+function openControle(equipId){
+  document.getElementById('c-equip-id').value=equipId;
+  document.getElementById('c-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('c-organisme').value='';
+  document.getElementById('c-resultat').value='Conforme';
+  document.getElementById('c-prochaine').value='';
+  document.getElementById('c-lien').value='';
+  document.getElementById('c-observations').value='';
+  document.getElementById('controle-modal').style.display='flex';
+}
+function closeControle(){document.getElementById('controle-modal').style.display='none';}
+function closeControleOutside(e){if(e.target===document.getElementById('controle-modal'))closeControle();}
+
+async function saveControle(){
+  var equipId=document.getElementById('c-equip-id').value;
+  var date=document.getElementById('c-date').value;
+  var resultat=document.getElementById('c-resultat').value;
+  if(!date||!resultat){showToast('Date et résultat obligatoires',false);return;}
+
+  var controle={
+    id:Date.now(),
+    equipId,
+    date,
+    organisme:document.getElementById('c-organisme').value.trim(),
+    resultat,
+    prochaine:document.getElementById('c-prochaine').value,
+    lien:document.getElementById('c-lien').value.trim(),
+    observations:document.getElementById('c-observations').value.trim()
+  };
+
+  try{
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveControle',data:controle})});
+
+    if(!HISTORIQUE[equipId])HISTORIQUE[equipId]=[];
+    HISTORIQUE[equipId].push(controle);
+
+    // Mettre à jour le statut et la date de l'équipement
+    var newStatut=resultat==='Conforme'?'Conforme':resultat==='Non conforme'?'Non conforme':'En attente';
+    var eq=EQUIPEMENTS.find(function(e){return String(e.id)===String(equipId);});
+    if(eq){
+      eq.derniereVerif=date;
+      if(controle.prochaine)eq.prochaine=controle.prochaine;
+      eq.statut=newStatut;
+      if(controle.lien)eq.lien=controle.lien;
+      await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveEquipement',data:eq})});
+    }
+
+    closeControle();
+    render();
+    var ficheEq=EQUIPEMENTS.find(function(e){return String(e.id)===String(equipId);});
+    if(ficheEq)renderFiche(ficheEq);
+    showToast('Contrôle enregistré !',true);
+  }catch(err){showToast('Erreur: '+err.message,false);}
+}
+
+async function init(){
+  try{
+    var d=await jsonpGet('getEquipements');
+    // Load historique
+    try{
+      var dh=await jsonpGet('getControles');
+      (dh.data||[]).forEach(function(r){
+        var eid=String(r[1]);
+        if(!HISTORIQUE[eid])HISTORIQUE[eid]=[];
+        HISTORIQUE[eid].push({id:r[0],equipId:eid,date:String(r[2]||'').split('T')[0],organisme:r[3],resultat:r[4],prochaine:String(r[5]||'').split('T')[0],lien:r[6],observations:r[7]});
+      });
+    }catch(ex){}
+
+    EQUIPEMENTS=(d.data||[]).map(function(r){
+      return{
+        id:r[0],type:r[1],site:String(r[2]),designation:r[3],
+        marque:r[4],modele:r[5],serie:r[6],
+        miseService:String(r[7]||'').split('T')[0],
+        typeVerif:r[8],periodicite:r[9],
+        derniereVerif:String(r[10]||'').split('T')[0],
+        prochaine:String(r[11]||'').split('T')[0],
+        organisme:r[12],statut:r[13]||'En attente',
+        lien:r[14],observations:r[15],updatedAt:r[16]
+      };
+    });
+    render();
+  }catch(e){console.warn(e);}
+}
+init();
+</script>
