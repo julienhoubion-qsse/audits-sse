@@ -426,7 +426,7 @@ function formatDue(dateStr){
   var diff=Math.floor((due-now)/86400000);
   var dateFormatted=due.toLocaleDateString('fr-FR');
   if(diff<0)return'<span class="due-overdue">⛔ '+dateFormatted+' ('+Math.abs(diff)+' j de retard)</span>';
-  if(diff===0)return'<span class="due-soon">⚠️ Aujourd\'hui !</span>';
+  if(diff===0)return'<span class="due-soon">⚠️ Ce jour !</span>';
   if(diff<=30)return'<span class="due-soon">⚠️ '+dateFormatted+' (J-'+diff+')</span>';
   return'<span class="due-ok">'+dateFormatted+'</span>';
 }
@@ -525,7 +525,7 @@ function render(){
 }
 
 function openModal(eq){
-  document.getElementById('modal-title').textContent=eq?'Modifier l\'équipement':'Nouvel équipement';
+  document.getElementById('modal-title').textContent=eq?'Modifier cet équipement':'Nouvel équipement';
   document.getElementById('m-id').value=eq?eq.id:'';
   document.getElementById('m-type').value=eq?eq.type:'';
   document.getElementById('m-site').value=eq?eq.site:'';
@@ -624,7 +624,7 @@ async function saveEquipement(){
 
     closeModal();
     render();
-    showToast('Équipement enregistré !'+(statut==='Non conforme'?' · Action créée dans le plan d\'actions':''),true);
+    showToast('Équipement enregistré !'+(statut==='Non conforme'?' · Action créée dans le plan actions':''),true);
   }catch(err){showToast('Erreur: '+err.message,false);}
 }
 
