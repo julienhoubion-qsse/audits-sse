@@ -1,0 +1,222 @@
+<!-- SSE — Bibliothèque des visites mensuelles -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --ok-bg:#D6F0A8;--ok-tc:#2D5A00;--warn-bg:#FFF0B3;--warn-tc:#7A5000;
+  --bad-bg:#FFD6D6;--bad-tc:#8B0000;--teal:#0891b2;--teal-lt:#cffafe;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10);--shadow-md:0 6px 28px rgba(46,69,88,.16)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--teal)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#a5f3fc;margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:#fff;border-bottom-color:rgba(107,191,31,.5)}
+.nav-btn.active{color:#fff!important;border-bottom-color:#6BBF1F!important}
+.wrapper{max-width:1100px;margin:0 auto;padding:22px 24px 48px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;background:var(--slate);border-bottom:1px solid var(--border)}
+.fld-sel,.fld-inp{height:34px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;background:var(--white);color:var(--charcoal)}
+.btn{height:34px;padding:0 16px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-danger{background:var(--bad-bg);color:var(--bad-tc);border:1px solid #fca5a5}
+.btn-sm{height:28px;padding:0 10px;font-size:11px}
+.stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.stat-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 18px;flex:1;min-width:120px;text-align:center}
+.stat-val{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:800;color:var(--steel-dk)}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+/* Visite card */
+.vis-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden;border-left:4px solid var(--teal)}
+.vis-hd{padding:13px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.vis-site{font-family:'Exo 2',sans-serif;font-size:16px;font-weight:800;color:var(--steel-dk);background:var(--steel-xlt);padding:4px 10px;border-radius:6px;flex-shrink:0}
+.vis-info{flex:1}
+.vis-title{font-size:13px;font-weight:700;color:var(--charcoal)}
+.vis-meta{font-size:11px;color:var(--muted);margin-top:3px;display:flex;gap:10px;flex-wrap:wrap}
+.score-badge{font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px}
+.score-ok{background:var(--ok-bg);color:var(--ok-tc)}
+.score-warn{background:var(--warn-bg);color:var(--warn-tc)}
+.score-bad{background:var(--bad-bg);color:var(--bad-tc)}
+.score-none{background:var(--steel-xlt);color:var(--muted)}
+.vis-body{padding:14px 16px;border-top:1px solid var(--border);display:none}
+.vis-body.open{display:block}
+.sec-scores{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.sec-score-item{background:var(--slate);border-radius:7px;padding:6px 10px;font-size:11px;text-align:center;min-width:80px}
+.sec-score-lbl{color:var(--muted);font-weight:600}
+.sec-score-val{font-family:'Exo 2',sans-serif;font-size:16px;font-weight:800;margin-top:2px}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-title{font-family:'Exo 2',sans-serif;font-size:16px;font-weight:700;color:var(--steel-dk);margin-bottom:6px}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE</div>
+    <div class="ph-title">📚 Bibliothèque des visites mensuelles</div>
+    <div class="ph-sub">Historique de toutes les visites de site réalisées</div>
+  </div>
+  <div style="position:relative;z-index:1">
+    <button class="btn btn-primary" onclick="window.location.href='Formulaire_Visite_SSE.html'">➕ Nouvelle visite</button>
+  </div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn" onclick="window.location.href='Formulaire_Visite_SSE.html'">🔍 Nouvelle visite</button>
+  <button class="nav-btn active">📚 Bibliothèque visites</button>
+  <button class="nav-btn" onclick="window.location.href='Plan_Actions_SSE.html'">⚡ Plan d'actions</button>
+  <button class="nav-btn" onclick="window.location.href='Formulaire_Audit_SSE.html'">📋 Audit conformité SSE</button>
+</div>
+
+<div class="wrapper">
+  <div class="stats-row">
+    <div class="stat-card" style="border-top:3px solid var(--teal)"><div class="stat-val" id="st-total" style="color:var(--teal)">—</div><div class="stat-lbl">Visites réalisées</div></div>
+    <div class="stat-card" style="border-top:3px solid var(--green)"><div class="stat-val" id="st-score" style="color:var(--green-dk)">—</div><div class="stat-lbl">Score moyen</div></div>
+    <div class="stat-card"><div class="stat-val" id="st-sites">—</div><div class="stat-lbl">Sites visités</div></div>
+    <div class="stat-card" style="border-top:3px solid #dc2626"><div class="stat-val" id="st-mois">—</div><div class="stat-lbl">Ce mois-ci</div></div>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <select class="fld-sel" id="f-site" onchange="render()">
+        <option value="">Tous les sites</option>
+        <option value="38">38</option><option value="41">41</option>
+        <option value="89">89</option><option value="47">47</option>
+        <option value="37">37</option><option value="17">17</option>
+        <option value="72">72</option><option value="72bis">72bis</option>
+      </select>
+      <select class="fld-sel" id="f-periode" onchange="render()">
+        <option value="">Toute période</option>
+        <option value="30">30 derniers jours</option>
+        <option value="90">3 derniers mois</option>
+        <option value="180">6 derniers mois</option>
+        <option value="365">12 derniers mois</option>
+      </select>
+      <input class="fld-inp" id="f-search" placeholder="Rechercher auditeur, site..." oninput="render()" style="min-width:180px">
+    </div>
+    <div style="padding:16px" id="vis-list">
+      <div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title">Chargement...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+const SEC_LABELS={documents:"📄 Documents",aspect_general:"🏭 Aspect général",controle_materiel:"🔧 Matériel",dechets:"♻️ Déchets",incendie_secours:"🔥 Incendie",attitude:"👷 Attitude"};
+let VISITES=[];
+
+function jsonpGet(action){
+  return new Promise(function(resolve,reject){
+    var cb='_cb'+Date.now()+Math.random().toString(36).slice(2);
+    window[cb]=function(d){delete window[cb];var el=document.getElementById('_js_'+cb);if(el)el.remove();resolve(d);};
+    var s=document.createElement('script');s.id='_js_'+cb;
+    s.src=GSHEET_URL+'?action='+action+'&callback='+cb;
+    s.onerror=function(){reject(new Error('failed'));};
+    document.head.appendChild(s);
+  });
+}
+
+function scoreBadge(s){
+  if(s===null||s===undefined||s==='')return'<span class="score-badge score-none">—</span>';
+  var n=Number(s);
+  var cls=n>=80?'score-ok':n>=50?'score-warn':'score-bad';
+  return'<span class="score-badge '+cls+'">'+n+'%</span>';
+}
+
+function render(){
+  var site=document.getElementById('f-site').value;
+  var periode=document.getElementById('f-periode').value;
+  var search=document.getElementById('f-search').value.toLowerCase();
+  var now=new Date();
+  var moisCourant=now.getFullYear()+'-'+(now.getMonth()+1).toString().padStart(2,'0');
+
+  var lib=VISITES.filter(function(v){
+    if(site&&v.site!==site)return false;
+    if(periode){var cutoff=new Date(now-Number(periode)*86400000);if(new Date(v.date)<cutoff)return false;}
+    if(search&&!((v.auditeur||'').toLowerCase().includes(search)||(v.site||'').toLowerCase().includes(search)))return false;
+    return true;
+  }).sort(function(a,b){return b.date.localeCompare(a.date);});
+
+  var scores=VISITES.map(function(v){return Number(v.total);}).filter(function(v){return !isNaN(v)&&v>0;});
+  document.getElementById('st-total').textContent=VISITES.length;
+  document.getElementById('st-score').textContent=scores.length?Math.round(scores.reduce(function(a,b){return a+b;},0)/scores.length)+'%':'—';
+  document.getElementById('st-sites').textContent=new Set(VISITES.map(function(v){return v.site;})).size;
+  document.getElementById('st-mois').textContent=VISITES.filter(function(v){return v.date&&v.date.startsWith(moisCourant);}).length;
+
+  var el=document.getElementById('vis-list');
+  if(!lib.length){
+    var empty='<div class="empty-state"><div class="empty-icon">📭</div>';
+    empty+='<div class="empty-title">'+(VISITES.length===0?'Aucune visite enregistrée':'Aucun résultat')+'</div>';
+    if(VISITES.length===0)empty+='<br><br><button class="btn btn-primary" onclick="location.href=\'Formulaire_Visite_SSE.html\'">🔍 Nouvelle visite</button>';
+    empty+='</div>';
+    el.innerHTML=empty;
+    return;
+  }
+
+  el.innerHTML=lib.map(function(v){
+    var dateStr=v.date?new Date(v.date).toLocaleDateString('fr-FR'):'—';
+    var scores_obj={};
+    try{scores_obj=JSON.parse(v.scores||'{}');}catch(ex){}
+    var secHtml=Object.keys(SEC_LABELS).map(function(k){
+      var s=scores_obj[k];
+      var val=s!==null&&s!==undefined&&s!==''?Number(s)+'%':'—';
+      var color=s!==null&&s!==undefined&&s!==''?(Number(s)>=80?'var(--green-dk)':Number(s)>=50?'#d97706':'#dc2626'):'var(--muted)';
+      return'<div class="sec-score-item"><div class="sec-score-lbl">'+SEC_LABELS[k]+'</div><div class="sec-score-val" style="color:'+color+'">'+val+'</div></div>';
+    }).join('');
+
+    var html='';
+    html+='<div class="vis-card" id="vc-'+v.id+'">';
+    html+='<div class="vis-hd" data-id="'+v.id+'" onclick="tog(this.dataset.id)">';
+    html+='<div class="vis-site">Site '+v.site+'</div>';
+    html+='<div class="vis-info">';
+    html+='<div class="vis-title">🔍 Visite mensuelle — '+v.auditeur+'</div>';
+    html+='<div class="vis-meta"><span>📅 '+dateStr+'</span>'+(v.accompagnateur?'<span>👥 '+v.accompagnateur+'</span>':'')+'</div>';
+    html+='</div>';
+    html+=scoreBadge(v.total);
+    html+='<span style="color:var(--border);font-size:18px;margin-left:6px">›</span>';
+    html+='</div>';
+    html+='<div class="vis-body" id="vb-'+v.id+'">';
+    html+='<div style="margin-bottom:10px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">Scores par thème</div>';
+    html+='<div class="sec-scores">'+secHtml+'</div></div>';
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap">';
+    html+='<button class="btn btn-ghost btn-sm" data-id="'+v.id+'" onclick="editVisite(this.dataset.id)">✏️ Modifier</button>';
+    html+='<button class="btn btn-danger btn-sm" data-id="'+v.id+'" onclick="delVisite(this.dataset.id)">🗑️ Supprimer</button>';
+    html+='</div></div></div>';
+    return html;
+  }).join('');
+}
+
+function tog(id){var b=document.getElementById('vb-'+id);if(b)b.classList.toggle('open');}
+function editVisite(id){window.location.href='Formulaire_Visite_SSE.html?edit='+id;}
+
+async function delVisite(id){
+  if(!confirm('Supprimer cette visite ?'))return;
+  try{
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'deleteVisite',id})});
+    VISITES=VISITES.filter(function(v){return String(v.id)!==String(id);});
+    render();
+  }catch(e){alert('Erreur: '+e.message);}
+}
+
+async function init(){
+  try{
+    var d=await jsonpGet('getVisites');
+    VISITES=(d.data||[]).map(function(r){
+      return{id:r[0],site:String(r[1]),date:String(r[2]||'').split('T')[0],
+        auditeur:r[3],accompagnateur:r[4],scores:r[5],total:r[6],createdAt:r[8]};
+    });
+    render();
+  }catch(e){
+    document.getElementById('vis-list').innerHTML='<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">Erreur de chargement</div></div>';
+  }
+}
+init();
+</script>

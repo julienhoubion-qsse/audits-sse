@@ -1,0 +1,528 @@
+<!-- SSE — Audit Visite Mensuelle -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-mid:#7A96AA;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --ok-bg:#D6F0A8;--ok-tc:#2D5A00;--warn-bg:#FFF0B3;--warn-tc:#7A5000;
+  --bad-bg:#FFD6D6;--bad-tc:#8B0000;
+  --teal:#0891b2;--teal-lt:#cffafe;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--teal)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#a5f3fc;margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:#fff;border-bottom-color:rgba(107,191,31,.5)}
+.nav-btn.active{color:#fff!important;border-bottom-color:#6BBF1F!important}
+.wrapper{max-width:1000px;margin:0 auto;padding:22px 24px 60px}
+/* Header info */
+.audit-header{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;margin-bottom:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.hfld{display:flex;flex-direction:column;gap:4px}
+.hfld-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.hfld-inp{height:36px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--white)}
+.hfld-sel{height:36px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--white)}
+/* Score bar */
+.score-bar{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.score-val{font-family:'Exo 2',sans-serif;font-size:36px;font-weight:800;color:var(--steel-dk);min-width:70px}
+.score-detail{display:flex;gap:12px;flex-wrap:wrap}
+.score-item{text-align:center;min-width:50px}
+.score-item-val{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:800}
+.score-item-lbl{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase}
+.prog-track{flex:1;height:10px;background:var(--slate);border-radius:5px;overflow:hidden;min-width:100px}
+.prog-fill{height:100%;border-radius:5px;transition:width .4s;background:var(--green)}
+/* Section card */
+.section-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px}
+.section-hd{padding:12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;border-left:4px solid var(--teal)}
+.section-icon{font-size:18px;flex-shrink:0}
+.section-name{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk);flex:1}
+.section-score{font-family:'Exo 2',sans-serif;font-size:14px;font-weight:800;padding:3px 10px;border-radius:20px}
+.sec-ok{background:var(--ok-bg);color:var(--ok-tc)}
+.sec-warn{background:var(--warn-bg);color:var(--warn-tc)}
+.sec-bad{background:var(--bad-bg);color:var(--bad-tc)}
+.sec-na{background:var(--steel-xlt);color:var(--muted)}
+.section-chevron{color:var(--muted);transition:transform .2s;font-size:14px}
+.section-body{display:none;border-top:1px solid var(--border)}
+.section-body.open{display:block}
+/* Criteria table */
+.criteria-table{width:100%;border-collapse:collapse}
+.criteria-table thead th{background:var(--steel-dk);color:#fff;padding:8px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;text-align:left}
+.criteria-table thead th:not(:first-child){text-align:center;width:50px}
+.criteria-table thead th:last-child{text-align:left;width:200px}
+.criteria-table tbody tr{border-bottom:1px solid var(--border)}
+.criteria-table tbody tr:hover{background:var(--slate)}
+.criteria-table tbody td{padding:9px 12px;font-size:13px;vertical-align:middle}
+.criteria-table tbody td:not(:first-child):not(:last-child){text-align:center}
+/* Radio buttons */
+.radio-group{display:flex;justify-content:center;gap:4px}
+.rbtn{width:32px;height:32px;border:2px solid var(--border);border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;background:var(--white);transition:all .12s;display:flex;align-items:center;justify-content:center}
+.rbtn:hover{border-color:var(--steel-mid)}
+.rbtn.sel-c{background:var(--ok-bg);border-color:var(--green-dk);color:var(--ok-tc)}
+.rbtn.sel-nc{background:var(--bad-bg);border-color:var(--bad-tc);color:var(--bad-tc)}
+.rbtn.sel-so{background:var(--steel-xlt);border-color:var(--steel-mid);color:var(--steel-dk)}
+.comment-inp{border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-family:'Nunito Sans',sans-serif;font-size:12px;width:100%;min-width:120px;resize:none;height:32px}
+.comment-inp:focus{outline:none;border-color:var(--teal)}
+/* Actions section */
+.actions-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.actions-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;border-left:4px solid var(--green)}
+.actions-title{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk)}
+.action-row{background:var(--slate);border-radius:7px;padding:10px 12px;margin:0 16px 8px;border:1px solid var(--border)}
+.action-row-grid{display:grid;grid-template-columns:1fr 160px 120px auto;gap:8px;align-items:center}
+@media(max-width:700px){.action-row-grid{grid-template-columns:1fr;}}
+.act-inp{height:32px;border:1px solid var(--border);border-radius:6px;padding:0 8px;font-family:'Nunito Sans',sans-serif;font-size:12px;width:100%}
+.btn-add-act{background:var(--green-lt);color:var(--green-dk);border:1px solid var(--green);height:30px;padding:0 12px;font-size:12px;font-weight:700;border-radius:7px;cursor:pointer;margin:8px 16px 14px}
+.btn-rm{background:var(--bad-bg);color:var(--bad-tc);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px}
+/* Foot */
+.form-foot{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.btn{height:38px;padding:0 20px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-audit{background:var(--green-lt);color:var(--green-dk);border:1px solid var(--green)}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="ph-tag">Service QSSE</div>
+    <div class="ph-title">🔍 Audit de visite mensuelle</div>
+    <div class="ph-sub">Contrôle opérationnel terrain · Visite mensuelle de site</div>
+  </div>
+  <div style="position:relative;z-index:1;text-align:right">
+    <div style="font-size:11px;color:var(--steel-lt)" id="today-label"></div>
+  </div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
+  <button class="nav-btn" onclick="window.location.href='Formulaire_Audit_SSE.html'">📋 Audit de conformité SSE</button>
+  <button class="nav-btn" onclick="window.location.href='Bibliotheque_Visites_SSE.html'">📚 Bibliothèque visites</button>
+  <button class="nav-btn" onclick="window.location.href='Plan_Actions_SSE.html'">⚡ Plan d'actions</button>
+  <button class="nav-btn active">🔍 Nouvelle visite</button>
+</div>
+
+<div class="wrapper">
+  <!-- Infos audit -->
+  <div class="audit-header">
+    <div class="hfld">
+      <label class="hfld-lbl">Site <span style="color:#dc2626">*</span></label>
+      <select class="hfld-sel" id="f-site">
+        <option value="">— Sélectionner —</option>
+        <option value="38">38</option><option value="41">41</option>
+        <option value="89">89</option><option value="47">47</option>
+        <option value="37">37</option><option value="17">17</option>
+        <option value="72">72</option><option value="72bis">72bis</option>
+      </select>
+    </div>
+    <div class="hfld">
+      <label class="hfld-lbl">Date <span style="color:#dc2626">*</span></label>
+      <input type="date" class="hfld-inp" id="f-date">
+    </div>
+    <div class="hfld">
+      <label class="hfld-lbl">Auditeur <span style="color:#dc2626">*</span></label>
+      <input type="text" class="hfld-inp" id="f-auditeur" placeholder="Nom Prénom">
+    </div>
+    <div class="hfld">
+      <label class="hfld-lbl">Accompagnateur</label>
+      <input type="text" class="hfld-inp" id="f-accompagnateur" placeholder="Nom Prénom">
+    </div>
+  </div>
+
+  <!-- Score global -->
+  <div class="score-bar">
+    <div>
+      <div style="font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Score global</div>
+      <div class="score-val" id="score-global">—</div>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="score-detail">
+      <div class="score-item"><div class="score-item-val" id="cnt-c" style="color:var(--green-dk)">0</div><div class="score-item-lbl">C</div></div>
+      <div class="score-item"><div class="score-item-val" id="cnt-nc" style="color:#dc2626">0</div><div class="score-item-lbl">NC</div></div>
+      <div class="score-item"><div class="score-item-val" id="cnt-so" style="color:var(--muted)">0</div><div class="score-item-lbl">SO</div></div>
+    </div>
+    <button class="btn btn-audit" onclick="window.open('Formulaire_Audit_SSE.html','_blank')" style="margin-left:auto;height:34px;font-size:12px">📋 Audit de conformité SSE complet →</button>
+  </div>
+
+  <!-- Sections -->
+  <div id="sections-container"></div>
+
+  <!-- Actions correctives -->
+  <div class="actions-card">
+    <div class="actions-hd">
+      <span style="font-size:18px">⚡</span>
+      <div class="actions-title">Actions correctives / préventives</div>
+      <span style="font-size:12px;color:var(--muted);margin-left:4px">→ intégrées au plan d'actions QSSE</span>
+    </div>
+    <div style="padding:12px 0 4px" id="actions-list"></div>
+    <button class="btn-add-act" onclick="addAction()">➕ Ajouter une action</button>
+  </div>
+
+  <div class="form-foot">
+    <button class="btn btn-ghost" onclick="resetForm()">🔄 Réinitialiser</button>
+    <button class="btn btn-primary" onclick="saveVisite()">💾 Enregistrer la visite</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+
+const SECTIONS=[
+  {key:"documents",icon:"📄",label:"Documents",criteria:[
+    "Instruction pour mise en rétention du site",
+    "Procédure en cas d'urgence : évacuation, prise en charge d'un blessé, projection d'un produit chimique dans l'oeil",
+    "Plan d'évacuation",
+    "Affichage obligatoire des documents réglementaires",
+    "Consignes de port des EPI au poste",
+    "Fiches de données de sécurité (emplacement, disponibilité)"
+  ]},
+  {key:"aspect_general",icon:"🏭",label:"Aspect général du site",criteria:[
+    "Organisation, propreté, rangement (y compris les vestiaires)",
+    "Balisage, voie de circulation, éclairage",
+    "Voies d'accès et issues de secours signalées et dégagées",
+    "Stockage des déchets > à 4m de la clôture",
+    "Voie engin dégagée = 3m autour de l'installation",
+    "Stockage des pièces de réemploi conforme",
+    "Séparation des véhicules thermiques des véhicules électriques",
+    "Entreposage des véhicules sur la zone de rétention",
+    "Empilement des carcasses < 3m"
+  ]},
+  {key:"controle_materiel",icon:"🔧",label:"Contrôle et suivi du matériel",criteria:[
+    "Bon état du matériel (vérification visuelle)",
+    "Vérification des caillebotis",
+    "Palettes de rétention : niveau déchets et solides souillés / déformation des grilles",
+    "Contrôle du fichier des vérifications périodiques"
+  ]},
+  {key:"dechets",icon:"♻️",label:"Déchets / Matières",criteria:[
+    "Respect du tri des déchets",
+    "Stockage des pneus : hauteur < 3m (si zone > 100m3 : distance de 6m avec autre zone)",
+    "Stockage à l'abri des pièces huileuses et graisseuses",
+    "Stockages des déchets combustibles et inflammables > 10m des bâtiments",
+    "Séparation du stockage des déchets combustibles et inflammables en îlot"
+  ]},
+  {key:"incendie_secours",icon:"🔥",label:"Incendie / Premiers secours",criteria:[
+    "Extincteurs (+ RIA) : accessibilité",
+    "Réserve d'eau : poteau incendie, zone d'immersion",
+    "Contrôle des boîtiers de secours",
+    "Trousse de premier secours valide et à disposition"
+  ]},
+  {key:"attitude",icon:"👷",label:"Attitude / Respect des consignes",criteria:[
+    "Port des EPI obligatoires respecté",
+    "Respect des zones de circulation piéton/engins",
+    "Absence de comportements dangereux observés",
+    "Respect des consignes de sécurité au poste"
+  ]}
+];
+
+// State: {sectionKey: {criteriaIdx: {status:'C'|'NC'|'SO', comment:''}}}
+var STATE={};
+var actionCount=0;
+
+SECTIONS.forEach(function(s){
+  STATE[s.key]={};
+  s.criteria.forEach(function(_,i){STATE[s.key][i]={status:'',comment:''};});
+});
+
+document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+document.getElementById('today-label').textContent='Visite du '+new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+function setStatus(sKey,cIdx,status){
+  STATE[sKey][cIdx].status=STATE[sKey][cIdx].status===status?'':status;
+  // Update buttons
+  var prefix='btn-'+sKey+'-'+cIdx+'-';
+  ['C','NC','SO'].forEach(function(s){
+    var btn=document.getElementById(prefix+s);
+    if(btn){
+      btn.className='rbtn'+(STATE[sKey][cIdx].status===s?' sel-'+s.toLowerCase():'');
+    }
+  });
+  updateScores();
+}
+
+function updateScores(){
+  var totalC=0,totalNC=0,totalSO=0;
+  SECTIONS.forEach(function(s){
+    s.criteria.forEach(function(_,i){
+      var st=STATE[s.key][i].status;
+      if(st==='C')totalC++;
+      else if(st==='NC')totalNC++;
+      else if(st==='SO')totalSO++;
+    });
+  });
+  var applicable=totalC+totalNC;
+  var pct=applicable>0?Math.round(totalC/applicable*100):0;
+  var scoreEl=document.getElementById('score-global');
+  scoreEl.textContent=applicable>0?pct+'%':'—';
+  scoreEl.style.color=pct>=80?'var(--green-dk)':pct>=50?'#d97706':'#dc2626';
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-fill').style.background=pct>=80?'var(--green)':pct>=50?'#d97706':'#dc2626';
+  document.getElementById('cnt-c').textContent=totalC;
+  document.getElementById('cnt-nc').textContent=totalNC;
+  document.getElementById('cnt-so').textContent=totalSO;
+  // Update section scores
+  SECTIONS.forEach(function(s){
+    var c=0,nc=0;
+    s.criteria.forEach(function(_,i){
+      var st=STATE[s.key][i].status;
+      if(st==='C')c++;else if(st==='NC')nc++;
+    });
+    var app=c+nc;
+    var p=app>0?Math.round(c/app*100):null;
+    var el=document.getElementById('sec-score-'+s.key);
+    if(el){
+      if(p===null){el.textContent='—';el.className='section-score sec-na';}
+      else{el.textContent=p+'%';el.className='section-score '+(p>=80?'sec-ok':p>=50?'sec-warn':'sec-bad');}
+    }
+  });
+}
+
+function buildSections(){
+  var container=document.getElementById('sections-container');
+  container.innerHTML='';
+  SECTIONS.forEach(function(sec){
+    var card=document.createElement('div');
+    card.className='section-card';
+    // Header
+    var hd=document.createElement('div');
+    hd.className='section-hd';
+    hd.innerHTML='<span class="section-icon">'+sec.icon+'</span>'
+      +'<span class="section-name">'+sec.label+'</span>'
+      +'<span class="section-score sec-na" id="sec-score-'+sec.key+'">—</span>'
+      +'<span class="section-chevron" id="chev-'+sec.key+'">▼</span>';
+    hd.addEventListener('click',function(){
+      var body=document.getElementById('body-'+sec.key);
+      var chev=document.getElementById('chev-'+sec.key);
+      body.classList.toggle('open');
+      chev.style.transform=body.classList.contains('open')?'rotate(180deg)':'';
+    });
+    card.appendChild(hd);
+    // Body
+    var body=document.createElement('div');
+    body.className='section-body open';
+    body.id='body-'+sec.key;
+    // Table
+    var table='<table class="criteria-table"><thead><tr>'
+      +'<th>Critère</th><th>C</th><th>NC</th><th>SO</th><th>Commentaire</th>'
+      +'</tr></thead><tbody>';
+    sec.criteria.forEach(function(crit,i){
+      var sk=sec.key;
+      table+='<tr>'
+        +'<td>'+crit+'</td>'
+        +'<td><div class="radio-group"><button class="rbtn" id="btn-'+sk+'-'+i+'-C" onclick="setStatus(\''+sk+'\','+i+',\'C\')">C</button></div></td>'
+        +'<td><div class="radio-group"><button class="rbtn" id="btn-'+sk+'-'+i+'-NC" onclick="setStatus(\''+sk+'\','+i+',\'NC\')">NC</button></div></td>'
+        +'<td><div class="radio-group"><button class="rbtn" id="btn-'+sk+'-'+i+'-SO" onclick="setStatus(\''+sk+'\','+i+',\'SO\')">SO</button></div></td>'
+        +'<td><textarea class="comment-inp" id="cmt-'+sk+'-'+i+'" oninput="STATE[\''+sk+'\']['+i+'].comment=this.value" placeholder="Observation..."></textarea></td>'
+        +'</tr>';
+    });
+    table+='</tbody></table>';
+    body.innerHTML=table;
+    card.appendChild(body);
+    container.appendChild(card);
+  });
+}
+
+function addAction(desc,resp,delai){
+  actionCount++;
+  var idx=actionCount;
+  var div=document.createElement('div');
+  div.id='act-row-'+idx;
+  div.className='action-row';
+  div.innerHTML='<div class="action-row-grid">'
+    +'<input type="text" class="act-inp" id="act-desc-'+idx+'" placeholder="Description de l\'action corrective..." value="'+(desc||'')+'">'
+    +'<input type="text" class="act-inp" id="act-resp-'+idx+'" placeholder="Responsable" value="'+(resp||'')+'">'
+    +'<input type="date" class="act-inp" id="act-delai-'+idx+'" value="'+(delai||'')+'">'
+    +'<button class="btn-rm" data-idx="'+idx+'" onclick="document.getElementById(\'act-row-\'+this.dataset.idx).remove()">✕</button>'
+    +'</div>';
+  document.getElementById('actions-list').appendChild(div);
+}
+
+function getActions(){
+  var acts=[];
+  for(var i=1;i<=actionCount;i++){
+    var d=document.getElementById('act-desc-'+i);
+    if(!d)continue;
+    var desc=d.value.trim();
+    if(!desc)continue;
+    acts.push({
+      desc,
+      resp:(document.getElementById('act-resp-'+i)||{}).value||'',
+      delai:(document.getElementById('act-delai-'+i)||{}).value||''
+    });
+  }
+  return acts;
+}
+
+const VISITE_AUDIT_MAPPING={"documents":{"0":[["incendie",7]],"1":[["incendie",3]],"2":[["incendie",3]],"3":[["obligations",0]],"4":[["epi",0]],"5":[["dechets",6]]},"aspect_general":{"0":[["exploitation",2]],"1":[["parc",0]],"2":[["incendie",0]],"3":[["incendie",10]],"4":[["parc",3]],"5":[["stockage",1]],"6":[["vhe",0]],"7":[["icpe",0]],"8":[]},"controle_materiel":{"0":[["controle_reg",2]],"1":[["controle_reg",2]],"2":[["icpe",1]],"3":[["controle_reg",0]]},"dechets":{"0":[["dechets",0]],"1":[["dechets",6]],"2":[["dechets",6]],"3":[["incendie",14]],"4":[["incendie",14]]},"incendie_secours":{"0":[["incendie",2]],"1":[["icpe",2]],"2":[["incendie",2]],"3":[["gestion_accident",4]]},"attitude":{"0":[["epi",3]],"1":[["parc",1]],"2":[["attitude",0]],"3":[["attitude",1]]}};
+
+async function applyVisiteToAudit(site, visiteState){
+  // Find last audit for this site
+  var audData;
+  try{
+    var d=await jsonpGet('getAll');
+    var audits=(d.data||[]).filter(function(r){return String(r[1])===String(site);});
+    if(!audits.length){showToast('Aucun audit SSE trouvé pour le site '+site+' — mise à jour impossible',false);return null;}
+    // Sort by date desc, take last
+    audits.sort(function(a,b){return String(b[3]).localeCompare(String(a[3]));});
+    audData=audits[0];
+  }catch(e){showToast('Erreur lors de la recherche du dernier audit',false);return null;}
+
+  var auditId=audData[0];
+  var scores={};try{scores=JSON.parse(audData[4]||'{}');}catch(ex){}
+  var comments={};try{comments=JSON.parse(audData[7]||'{}');}catch(ex){}
+
+  var updated=[];
+
+  // For each NC in the visite, update the corresponding audit criteria
+  Object.keys(visiteState).forEach(function(secKey){
+    var secState=visiteState[secKey];
+    Object.keys(secState).forEach(function(cIdx){
+      if(secState[cIdx].status!=='NC')return;
+      var targets=(VISITE_AUDIT_MAPPING[secKey]||{})[cIdx]||[];
+      targets.forEach(function(target){
+        var audSecKey=target[0];
+        var audCIdx=target[1];
+        // Only update if currently C (do not overwrite existing NC)
+        if(!comments[audSecKey])return;
+        if(!comments[audSecKey][audCIdx])return;
+        if(comments[audSecKey][audCIdx].status==='C'){
+          comments[audSecKey][audCIdx].status='NC';
+          updated.push(audSecKey+' #'+(audCIdx+1));
+          // Recalculate section score
+          var sc=comments[audSecKey];
+          var applicable=sc.filter(function(c){return c.status!=='NA';}).length;
+          var conformes=sc.filter(function(c){return c.status==='C';}).length;
+          scores[audSecKey]=applicable>0?Math.round(conformes/applicable*100):null;
+        }
+      });
+    });
+  });
+
+  if(!updated.length){return {auditId:auditId, updated:[]};}
+
+  // Recalculate total score
+  var scVals=Object.values(scores).filter(function(v){return v!==null;});
+  var newTotal=scVals.length?Math.round(scVals.reduce(function(a,b){return a+b;},0)/scVals.length):'';
+
+  // Save updated audit
+  try{
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({
+      action:'updateAuditScores',
+      auditId:auditId,
+      scores:JSON.stringify(scores),
+      total:newTotal,
+      comments:JSON.stringify(comments)
+    })});
+  }catch(e){showToast('Erreur lors de la mise à jour de l'audit',false);return null;}
+
+  return {auditId:auditId, updated:updated};
+}
+
+async function saveVisite(){
+  var site=document.getElementById('f-site').value;
+  var date=document.getElementById('f-date').value;
+  var auditeur=document.getElementById('f-auditeur').value.trim();
+  if(!site||!date||!auditeur){showToast('Site, date et auditeur sont obligatoires',false);return;}
+
+  // Build scores per section
+  var scores={};
+  SECTIONS.forEach(function(s){
+    var c=0,nc=0;
+    s.criteria.forEach(function(_,i){
+      var st=STATE[s.key][i].status;
+      if(st==='C')c++;else if(st==='NC')nc++;
+    });
+    var app=c+nc;
+    scores[s.key]=app>0?Math.round(c/app*100):null;
+  });
+  var allScores=Object.values(scores).filter(function(v){return v!==null;});
+  var total=allScores.length?Math.round(allScores.reduce(function(a,b){return a+b;},0)/allScores.length):null;
+
+  var data={
+    id:Date.now(),site,date,auditeur,
+    accompagnateur:document.getElementById('f-accompagnateur').value.trim(),
+    scores:JSON.stringify(scores),
+    total:total,
+    comments:JSON.stringify(STATE),
+    createdAt:new Date().toISOString()
+  };
+
+  var actions=getActions();
+  showToast('Enregistrement...',false);
+  try{
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveVisite',data})});
+    // Envoyer les actions au plan d'actions
+    for(var act of actions){
+      var origin='🔍 Visite mensuelle — Site '+site+' — '+date;
+      await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveAction',data:{
+        id:Date.now()+Math.random(),
+        auditId:'VIS-'+data.id,
+        site,auditDate:date,
+        sectionKey:'visite',criteriaIdx:0,
+        origin,
+        description:act.desc,
+        responsable:act.resp,
+        delai:act.delai,
+        avancement:0,commentaire:'',efficace:'',
+        createdAt:new Date().toISOString()
+      }})});
+    }
+    // Appliquer les NC de la visite sur le dernier audit SSE du site
+    var auditResult=await applyVisiteToAudit(site, STATE);
+    var msg='Visite enregistrée !'+(actions.length?' · '+actions.length+' action(s)':'');
+    if(auditResult&&auditResult.updated.length>0){
+      msg+=' · Audit SSE mis à jour ('+auditResult.updated.length+' critère(s) passé(s) NC)';
+      showToast(msg,true);
+      setTimeout(function(){
+        var detail=auditResult.updated.join(', ');
+        if(confirm('Audit SSE mis à jour : '+auditResult.updated.length+' critère(s) passé(s) en NC.\n\nSections concernées : '+detail+'\n\nVoulez-vous consulter l\'audit ?')){
+          window.location.href='Bibliotheque_Audits_SSE.html';
+          return;
+        }
+        window.location.href='Bibliotheque_Visites_SSE.html';
+      },1200);
+    } else {
+      showToast(msg,true);
+      setTimeout(function(){window.location.href='Bibliotheque_Visites_SSE.html';},1800);
+    }
+  }catch(e){showToast('Erreur: '+e.message,false);}
+}
+
+function resetForm(){
+  document.getElementById('f-site').value='';
+  document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('f-auditeur').value='';
+  document.getElementById('f-accompagnateur').value='';
+  SECTIONS.forEach(function(s){
+    STATE[s.key]={};
+    s.criteria.forEach(function(_,i){
+      STATE[s.key][i]={status:'',comment:''};
+      ['C','NC','SO'].forEach(function(st){
+        var btn=document.getElementById('btn-'+s.key+'-'+i+'-'+st);
+        if(btn)btn.className='rbtn';
+      });
+      var cmt=document.getElementById('cmt-'+s.key+'-'+i);
+      if(cmt)cmt.value='';
+    });
+  });
+  document.getElementById('actions-list').innerHTML='';
+  actionCount=0;
+  updateScores();
+}
+
+function showToast(msg,ok){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=ok?'var(--green-dk)':'var(--steel-dk)';
+  t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3000);
+}
+
+// Init
+buildSections();
+</script>
