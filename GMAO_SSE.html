@@ -14,8 +14,8 @@
 body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);min-height:100vh;margin:0}
 .page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:20px 28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
 .page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--indigo)}
-.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#a5b4fc;margin-bottom:5px;position:relative;z-index:1}
-.ph-title{font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ph-tag{font-family:sans-serif,sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#a5b4fc;margin-bottom:5px;position:relative;z-index:1}
+.ph-title{font-family:sans-serif,sans-serif;font-size:20px;font-weight:800;color:#fff;position:relative;z-index:1}
 .ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px;position:relative;z-index:1}
 .nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
 .nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
@@ -28,7 +28,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 .kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
 .kpi-card::after{content:attr(data-icon);position:absolute;right:8px;bottom:4px;font-size:32px;opacity:.08}
 .kpi-lbl{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
-.kpi-val{font-family:'Exo 2',sans-serif;font-size:28px;font-weight:800;line-height:1.1;margin:4px 0 2px}
+.kpi-val{font-family:sans-serif,sans-serif;font-size:28px;font-weight:800;line-height:1.1;margin:4px 0 2px}
 .kpi-sub{font-size:11px;color:var(--muted)}
 /* Filters */
 .filter-bar{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 16px;margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -61,7 +61,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px}
 .modal{background:var(--white);border-radius:var(--radius);box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:680px;max-height:92vh;overflow-y:auto}
 .modal-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:1}
-.modal-title{font-family:'Exo 2',sans-serif;font-size:15px;font-weight:700;color:var(--steel-dk)}
+.modal-title{font-family:sans-serif,sans-serif;font-size:15px;font-weight:700;color:var(--steel-dk)}
 .modal-body{padding:16px 18px}
 .modal-foot{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--white)}
 .fld{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
@@ -80,7 +80,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 /* Empty */
 .empty-state{text-align:center;padding:48px 20px;color:var(--muted)}
 .empty-icon{font-size:48px;margin-bottom:12px}
-.empty-title{font-family:'Exo 2',sans-serif;font-size:16px;font-weight:700;color:var(--steel-dk);margin-bottom:6px}
+.empty-title{font-family:sans-serif,sans-serif;font-size:16px;font-weight:700;color:var(--steel-dk);margin-bottom:6px}
 .toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 </style>
@@ -505,7 +505,7 @@ function render(){
       +'<td><div style="font-weight:700;font-size:13px">'+e.designation+'</div>'
       +(e.marque?'<div style="font-size:11px;color:var(--muted)">'+e.marque+(e.modele?' · '+e.modele:'')+'</div>':'')
       +'</td>'
-      +'<td><span style="font-family:\'Exo 2\',sans-serif;font-weight:700">Site '+e.site+'</span></td>'
+      +'<td><span style="font-family:sans-serif,sans-serif;font-weight:700">Site '+e.site+'</span></td>'
       +'<td style="font-size:11px;color:var(--muted)">'+(e.serie||'—')+'</td>'
       +'<td style="font-size:11px">'+(e.typeVerif||'—')+'<br><span style="color:var(--muted)">'+(e.periodicite?'Tous les '+e.periodicite+' mois':'—')+'</span></td>'
       +'<td style="font-size:11px">'+(e.organisme||'—')+'</td>'
@@ -701,7 +701,7 @@ function renderFiche(eq){
 
   // Historique des contrôles
   html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">';
-  html+='<div style="font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk)">📋 Historique des contrôles</div>';
+  html+='<div style="font-family:sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk)">📋 Historique des contrôles</div>';
   html+='<button class="btn btn-primary btn-sm" onclick="openControle(''+eq.id+'')">➕ Ajouter un contrôle</button>';
   html+='</div>';
 
