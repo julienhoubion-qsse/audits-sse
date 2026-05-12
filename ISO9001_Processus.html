@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ISO 9001 — Fiche processus</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --indigo:#4F46E5;--indigo-lt:#EEF2FF;--amber:#D97706;--amber-lt:#FEF3C7;
+  --red:#DC2626;--red-lt:#FEE2E2;--teal:#0891B2;--teal-lt:#CFFAFE;--purple:#7C3AED;--purple-lt:#EDE9FE;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10);--shadow-md:0 6px 28px rgba(46,69,88,.16)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:18px 28px;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#a5b4fc;margin-bottom:4px}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:11px 16px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block;transition:all .15s}
+.nav-btn:hover{color:#fff}
+.nav-btn.active{color:#fff!important;border-bottom-color:var(--green)!important}
+.tab-bar{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.tab-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all .15s}
+.tab-btn:hover{color:var(--steel-dk)}
+.tab-btn.active{color:var(--indigo)!important;border-bottom-color:var(--indigo)!important}
+.wrapper{max-width:1200px;margin:0 auto;padding:20px 24px 60px}
+.tab-content{display:none}.tab-content.active{display:block}
+/* Cards */
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
+.card-hd{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-icon{font-size:18px}
+.card-title{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk);flex:1}
+.card-body{padding:16px 18px}
+/* Table */
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table thead th{background:var(--steel-dk);color:#fff;padding:9px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.data-table tbody tr{border-bottom:1px solid var(--border)}
+.data-table tbody tr:hover{background:var(--slate)}
+.data-table tbody td{padding:10px 12px;vertical-align:top}
+/* Badges */
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;white-space:nowrap}
+.badge-r4{background:#FEE2E2;color:#DC2626}
+.badge-r3{background:#FEF3C7;color:#D97706}
+.badge-r2{background:#EEF2FF;color:#4F46E5}
+.badge-r1{background:var(--green-xlt);color:var(--green-dk)}
+.badge-na{background:var(--slate);color:var(--muted)}
+/* Form */
+.form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld-lbl{font-size:11px;font-weight:700;color:var(--steel-dk);text-transform:uppercase;letter-spacing:.5px}
+.fld-inp,.fld-sel{height:36px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:13px;background:var(--white)}
+.fld-inp:focus,.fld-sel:focus{outline:none;border-color:var(--indigo)}
+.fld-txt{border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;resize:vertical;min-height:60px;width:100%}
+/* KPI */
+.kpi-mini-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:14px}
+.kpi-mini{background:var(--slate);border-radius:8px;padding:12px 14px;border-left:3px solid var(--indigo)}
+.kpi-mini-lbl{font-size:11px;color:var(--muted);font-weight:600}
+.kpi-mini-obj{font-size:12px;color:var(--charcoal);font-weight:600;margin-top:2px}
+.kpi-mini-freq{font-size:10px;color:var(--muted)}
+/* Action form */
+.action-form{background:var(--green-xlt);border:1px solid var(--green);border-radius:8px;padding:14px;margin-bottom:14px}
+.btn{height:36px;padding:0 18px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--indigo);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-danger{background:var(--red-lt);color:var(--red);border:1px solid #fca5a5}
+.btn-sm{height:28px;padding:0 10px;font-size:11px}
+/* Notation */
+.note-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.note-sel{height:34px;border:1px solid var(--border);border-radius:6px;padding:0 8px;font-size:12px;width:100%}
+.note-result{background:var(--slate);border-radius:6px;padding:8px 12px;text-align:center;font-family:'Exo 2',sans-serif;font-weight:700;font-size:14px;min-height:34px;display:flex;align-items:center;justify-content:center}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+/* Process selector */
+.process-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.proc-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid var(--border);background:var(--white);transition:all .15s;text-decoration:none}
+.proc-pill:hover{border-color:var(--indigo);color:var(--indigo)}
+.proc-pill.active{background:var(--indigo);border-color:var(--indigo);color:#fff}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="ph-tag">ISO 9001 — Revue de processus</div>
+  <div class="ph-title" id="ph-title">Fiche processus</div>
+  <div class="ph-sub" id="ph-sub">Parties prenantes · Risques &amp; Opportunités · KPI · Plan d'actions</div>
+</div>
+<div class="nav-bar">
+  <a class="nav-btn" href="Accueil_SSE.html">🏠 Site SSE</a>
+  <a class="nav-btn" href="ISO9001_Cartographie.html">🗺️ Cartographie</a>
+  <a class="nav-btn" href="ISO9001_Parties_Prenantes.html">👥 Parties prenantes</a>
+  <a class="nav-btn" href="ISO9001_Risques_Opportunites.html">⚡ Risques &amp; Opps</a>
+  <a class="nav-btn" href="ISO9001_KPI_Dashboard.html">📊 KPI Dashboard</a>
+  <a class="nav-btn" href="ISO9001_Plan_Actions.html">📋 Plan d'actions</a>
+</div>
+<div class="wrapper">
+  <!-- Sélecteur processus -->
+  <div class="process-nav" id="proc-nav"></div>
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showTab('pp')">👥 Parties prenantes</button>
+    <button class="tab-btn" onclick="showTab('risques')">🚨 Risques</button>
+    <button class="tab-btn" onclick="showTab('opps')">💡 Opportunités</button>
+    <button class="tab-btn" onclick="showTab('kpi')">📊 KPI &amp; Indicateurs</button>
+    <button class="tab-btn" onclick="showTab('actions')">📋 Plan d'actions</button>
+  </div>
+
+  <!-- TAB: Parties prenantes -->
+  <div class="tab-content active" id="tab-pp">
+    <div class="card" style="margin-top:16px">
+      <div class="card-hd"><span class="card-icon">👥</span><span class="card-title">Parties prenantes du processus</span>
+        <button class="btn btn-sm btn-primary" onclick="openAddPP()">➕ Ajouter</button>
+      </div>
+      <div class="card-body" id="pp-body"></div>
+    </div>
+    <!-- Formulaire ajout PP -->
+    <div class="card" id="form-pp" style="display:none">
+      <div class="card-hd"><span class="card-icon">➕</span><span class="card-title">Nouvelle partie prenante</span>
+        <button class="btn btn-sm btn-ghost" onclick="document.getElementById('form-pp').style.display='none'">✕</button>
+      </div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="fld"><label class="fld-lbl">Partie prenante *</label><input class="fld-inp" id="pp-nom" placeholder="Ex: Collaborateurs"></div>
+          <div class="fld"><label class="fld-lbl">Fréquence (F) 1-5</label>
+            <select class="fld-sel" id="pp-f" onchange="calcPP()">
+              <option value="">—</option><option value="1">1 — Rarement</option><option value="2">2 — Occasionnellement</option><option value="3">3 — Quelques fois</option><option value="4">4 — Fréquemment</option><option value="5">5 — Habituellement</option>
+            </select></div>
+          <div class="fld"><label class="fld-lbl">Impact (I)</label>
+            <select class="fld-sel" id="pp-i" onchange="calcPP()">
+              <option value="">—</option><option value="5">5 — Faible</option><option value="10">10 — Mineur</option><option value="25">25 — Modéré</option><option value="50">50 — Grave</option>
+            </select></div>
+          <div class="fld"><label class="fld-lbl">Score F×I → Niveau</label>
+            <div class="note-result" id="pp-score">—</div></div>
+        </div>
+        <div class="fld" style="margin-bottom:12px"><label class="fld-lbl">Besoins et attentes</label><textarea class="fld-txt" id="pp-besoins" placeholder="Décrire les besoins et attentes de cette partie prenante..."></textarea></div>
+        <button class="btn btn-primary" onclick="savePP()">💾 Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Risques -->
+  <div class="tab-content" id="tab-risques">
+    <div class="card" style="margin-top:16px">
+      <div class="card-hd"><span class="card-icon">🚨</span><span class="card-title">Risques du processus</span>
+        <button class="btn btn-sm btn-primary" onclick="openAddRisque()">➕ Ajouter</button>
+      </div>
+      <div class="card-body" id="risques-body"></div>
+    </div>
+    <div class="card" id="form-risque" style="display:none">
+      <div class="card-hd"><span class="card-icon">➕</span><span class="card-title">Nouveau risque</span>
+        <button class="btn btn-sm btn-ghost" onclick="document.getElementById('form-risque').style.display='none'">✕</button>
+      </div>
+      <div class="card-body">
+        <div class="fld" style="margin-bottom:12px"><label class="fld-lbl">Description du risque *</label><textarea class="fld-txt" id="r-desc" placeholder="Décrivez le risque identifié..."></textarea></div>
+        <div class="form-row">
+          <div class="fld"><label class="fld-lbl">Impact (1-4)</label>
+            <select class="fld-sel" id="r-impact" onchange="calcRisque()">
+              <option value="">—</option><option value="1">1 — Mineur</option><option value="2">2 — Significatif</option><option value="3">3 — Grave</option><option value="4">4 — Critique</option>
+            </select></div>
+          <div class="fld"><label class="fld-lbl">Probabilité (1-4)</label>
+            <select class="fld-sel" id="r-proba" onchange="calcRisque()">
+              <option value="">—</option><option value="1">1 — Très improbable</option><option value="2">2 — Peu probable</option><option value="3">3 — Possible</option><option value="4">4 — Probable</option>
+            </select></div>
+          <div class="fld"><label class="fld-lbl">Note risque (I×P)</label>
+            <div class="note-result" id="r-note">—</div></div>
+          <div class="fld"><label class="fld-lbl">Lien stratégique</label>
+            <select class="fld-sel" id="r-strat"><option value="">—</option><option value="Oui">Oui</option><option value="Non">Non</option></select></div>
+        </div>
+        <div class="fld" style="margin-bottom:12px"><label class="fld-lbl">Action de traitement prévue</label><textarea class="fld-txt" id="r-action" placeholder="Action à mettre en oeuvre pour traiter ce risque..."></textarea></div>
+        <div class="form-row">
+          <div class="fld"><label class="fld-lbl">Responsable action</label><input class="fld-inp" id="r-resp" placeholder="Nom Prénom"></div>
+          <div class="fld"><label class="fld-lbl">Délai</label><input type="date" class="fld-inp" id="r-delai"></div>
+        </div>
+        <button class="btn btn-primary" onclick="saveRisque()">💾 Enregistrer + créer action</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Opportunités -->
+  <div class="tab-content" id="tab-opps">
+    <div class="card" style="margin-top:16px">
+      <div class="card-hd"><span class="card-icon">💡</span><span class="card-title">Opportunités du processus</span>
+        <button class="btn btn-sm btn-primary" onclick="openAddOpp()">➕ Ajouter</button>
+      </div>
+      <div class="card-body" id="opps-body"></div>
+    </div>
+    <div class="card" id="form-opp" style="display:none">
+      <div class="card-hd"><span class="card-icon">➕</span><span class="card-title">Nouvelle opportunité</span>
+        <button class="btn btn-sm btn-ghost" onclick="document.getElementById('form-opp').style.display='none'">✕</button>
+      </div>
+      <div class="card-body">
+        <div class="fld" style="margin-bottom:12px"><label class="fld-lbl">Description de l'opportunité *</label><textarea class="fld-txt" id="o-desc" placeholder="Décrivez l'opportunité identifiée..."></textarea></div>
+        <div class="form-row">
+          <div class="fld"><label class="fld-lbl">Impact (1-4)</label>
+            <select class="fld-sel" id="o-impact" onchange="calcOpp()">
+              <option value="">—</option><option value="1">1 — Risque</option><option value="2">2 — Opérationnel</option><option value="3">3 — Client</option><option value="4">4 — Financier</option>
+            </select></div>
+          <div class="fld"><label class="fld-lbl">Faisabilité (1-4)</label>
+            <select class="fld-sel" id="o-fais" onchange="calcOpp()">
+              <option value="">—</option><option value="1">1 — Technique</option><option value="2">2 — Réglementaire</option><option value="3">3 — Organisationnelle</option><option value="4">4 — Économique</option>
+            </select></div>
+          <div class="fld"><label class="fld-lbl">Note (I×F)</label>
+            <div class="note-result" id="o-note">—</div></div>
+          <div class="fld"><label class="fld-lbl">Lien stratégique</label>
+            <select class="fld-sel" id="o-strat"><option value="">—</option><option value="Oui">Oui</option><option value="Non">Non</option></select></div>
+        </div>
+        <div class="fld" style="margin-bottom:12px"><label class="fld-lbl">Actions pour saisir l'opportunité</label><textarea class="fld-txt" id="o-action" placeholder="Actions à mettre en oeuvre..."></textarea></div>
+        <div class="form-row">
+          <div class="fld"><label class="fld-lbl">Responsable</label><input class="fld-inp" id="o-resp" placeholder="Nom Prénom"></div>
+          <div class="fld"><label class="fld-lbl">Délai</label><input type="date" class="fld-inp" id="o-delai"></div>
+        </div>
+        <button class="btn btn-primary" onclick="saveOpp()">💾 Enregistrer + créer action</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: KPI -->
+  <div class="tab-content" id="tab-kpi">
+    <div class="card" style="margin-top:16px">
+      <div class="card-hd"><span class="card-icon">📊</span><span class="card-title">Indicateurs de performance du processus</span>
+        <button class="btn btn-sm btn-primary" onclick="openAddKPI()">➕ Ajouter un KPI</button>
+      </div>
+      <div class="card-body" id="kpi-body"></div>
+    </div>
+    <div class="card" id="form-kpi" style="display:none">
+      <div class="card-hd"><span class="card-icon">➕</span><span class="card-title">Nouvel indicateur</span>
+        <button class="btn btn-sm btn-ghost" onclick="document.getElementById('form-kpi').style.display='none'">✕</button>
+      </div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="fld"><label class="fld-lbl">Libellé indicateur *</label><input class="fld-inp" id="kpi-lib" placeholder="Ex: Taux de satisfaction client"></div>
+          <div class="fld"><label class="fld-lbl">Objectif 2025</label><input class="fld-inp" id="kpi-obj" placeholder="Ex: >= 90%"></div>
+          <div class="fld"><label class="fld-lbl">Fréquence de revue</label>
+            <select class="fld-sel" id="kpi-freq">
+              <option value="">—</option><option value="Mensuelle">Mensuelle</option><option value="Trimestrielle">Trimestrielle</option><option value="Semestrielle">Semestrielle</option><option value="Annuelle">Annuelle</option>
+            </select></div>
+          <div class="fld"><label class="fld-lbl">Valeur actuelle</label><input class="fld-inp" id="kpi-val" placeholder="Ex: 85%"></div>
+        </div>
+        <button class="btn btn-primary" onclick="saveKPI()">💾 Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Plan d'actions -->
+  <div class="tab-content" id="tab-actions">
+    <div class="card" style="margin-top:16px">
+      <div class="card-hd"><span class="card-icon">📋</span><span class="card-title">Plan d'actions du processus</span>
+        <button class="btn btn-sm btn-primary" onclick="openAddAction()">➕ Ajouter une action</button>
+      </div>
+      <div class="card-body" id="actions-body"></div>
+    </div>
+    <div class="card" id="form-action" style="display:none">
+      <div class="card-hd"><span class="card-icon">➕</span><span class="card-title">Nouvelle action d'amélioration</span>
+        <button class="btn btn-sm btn-ghost" onclick="document.getElementById('form-action').style.display='none'">✕</button>
+      </div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="fld"><label class="fld-lbl">Origine *</label>
+            <select class="fld-sel" id="act-origine">
+              <option value="Revue de processus">Revue de processus</option>
+              <option value="Audit interne">Audit interne</option>
+              <option value="Non-conformité">Non-conformité</option>
+              <option value="Risque identifié">Risque identifié</option>
+              <option value="Opportunité identifiée">Opportunité identifiée</option>
+              <option value="Partie prenante">Partie prenante</option>
+              <option value="Autre">Autre</option>
+            </select></div>
+          <div class="fld"><label class="fld-lbl">Responsable *</label><input class="fld-inp" id="act-resp" placeholder="Nom Prénom"></div>
+          <div class="fld"><label class="fld-lbl">Délai *</label><input type="date" class="fld-inp" id="act-delai"></div>
+          <div class="fld"><label class="fld-lbl">Avancement %</label>
+            <select class="fld-sel" id="act-av"><option value="0">0%</option><option value="25">25%</option><option value="50">50%</option><option value="75">75%</option><option value="100">100%</option></select></div>
+        </div>
+        <div class="fld" style="margin-bottom:12px"><label class="fld-lbl">Description de l'action *</label><textarea class="fld-txt" id="act-desc" placeholder="Décrivez l'action d'amélioration à mettre en oeuvre..."></textarea></div>
+        <div class="form-row">
+          <div class="fld"><label class="fld-lbl">Statut</label>
+            <select class="fld-sel" id="act-statut"><option value="A faire">À faire</option><option value="En cours">En cours</option><option value="Clôturée">Clôturée</option></select></div>
+          <div class="fld"><label class="fld-lbl">Commentaire</label><input class="fld-inp" id="act-cmt" placeholder="Observations..."></div>
+        </div>
+        <button class="btn btn-primary" onclick="saveAction()">💾 Enregistrer dans le plan d'actions</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const PROCESSUS_DATA = {"DIR": {"code": "DIR", "nom": "Direction Stratégie", "pilote": "Florence BAILLEUIL", "copilote": "Membres du CODIR", "indicateurs": [{"libelle": "Taux de réalisation des objectifs stratégiques", "objectif": "??", "frequence": "Trimestrielle"}, {"libelle": "CA EBIT / EBIDA", "objectif": "??", "frequence": "Mensuelle"}], "parties_prenantes": [{"nom": "Collaborateurs", "F": "5", "I": "10", "score": "50", "niveau": "R3", "besoins": "Clarté de la vision et des objectifs - Communication ouverte et transparente - Reconnaissance et valorisation - Culture d'entreprise et valeur partagées - Avoir un environnement de travail satisfaisant aux exigences QSSE"}, {"nom": "Metteurs en marché", "F": "3", "I": "50", "score": "150", "niveau": "R4", "besoins": "Prendre en compte l'évolution réglementaire (loi AGEC / REP batteries...)dans la stratégie de développement des services INDRA (prestataire SI) \nDéployer les SI"}, {"nom": "Actionnaires", "F": "4", "I": "50", "score": "200", "niveau": "R4", "besoins": "Transparence et communication - Rentabilité et croissance - Reporting régulier de l'avancée de la stratégie"}, {"nom": "CVHU", "F": "3", "I": "50", "score": "150", "niveau": "R4", "besoins": "Proposition de rachat, intégration au réseau, participation au développement stratégique d'INDRA"}, {"nom": "Partenaires", "F": "3", "I": "50", "score": "150", "niveau": "R4", "besoins": "Prendre en compte des exigences contractuelles dans la stratégie de développement des services d'INDRA"}, {"nom": "CSE (CHSCT, DUP)", "F": "3", "I": "10", "score": "30", "niveau": "R2", "besoins": "Attend de la direction qu'elle respects ses obligations légales et qu’elle prenne en compte les préoccupations des salariés en favorisant un dialogue constructif, une prise en compte des besoins sociaux, ainsi qu’une amélioration continue des conditions de travail et de bien-être."}, {"nom": "Les ministères et agences gouvernementales", "F": "3", "I": "25", "score": "75", "niveau": "R3", "besoins": "Participation et échange sur l'élaboration de réglementation, retour d'expérience des métiers de CVHU"}], "menaces": [{"id": "M01", "desc": "Contrainte réglementaire sur les Systèmes Individuels (restreint les actions possibles)", "impact": "4", "probabilite": "4", "note": "16"}, {"id": "M02", "desc": "Risque de défaillance de paiement sur un marché en contraction et en consolidation", "impact": "4", "probabilite": "4", "note": "16"}], "opportunites": [{"id": "O01", "desc": "Rachat de CVHUS qui présentent des compétences complémentaires", "impact": "4", "faisabilite": "4", "note": "16"}, {"id": "O02", "desc": "Exporter/adapter le modèle Indra en Europe (SI; rachat de sites)", "impact": "3", "faisabilite": "3", "note": "9"}, {"id": "O03", "desc": "Participer à un éco organisme dans d’autres pays (Europe)", "impact": "3", "faisabilite": "2", "note": ""}, {"id": "O04", "desc": "Reconnaissance de notre métier au travers du SI (Système Individuel) au sein d’une fédération", "impact": "3", "faisabilite": "2", "note": ""}], "plan_actions": [{"source": "Source", "date": "Date", "responsable": "Responsable Action", "action": "Action à mettre en œuvre"}, {"source": "M01", "date": "2025", "responsable": "Service RH", "action": "Réorganisation AGEC, RECRUTEMENT"}, {"source": "Opp 01", "date": "", "responsable": "", "action": "Suivi du planning d'acquisition CATANE"}, {"source": "Opp 02", "date": "2026-2027", "responsable": "", "action": "Acquérir des CVHU en Europe hors de France"}, {"source": "Opp 03", "date": "2026-2027", "responsable": "", "action": "Postuler à un éco-organisme en Europe"}]}, "AMP": {"code": "AMP", "nom": "Amélioration continue et performances", "pilote": "Julien HOUBION", "copilote": "Sandrine GLASSON / Delphine VARNET", "indicateurs": [{"libelle": "Nombre de faits accidentels : accidents aves arrêt - sans arrêt / soins infirmiers", "objectif": "", "frequence": "Mensuel"}, {"libelle": "Taux de conformité des sites aux exigences opérationnelles", "objectif": "", "frequence": "Trimestriel"}, {"libelle": "Augmentation de la maitrise des aspects environnementaux significatifs", "objectif": "", "frequence": "Annuel"}], "parties_prenantes": [{"nom": "Collaborateurs", "F": "5", "I": "10", "score": "50", "niveau": "R3", "besoins": "Être informés  des consignes liées à la qualité, à la santé/sécurité au travail et à l'environnement"}, {"nom": "Direction Management", "F": "5", "I": "50", "score": "250", "niveau": "R4", "besoins": "Etre accompagné dans la démarche QSSE, RSE et développement durable. \nAvoir à disposition les élements  QSSE, RSE et développement durable nécessaires afin de répondre à leurs propres parties intéressées.\nAvoir le niveau de performance du SMI (tableaux KPI)"}, {"nom": "CSE (CHSCT, DUP)", "F": "3", "I": "25", "score": "75", "niveau": "R3", "besoins": "Etre informés de tous les élements ayant un impact sur les conditions de travail des collaborateurs"}, {"nom": "Banques / Assurances /  Commissaires aux comptes", "F": "", "I": "", "score": "", "niveau": "", "besoins": ""}, {"nom": "Pouvoirs publics : Inspection du travail / Médecin du travail / CARSAT / DREAL / Mairies / Préfecture", "F": "2", "I": "25", "score": "50", "niveau": "R3", "besoins": "Répondre aux demandes exprimées"}, {"nom": "Organismes de certification", "F": "2", "I": "25", "score": "50", "niveau": "R3", "besoins": "Respect des normes\nDe la transparence et mettre à disposition des éléments nécessaires au bon déroulement de l'audit"}], "menaces": [{"id": "M02", "desc": "Non appropriation du SMI par les collaborateurs", "impact": "3", "probabilite": "3", "note": "9"}, {"id": "M03", "desc": "Non remontée des dysfonctionnements, FNC  par les collaborateurs", "impact": "3", "probabilite": "2", "note": "6"}, {"id": "M05", "desc": "Absence de challenge sécurité qui permettrait de promouvoir et d’aider à l’implication du personnel dans la remontée des infos terrain.", "impact": "2", "probabilite": "3", "note": "6"}, {"id": "M04", "desc": "Méconnaissance de l'évolution de la réglementation dans notre domaine SMI", "impact": "2", "probabilite": "3", "note": "6"}, {"id": "M01", "desc": "Non respect des exigences des normes", "impact": "1", "probabilite": "4", "note": "4"}], "opportunites": [{"id": "O04", "desc": "Amélioration de la satisfaction clients internes / externes", "impact": "3", "faisabilite": "3", "note": "9"}, {"id": "O03", "desc": "Mettre en place un challenge sécurité avec l’aide des membres du CSE.", "impact": "3", "faisabilite": "3", "note": "9"}, {"id": "O01", "desc": "Améliorer la productivité, l'efficience et la fiabilité des process", "impact": "2", "faisabilite": "3", "note": "6"}, {"id": "O02", "desc": "Dématérialiser nos formulaires et trouver un système fonctionnel sur tablette ou smartphone (type GED ou SharePoint).", "impact": "3", "faisabilite": "1", "note": "3"}], "plan_actions": [{"source": "Source", "date": "Date", "responsable": "Responsable Action", "action": "Action à mettre en œuvre"}, {"source": "M02", "date": "2025-03-30 00:00:00", "responsable": "DV", "action": "Mettre en place des flashs QSSE mensuels pour sensibiliser/informer le personnel au SMI QSSE"}, {"source": "M03", "date": "2025-09-30 00:00:00", "responsable": "SG", "action": "Mettre en place un système de récupération des dysfonctionnements et suggestion d'amélioration disponible pour les collaborateurs"}, {"source": "Opp 04", "date": "2025-09-30 00:00:00", "responsable": "SG", "action": "Mettre en place un système de récupération des réclamations de tout nos clients"}, {"source": "Opp 02", "date": "2025-12-31 00:00:00", "responsable": "JH", "action": "Dématérialiser les outils du système QSSE : FNC, Audits, Causerie, plan d'actions"}]}, "DECO": {"code": "DECO", "nom": "Déconstruction", "pilote": "", "copilote": "", "indicateurs": [{"libelle": "Nombre de véhicules détruits par semaine", "objectif": "", "frequence": "Mensuel"}, {"libelle": "Mis en sécurité des véhicules VEH à l'expertise", "objectif": "", "frequence": "Mensuel"}], "parties_prenantes": [{"nom": "Collaborateurs", "F": "5", "I": "10", "score": "50", "niveau": "R3", "besoins": "Avoir les moyens de réaliser leur mission dans de bonnes conditions (charge et outils, matériel)"}, {"nom": "ADEME", "F": "2", "I": "10", "score": "20", "niveau": "R2", "besoins": "Déclaration SYDEREP"}, {"nom": "Partenaires / Constructeurs", "F": "5", "I": "25", "score": "125", "niveau": "R4", "besoins": "Respecter le cahier des charges"}, {"nom": "Gestionnaires des réseaux eaux usés", "F": "1", "I": "10", "score": "10", "niveau": "R1", "besoins": "Eaux usées rejettées conformes aux normes sanitaires (Interdiction de rejetter des éléments toxiques ou chimiques dans le réseau d'eaux usées)"}, {"nom": "Clients particuliers, professionnel", "F": "5", "I": "10", "score": "50", "niveau": "R3", "besoins": "Pièces dépolluéees, tracées avec vérification de la qualité de la pièce"}, {"nom": "DREAL", "F": "2", "I": "50", "score": "100", "niveau": "R4", "besoins": "Respect de l'arrété préfectoral"}, {"nom": "Collectivités", "F": "1", "I": "10", "score": "10", "niveau": "R1", "besoins": "Respect du PREDD pour que l'entreprise ait une image respectueuse de l'environnement\nRespect du Plan Départemental d'Elimination des Déchets Ménagers et Assimilés (PDEDMA)\nRespect Schéma Directeur d'Aménagement et de Gestion des Eaux (SDAGE)"}], "menaces": [{"id": "M01", "desc": "Augmentation des VEH avec risque incendie, conditions d'exploitation nécessaires pour les sites", "impact": "4", "probabilite": "4", "note": "16"}, {"id": "M05", "desc": "Incendie du site", "impact": "3", "probabilite": "3", "note": "9"}, {"id": "M03", "desc": "Déversement accidentel de liquide polluant", "impact": "3", "probabilite": "2", "note": "6"}, {"id": "M04", "desc": "Explosion zone ATEX", "impact": "3", "probabilite": "2", "note": "6"}, {"id": "M07", "desc": "Evolution du cout d'achat des véhicules (VE et hybrides)", "impact": "2", "probabilite": "2", "note": "4"}, {"id": "M06", "desc": "Agression verbale des clients (comptoirs et téléphone)", "impact": "1", "probabilite": "4", "note": "4"}, {"id": "M08", "desc": "Evènements climatiques exceptionnels (Verglas, tempête, canicule,...)", "impact": "3", "probabilite": "2", "note": "6"}], "opportunites": [{"id": "O01", "desc": "Demontage des pièces pertinentes", "impact": "4", "faisabilite": "3", "note": "2"}], "plan_actions": [{"source": "Source", "date": "Date", "responsable": "Responsable Action", "action": "Action à mettre en œuvre"}, {"source": "M01", "date": "", "responsable": "CB", "action": "Mettre en conformité les Sites pour le  traitement des VeH"}, {"source": "OO1", "date": "", "responsable": "Resp.sites", "action": "Démontage pertinent des pièces : application expertise OPISTO mobile"}]}, "GD": {"code": "GD", "nom": "Gestion administrative et physique des véhicules", "pilote": "Chrystelle DREVON", "copilote": "Hélène JOURDE OGIER", "indicateurs": [{"libelle": "Délai de mise à disposition", "objectif": "", "frequence": ""}, {"libelle": "% de dossiers avec un TCSS", "objectif": "", "frequence": ""}], "parties_prenantes": [{"nom": "Collaborateurs", "F": "5", "I": "5", "score": "25", "niveau": "R2", "besoins": "Avoir les moyens de réaliser leur mission dans de bonnes conditions (consigne, priorisation, charge, outils, matériel)"}, {"nom": "Direction", "F": "4", "I": "5", "score": "20", "niveau": "R2", "besoins": "Satisfactions des clients : CVHU et Partenaires"}, {"nom": "CVHU", "F": "5", "I": "25", "score": "125", "niveau": "R4", "besoins": "Recevoir les missions d'enlèvement, obtenir les documents de mise à disposition au plus vite, avoir un support et appui dans le suivi de ses dossiers"}, {"nom": "Experts automobiles", "F": "5", "I": "8", "score": "40", "niveau": "R3", "besoins": "Traitement de sa demande, retour d'information sur la date d'enlèvement afin de cloturer son rapport"}, {"nom": "Partenaires", "F": "5", "I": "50", "score": "250", "niveau": "R4", "besoins": "Enlever (prise en charge) les véhicules au plus vite pour limiter les frais de gardiennage, puis réaliser les transferts de propriété jusqu'au CVHU"}], "menaces": [{"id": "M01", "desc": "Retard de traitement engendrant une perte financière ou une insatisfaction clients/partenaires", "impact": "4", "probabilite": "3", "note": "12"}, {"id": "M02", "desc": "Bug outil informatique (V2, C'C) avec blocage/perte > 1 jour", "impact": "2", "probabilite": "4", "note": "8"}, {"id": "M03", "desc": "Evènements climatiques exceptionnels (Verglas, tempête, canicule,...)", "impact": "", "probabilite": "", "note": ""}], "opportunites": [{"id": "O01", "desc": "Fidélisation des partenaires et des CVHU", "impact": "3", "faisabilite": "3", "note": "9"}, {"id": "O02", "desc": "Optimiser les flux et les process pour augmenter la qualité / savoir s'adapter à la demande client", "impact": "3", "faisabilite": "3", "note": "9"}, {"id": "O03", "desc": "Synergie avec clients/Partenaires/prestataires des clients (pour simplification des flux, référent,...)", "impact": "3", "faisabilite": "3", "note": "9"}], "plan_actions": [{"source": "Source", "date": "Date", "responsable": "Responsable Action", "action": "Action à mettre en œuvre"}, {"source": "Opp03", "date": "", "responsable": "", "action": "Mettre en place un process commun avec les principaux cabinets d'experts en délégation de gestion"}]}, "ING": {"code": "ING", "nom": "Ingénierie", "pilote": "Vincent GRIVOTTE", "copilote": "", "indicateurs": [], "parties_prenantes": [{"nom": "Clients", "F": "3", "I": "50", "score": "150", "niveau": "R4", "besoins": "Exigences formalisées dans un cahier des charges ou listées dans le devis avec en autres le nombre de véhicules à détruire\nMachines respectueuses de la règlementation environnementales\nRespect des consignes de tri de déchets et filières d'élimination lors des installations\nRéactivité au besoins du client"}, {"nom": "Fournisseurs / Sous-traitants / Prestataires", "F": "", "I": "", "score": "", "niveau": "", "besoins": ""}, {"nom": "Equipementiers", "F": "", "I": "", "score": "", "niveau": "", "besoins": ""}, {"nom": "Industries matières", "F": "", "I": "", "score": "", "niveau": "", "besoins": ""}, {"nom": "Recycleurs / Broyeurs", "F": "", "I": "", "score": "", "niveau": "", "besoins": ""}], "menaces": [{"id": "M04", "desc": "Commercialisation d'équipements potentiellement dangereux (mauvais entretien, mauvaise utilisation): cisailles hydrauliques, …", "impact": "3", "probabilite": "3", "note": "9"}, {"id": "M05", "desc": "Perte de CA : arrivée de concurrents sur le marché + nouvelle force commerciale + positionnement tarifaire", "impact": "3", "probabilite": "3", "note": "9"}, {"id": "M06", "desc": "Etudes imposées aux MEM par la loi AGEC", "impact": "3", "probabilite": "3", "note": "9"}, {"id": "M02", "desc": "Les prestations reposent sur les compétences humaines des membres de l'équipe, nous devons continuer à formaliser nos savoir-faire et transférer les compétences pour augmenter la polyvalence (Méthodes)", "impact": "3", "probabilite": "2", "note": "6"}, {"id": "M03", "desc": "Maitrise du savoir faire maintenance, installation…", "impact": "2", "probabilite": "3", "note": "6"}, {"id": "M01", "desc": "Suivi des sous-traitants", "impact": "2", "probabilite": "2", "note": "4"}, {"id": "M07", "desc": "Evènements climatiques exceptionnels (Verglas, tempête, canicule,...)", "impact": "", "probabilite": "", "note": ""}], "opportunites": [{"id": "O01", "desc": "Prestations pour augmenter l'extraction de matière et l'équipement des CVHU", "impact": "3", "faisabilite": "1", "note": "3"}, {"id": "O02", "desc": "Volonté accrue d'écoconception en vue du recyclage / équipementiers et constructeurs automobiles + Evolution des technologies utilisées dans l'automobile + Volonté accrue de recourir à des matières recyclées", "impact": "3", "faisabilite": "2", "note": "6"}], "plan_actions": [{"source": "Source", "date": "Date", "responsable": "Responsable Action", "action": "Action à mettre en œuvre"}]}, "RES": {"code": "RES", "nom": "Réseau", "pilote": "Jean-Marc PROUFIT PORTIER", "copilote": "", "indicateurs": [{"libelle": "Nombre de CVHU tronc commun", "objectif": "", "frequence": "Mensuelle"}, {"libelle": "Satisfaction des clients CVHU via l'enquête de satisfaction du réseau", "objectif": "", "frequence": "Annuelle"}], "parties_prenantes": [{"nom": "CVHU", "F": "5", "I": "50", "score": "250", "niveau": "R4", "besoins": "Proposition de nouvelles formations \nRespect de la réglementation\nApprovisionnement de VHU et VA\nNégociation des tarifs auprès des partenaires (assureurs, constructeurs, enchéristes, …)\nVisite récurente du conseiller réseau et avoir une relation privilégiée\nOrgansiation d'évenements (convention annuelle, réunion régionale, salon…)\nMise à diposition des véhicules dans un délai cours\nEtre à leur écoute (via les conseillés réseau, POP, Hotline…)"}, {"nom": "Partenaires Assureurs/constructeurs…", "F": "4", "I": "50", "score": "200", "niveau": "R4", "besoins": "Respect des exigences contractuelles"}, {"nom": "Clients internes", "F": "5", "I": "10", "score": "50", "niveau": "R3", "besoins": "Respect des exigences contractuelles\nAucune réclamation des clients/Partenaires provenant des CVHU.\nMaitriser la performance  des CVHU du réseau"}, {"nom": "Concurrents", "F": "3", "I": "25", "score": "75", "niveau": "R3", "besoins": "Capaciter de déconstruction\nZone géographique \nMultisites"}], "menaces": [{"id": "M05", "desc": "Réseau qui ne répond plus aux besoins du marché : quel réseau, quel maillage, quel contrat ? projet réseau", "impact": "4", "probabilite": "4", "note": "2"}, {"id": "M04", "desc": "Impact de la Loi AGEC sur le nombre de CVHU à intégrer dans le réseau", "impact": "3", "probabilite": "3", "note": "2"}, {"id": "M01", "desc": "Concurrence de CVHU importante", "impact": "4", "probabilite": "2", "note": "2"}, {"id": "M06", "desc": "Continuité de service du réseau : s'assurer d'un PCA pour tous les CVHUs Réseau", "impact": "4", "probabilite": "2", "note": "2"}, {"id": "M02", "desc": "Mise en risque d'INDRA du fait des retards de paiement des CVHU", "impact": "2", "probabilite": "3", "note": "2"}, {"id": "M03", "desc": "Ne pas atteindre les objectifs fixés pour la matière du fait de la mise en œuvre du nouveau challenge", "impact": "2", "probabilite": "2", "note": "2"}, {"id": "M07", "desc": "Evènements climatiques exceptionnels (Verglas, tempête, canicule,...)", "impact": "", "probabilite": "", "note": ""}], "opportunites": [{"id": "O01", "desc": "Acquisitions de sites en propre en France et en Europe", "impact": "4", "faisabilite": "4", "note": "1"}, {"id": "O04", "desc": "Nouvelle réglementation à venir (Eco-organisme ou système individuel)", "impact": "3", "faisabilite": "4", "note": "2"}, {"id": "O05", "desc": "Dépasser les objectifs fixés pour la matière du fait de la mise en œuvre de la nouvelle réglementation (future loi AGEC). La mobilisation des CVHU à fournir la matière des véhicules produits par un constructeur peut apporter un tonnage supplémentaire (vs crainte d'être d'exclus du SI).", "impact": "4", "faisabilite": "3", "note": "2"}, {"id": "O03", "desc": "Développement 2 roues (CMHU)", "impact": "1", "faisabilite": "2", "note": "2"}, {"id": "O02", "desc": "Développement filière PLHU", "impact": "1", "faisabilite": "2", "note": "2"}], "plan_actions": [{"source": "Source", "date": "Date", "responsable": "Responsable Action", "action": "Action à mettre en œuvre"}]}, "RH": {"code": "RH", "nom": "Ressources Humaines", "pilote": "Laetitia VAUGELADE", "copilote": "Naïka TRONCHON", "indicateurs": [{"libelle": "Délai du recrutement (Employés)", "objectif": "", "frequence": "Annuelle"}, {"libelle": "Taux de réalisation du plan de formation (Nb de formations prévues / Nb de formations réalisées)", "objectif": "", "frequence": "Annuelle"}, {"libelle": "Taux d’absentéisme (ETP absents / ETP total)", "objectif": "", "frequence": "Mensuelle"}], "parties_prenantes": [{"nom": "Collaborateurs", "F": "5", "I": "10", "score": "50", "niveau": "R3", "besoins": "Bénéficier de conditions de travail satisfaisante (Santé, Sécurité, attendue de la fonction claire, communication…)\nPercevoir sa paie\nEtre accompagné sur le développement de ses compétences\nEtre informé sur la vie de l'entreprise"}, {"nom": "CSE", "F": "4", "I": "25", "score": "100", "niveau": "R4", "besoins": "Avoir les informations nécessaires à leur exercice,leur role et un dialogue constructif et transparent"}, {"nom": "Direction/Managers", "F": "5", "I": "25", "score": "125", "niveau": "R4", "besoins": "Bénéficier à un climat social sain\nRaccourcir au maximum le délai de recrutement\nRecruter du personnel déjà compétent pour son métier ou pouvant acquérir le plus rapidement possible la compétence\nAvoir du personnel qualifié et performant"}, {"nom": "Inspection du travail", "F": "1", "I": "50", "score": "50", "niveau": "R3", "besoins": "Respect du code du travail\nRéponse à leur sollicitation"}, {"nom": "CARSAT", "F": "1", "I": "50", "score": "50", "niveau": "R3", "besoins": "Suivi des dossiers d'accident de travail"}], "menaces": [{"id": "M03", "desc": "Vitesse de l'évolution du marché", "impact": "3", "probabilite": "3", "note": "9"}, {"id": "M01", "desc": "Dégradation du process paie/admin en lien avec l'intégration des sites", "impact": "2", "probabilite": "2", "note": "4"}, {"id": "M02", "desc": "Tension sur le marché de l'emploi (pénurie de compétences/évolution comportementale des candidats et salariés)", "impact": "2", "probabilite": "2", "note": "4"}, {"id": "M04", "desc": "Evènements climatiques exceptionnels (Verglas, tempête, canicule,...)", "impact": "", "probabilite": "", "note": ""}], "opportunites": [{"id": "O01", "desc": "Developper l'attractivité de l'entreprise et sa marque employeur", "impact": "3", "faisabilite": "2", "note": "6"}, {"id": "O02", "desc": "Mise en avant des incateurs RSE à nos clients (climat social, mixité…)", "impact": "3", "faisabilite": "2", "note": "6"}], "plan_actions": [{"source": "Source", "date": "Date", "responsable": "Responsable Action", "action": "Action à mettre en œuvre"}]}, "SI": {"code": "SI", "nom": "Système d'Information", "pilote": "Vincent VOINOT", "copilote": "Emmanuel RENAULT", "indicateurs": [], "parties_prenantes": [{"nom": "Collaborateurs", "F": "5", "I": "10", "score": "50", "niveau": "R3", "besoins": "Travailler dans de bonnes conditions et avoir les moyens de remplir leurs objectifs"}, {"nom": "Direction", "F": "5", "I": "50", "score": "250", "niveau": "R4", "besoins": "Développer le business (augmentation CA et marges, opportunités), améliorer la qualité de service, couvrir des risques, réaliser des gains de productivité"}, {"nom": "Actionnaires", "F": "4", "I": "10", "score": "40", "niveau": "R3", "besoins": "Bon retour sur investissement, respect des budgets, maîtrise des risques notamment cyber sécurité"}, {"nom": "Autorités", "F": "2", "I": "10", "score": "20", "niveau": "R2", "besoins": "Respect de la réglementation"}, {"nom": "Architecte SI / Chef de projet SI", "F": "5", "I": "50", "score": "250", "niveau": "R4", "besoins": "Stratégie d'entreprise claire et bien déclinée dans chaque métier. Vision claire de la part de chaque direction"}, {"nom": "Clients / Partenaires", "F": "5", "I": "10", "score": "50", "niveau": "R3", "besoins": "Qualité de service, respect des engagements contractuels"}, {"nom": "Fournisseurs / Sous-traitants / Prestataires", "F": "5", "I": "10", "score": "50", "niveau": "R3", "besoins": "Respect des engagements contractuel"}], "menaces": [{"id": "M02", "desc": "Arrêt ou ralentissement de l'activité (panne serveur, arrêt internet, coupure d'électricité, incendie, catastrophes naturelles)", "impact": "4", "probabilite": "4", "note": "16"}, {"id": "M01", "desc": "Risque de Fraude et CYBER sécurité", "impact": "4", "probabilite": "4", "note": "16"}, {"id": "M04", "desc": "Dérive (Pannes et ralentissement)/Obsolescence des systèmes matériels et logiciels", "impact": "3", "probabilite": "4", "note": "12"}, {"id": "M08", "desc": "Non-conformité aux réglementations (RGPD, NIS indice 2)", "impact": "3", "probabilite": "4", "note": "12"}, {"id": "M06", "desc": "Non couverture des besoins métIers (SHADOW IT)", "impact": "3", "probabilite": "3", "note": "9"}, {"id": "M10", "desc": "SI non adaptée entrainant la perte potentielle de clients", "impact": "2", "probabilite": "4", "note": "8"}, {"id": "M05", "desc": "Perte de maîtrise des SI (100% de la compétence sous-traitée)", "impact": "2", "probabilite": "3", "note": "6"}, {"id": "M07", "desc": "Rupture d'approvisionnement matériel", "impact": "3", "probabilite": "2", "note": "6"}, {"id": "M11", "desc": "Défaillance d'un prestataire impactant nos systèmes", "impact": "1", "probabilite": "4", "note": "4"}, {"id": "M03", "desc": "Absentéisme complet de l'équipe (épidémie, accident …)", "impact": "2", "probabilite": "2", "note": "4"}, {"id": "M09", "desc": "Echec d'un projet majeur SI", "impact": "1", "probabilite": "3", "note": "3"}], "opportunites": [{"id": "O02", "desc": "Utilisation de nouveaux outils bureautiques (M365)", "impact": "2", "faisabilite": "3", "note": "6"}, {"id": "O04", "desc": "Faciliter l'analyse et le pilotage des différents services via une meilleure gestion de la DATA (BI)", "impact": "2", "faisabilite": "3", "note": "6"}, {"id": "O01", "desc": "Innovation", "impact": "2", "faisabilite": "3", "note": "6"}, {"id": "O05", "desc": "Outils de mobilité", "impact": "2", "faisabilite": "2", "note": "4"}, {"id": "O03", "desc": "Architecture applicative maitrisée et évolutive", "impact": "1", "faisabilite": "4", "note": "4"}], "plan_actions": [{"source": "Source", "date": "Date", "responsable": "Responsable Action", "action": "Actions à mettre en œuvre"}, {"source": "M04/M10/M11", "date": "Voir avec VV", "responsable": "Vincent VOINOT", "action": "Lancer le projet de remplacement de la V2"}, {"source": "M06", "date": "Voir avec VV", "responsable": "Vincent VOINOT", "action": "Lancer une enquête de besoins SI (matériels, logiciel) auprès des services INDRA"}, {"source": "Opp02", "date": "Voir avec VV", "responsable": "Vincent VOINOT", "action": "Former le personnel aux outils M365 souhaités: Powerapp, sharepoint, treams, etc."}, {"source": "Opp04", "date": "Voir avec VV", "responsable": "Vincent VOINOT", "action": "Trouver un logiciel BI adapté"}]}, "SOU": {"code": "SOU", "nom": "Sourcing", "pilote": "Mickaël ARGOUD", "copilote": "", "indicateurs": [{"libelle": "Rentabilité des contrats", "objectif": "", "frequence": "?"}, {"libelle": "Nombre de contrats signés (renouvellement et nouveaux) et volume associé (gain ou perte) vs Budget/Objectif fixé", "objectif": "", "frequence": "?"}], "parties_prenantes": [{"nom": "Collaborateurs", "F": "3", "I": "50", "score": "150", "niveau": "R4", "besoins": "Visibilité sur la qualité de la gestion de la relation client, les attentes des clients/Partenaires"}, {"nom": "Actionnaires", "F": "4", "I": "10", "score": "40", "niveau": "R3", "besoins": "Besoin d'informations conjoncturelles sur le marché vs processus budgetaire et structurelles afin d'anticiper les investissements necessaires   pour INDRA."}, {"nom": "CVHU réseaux", "F": "3", "I": "10", "score": "30", "niveau": "R2", "besoins": "conditions contractuelles permettant de dégager un niveau de rentabilité adequate"}, {"nom": "Prospects", "F": "4", "I": "50", "score": "200", "niveau": "R4", "besoins": "proposition de service dont la valeur percue est supérieure vs leurs prestataires actuels"}, {"nom": "Client Assureurs", "F": "5", "I": "50", "score": "250", "niveau": "R4", "besoins": "réaliser avec le niveau de qualité de service approprié les prestations de services contractualisées. Formuler toutes propositions viant à améliorer les processus et prestations, proposer des nouveaux services a forte valeur ajoutée (RSE/PIEC/KPI…), contribuer positivement à leur image de marque"}, {"nom": "Client MeM", "F": "4", "I": "50", "score": "200", "niveau": "R4", "besoins": "Formuler les recommandations et mettre en œuvre les moyens necessaires à l'atteinte de leurs objectifs réglementaires loi AGEC"}, {"nom": "Experts automobiles", "F": "2", "I": "10", "score": "20", "niveau": "R2", "besoins": "des prestations et processus de gestion facilitateurs pour la bonne execution de leurs propres prestations à destination des assureurs"}, {"nom": "Concurrents", "F": "4", "I": "25", "score": "100", "niveau": "R4", "besoins": "Récupérer des parts de marché INDRA"}, {"nom": "Fourrières", "F": "4", "I": "50", "score": "200", "niveau": "R4", "besoins": "des prestations conformes aux contrats"}, {"nom": "FLNE", "F": "4", "I": "50", "score": "200", "niveau": "R4", "besoins": "des prestations conformes aux contrats"}, {"nom": "Particuliers", "F": "5", "I": "50", "score": "250", "niveau": "R4", "besoins": "Une offre de rachat économiquement avantageuse, une offre de service adaptée"}], "menaces": [{"id": "M02", "desc": "Concurrence accrue : pénétration grands groupes, montée en puissance groupes régionaux", "impact": "4", "probabilite": "4", "note": "16"}, {"id": "M01", "desc": "Perte de contrats sourcing dans le cadre du projet catane", "impact": "4", "probabilite": "4", "note": "16"}, {"id": "M03", "desc": "Baisse structurelle du marché VHU", "impact": "4", "probabilite": "4", "note": "16"}, {"id": "M04", "desc": "Evènements climatiques exceptionnels (Verglas, tempête, canicule,...)", "impact": "", "probabilite": "", "note": ""}], "opportunites": [{"id": "O05", "desc": "REP Batterie : nouveau marché & prestation", "impact": "3", "faisabilite": "4", "note": "12"}, {"id": "O04", "desc": "Assureurs : renouvellement réseau épavistes", "impact": "4", "faisabilite": "3", "note": "12"}], "plan_actions": [{"source": "Source", "date": "Date", "responsable": "Responsable Action", "action": "Action à mettre en œuvre"}, {"source": "Opp 05", "date": "2025-02-01 00:00:00", "responsable": "Mickaël ARGOUD", "action": "Embaucher un KAM afin d'organiser le suivi et le dvpt des contrats existants"}, {"source": "Opp 04", "date": "", "responsable": "", "action": "Statuer sur une organisation de la prospection adaptée aux contexte prospects/clients"}, {"source": "Source", "date": "Date", "responsable": "Responsable Action", "action": "Action à mettre en œuvre"}]}, "VEN": {"code": "VEN", "nom": "Vente", "pilote": "Christophe BOURNAY", "copilote": "", "indicateurs": [{"libelle": "croissance ventes & rentabilité MPS vs N-1 et budgets", "objectif": "", "frequence": ""}, {"libelle": "évolution nombre de clients vs potentiel marché / evolution CA par client (frequence/nb de produits différents)", "objectif": "", "frequence": ""}, {"libelle": "Nb de devis réalisés  et transformés (Equipements)\nCA par secteur + Tx remplissage des sessions (Formations)", "objectif": "", "frequence": ""}, {"libelle": "Taux d'impression et républication linkedin /", "objectif": "", "frequence": ""}, {"libelle": "évolution nombre de clients vs potentiel zone de chalandise/Panier moyen par client", "objectif": "", "frequence": ""}, {"libelle": "% de Fiche de démarrage fournies aux équipes opérationnelles dans un délai d'un mois avant la date de démarrage de la prestation", "objectif": "", "frequence": ""}, {"libelle": "Pénétration des prestations chez les clients (ex : collecte VHU réseaux MEM) // % de non conformités chez le client de son fait (process non appliqué par le client)", "objectif": "", "frequence": ""}, {"libelle": "Nombre d'intervention?", "objectif": "", "frequence": ""}], "parties_prenantes": [{"nom": "Direction", "F": "4", "I": "25", "score": "100", "niveau": "R4", "besoins": "analyse marché, formulation stratégie, plan d'actions / suivi budgets"}, {"nom": "CVHU", "F": "3", "I": "25", "score": "75", "niveau": "R3", "besoins": "cdc charges / KPI / services"}, {"nom": "Partenaires / Constructeurs", "F": "2", "I": "10", "score": "20", "niveau": "R2", "besoins": "Offre de produits(largeurs et profondeur de gammes) et services associés répondant à leur besoins"}, {"nom": "Experts automobiles", "F": "3", "I": "10", "score": "30", "niveau": "R2", "besoins": "Offre de produits(largeurs et profondeur de gammes) et services associés répondant à leur besoins"}, {"nom": "Filiales / Succursales", "F": "3", "I": "25", "score": "75", "niveau": "R3", "besoins": "cdc charges / KPI / services"}, {"nom": "Clients", "F": "4", "I": "25", "score": "100", "niveau": "R4", "besoins": "Réactivité au besoins du client\nPièces dépolluéees, tracées avec vérification de la qualité de la pièce"}], "menaces": [{"id": "M01", "desc": "concurrence", "impact": "4", "probabilite": "3", "note": "12"}, {"id": "M02", "desc": "Evènements climatiques exceptionnels (Verglas, tempête, canicule,...)", "impact": "", "probabilite": "", "note": ""}], "opportunites": [{"id": "O01", "desc": "Développement de la vente par Internet (pièces de réemploi)", "impact": "4", "faisabilite": "3", "note": "12"}, {"id": "O02", "desc": "Mise en place de la vente internet des véhicules assurances sur BIDYCAR (Juillet 2024)", "impact": "4", "faisabilite": "3", "note": "12"}, {"id": "O03", "desc": "Mutualisation de la vente export/rénovation", "impact": "4", "faisabilite": "3", "note": "12"}, {"id": "O04", "desc": "obligations réglementaires réincorpo matières", "impact": "3", "faisabilite": "2", "note": "6"}], "plan_actions": [{"source": "Source", "date": "Date", "responsable": "Responsable Action", "action": "Action à mettre en œuvre"}]}};
+const PROCESS_NAMES = {"DIR": "Direction Stratégie", "AMP": "Amélioration continue et performances", "DECO": "Déconstruction", "GD": "Gestion administrative des véhicules", "ING": "Ingénierie", "RES": "Réseau", "RH": "Ressources Humaines", "SI": "Système d'Information", "SOU": "Sourcing", "VEN": "Vente"};
+const PROCESS_ICONS = {"DIR": "🏢", "AMP": "⭐", "DECO": "🔧", "GD": "🚗", "ING": "⚙️", "RES": "🌐", "RH": "👥", "SI": "💻", "SOU": "📦", "VEN": "💼"};
+const PROCESS_TYPES = {"DIR": "Pilotage", "AMP": "Support", "DECO": "Opérationnel", "GD": "Opérationnel", "ING": "Support", "RES": "Opérationnel", "RH": "Support", "SI": "Support", "SOU": "Opérationnel", "VEN": "Opérationnel"};
+
+function niveauBadge(n) {
+    if (!n) return '<span class="badge badge-na">—</span>';
+    const map = {
+        'R4': '<span class="badge badge-r4">R4 — Très haut</span>',
+        'R3': '<span class="badge badge-r3">R3 — Haut</span>',
+        'R2': '<span class="badge badge-r2">R2 — Secondaire</span>',
+        'R1': '<span class="badge badge-r1">R1 — Mineur</span>',
+    };
+    return map[n] || '<span class="badge badge-na">'+n+'</span>';
+}
+function noteBadge(note) {
+    if (!note) return '<span class="badge badge-na">—</span>';
+    const n = parseInt(note);
+    if (n >= 12) return '<span class="badge badge-r4">'+n+' — Critique</span>';
+    if (n >= 8)  return '<span class="badge badge-r3">'+n+' — Élevé</span>';
+    if (n >= 4)  return '<span class="badge badge-r2">'+n+' — Modéré</span>';
+    return '<span class="badge badge-r1">'+n+' — Faible</span>';
+}
+
+const GSHEET_URL = 'https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec';
+
+// Parse URL param
+const params = new URLSearchParams(location.search);
+let currentCode = params.get('p') || 'DIR';
+if (!PROCESSUS_DATA[currentCode]) currentCode = 'DIR';
+
+// Build process nav pills
+document.getElementById('proc-nav').innerHTML = Object.keys(PROCESSUS_DATA).map(code => {
+    const p = PROCESSUS_DATA[code];
+    return `<a class="proc-pill ${code===currentCode?'active':''}" href="?p=${code}">${PROCESS_ICONS[code]} ${code}</a>`;
+}).join('');
+
+// Update header
+function updateHeader() {
+    const p = PROCESSUS_DATA[currentCode];
+    document.getElementById('ph-title').textContent = PROCESS_ICONS[currentCode] + ' ' + p.nom;
+    document.getElementById('ph-sub').textContent = 'Pilote : ' + (p.pilote||'—') + '  ·  Co-pilote : ' + (p.copilote||'—');
+}
+updateHeader();
+
+// Tab management
+function showTab(id) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-'+id).classList.add('active');
+    event.target.classList.add('active');
+}
+
+// ── Render PP ──────────────────────────────────────────────────
+function renderPP() {
+    const p = PROCESSUS_DATA[currentCode];
+    if (!p.parties_prenantes.length) {
+        document.getElementById('pp-body').innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted)">Aucune partie prenante enregistrée</div>';
+        return;
+    }
+    let html = '<table class="data-table"><thead><tr><th>Partie prenante</th><th style="width:60px;text-align:center">F</th><th style="width:60px;text-align:center">I</th><th style="width:80px;text-align:center">Score</th><th style="width:130px;text-align:center">Niveau</th><th>Besoins et attentes</th></tr></thead><tbody>';
+    p.parties_prenantes.forEach(pp => {
+        html += `<tr><td style="font-weight:700">${pp.nom}</td><td style="text-align:center">${pp.F||'—'}</td><td style="text-align:center">${pp.I||'—'}</td><td style="text-align:center;font-weight:700">${pp.score||'—'}</td><td style="text-align:center">${niveauBadge(pp.niveau)}</td><td style="font-size:11px">${pp.besoins||'—'}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('pp-body').innerHTML = html;
+}
+
+// ── Render Risques ─────────────────────────────────────────────
+function renderRisques() {
+    const p = PROCESSUS_DATA[currentCode];
+    if (!p.menaces.length) {
+        document.getElementById('risques-body').innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted)">Aucun risque enregistré</div>';
+        return;
+    }
+    const sorted = [...p.menaces].sort((a,b) => (parseInt(b.note)||0)-(parseInt(a.note)||0));
+    let html = '<table class="data-table"><thead><tr><th style="width:60px">#</th><th>Description du risque</th><th style="width:80px;text-align:center">Impact</th><th style="width:90px;text-align:center">Probabilité</th><th style="width:120px;text-align:center">Note</th></tr></thead><tbody>';
+    sorted.forEach(m => {
+        html += `<tr><td style="font-weight:700;color:var(--muted)">${m.id}</td><td>${m.desc}</td><td style="text-align:center">${m.impact||'—'}</td><td style="text-align:center">${m.probabilite||'—'}</td><td style="text-align:center">${noteBadge(m.note)}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('risques-body').innerHTML = html;
+}
+
+// ── Render Opportunités ────────────────────────────────────────
+function renderOpps() {
+    const p = PROCESSUS_DATA[currentCode];
+    if (!p.opportunites.length) {
+        document.getElementById('opps-body').innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted)">Aucune opportunité enregistrée</div>';
+        return;
+    }
+    const sorted = [...p.opportunites].sort((a,b) => (parseInt(b.note)||0)-(parseInt(a.note)||0));
+    let html = '<table class="data-table"><thead><tr><th style="width:60px">#</th><th>Description de l'opportunité</th><th style="width:80px;text-align:center">Impact</th><th style="width:90px;text-align:center">Faisabilité</th><th style="width:120px;text-align:center">Note</th></tr></thead><tbody>';
+    sorted.forEach(o => {
+        html += `<tr><td style="font-weight:700;color:var(--green-dk)">${o.id}</td><td>${o.desc}</td><td style="text-align:center">${o.impact||'—'}</td><td style="text-align:center">${o.faisabilite||'—'}</td><td style="text-align:center">${noteBadge(o.note)}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('opps-body').innerHTML = html;
+}
+
+// ── Render KPI ─────────────────────────────────────────────────
+function renderKPI() {
+    const p = PROCESSUS_DATA[currentCode];
+    if (!p.indicateurs.length) {
+        document.getElementById('kpi-body').innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted)">Aucun indicateur enregistré — Ajoutez les KPI de ce processus</div>';
+        return;
+    }
+    let html = '<table class="data-table"><thead><tr><th>Indicateur</th><th style="width:140px">Objectif 2025</th><th style="width:130px;text-align:center">Fréquence</th><th style="width:120px">Valeur actuelle</th></tr></thead><tbody>';
+    p.indicateurs.forEach(ind => {
+        html += `<tr><td style="font-weight:600">${ind.libelle}</td><td>${ind.objectif||'À définir'}</td><td style="text-align:center"><span class="badge badge-r2">${ind.frequence||'—'}</span></td><td style="color:var(--muted);font-style:italic">À renseigner</td></tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('kpi-body').innerHTML = html;
+}
+
+// ── Render Actions ─────────────────────────────────────────────
+function renderActions() {
+    const p = PROCESSUS_DATA[currentCode];
+    if (!p.plan_actions.length) {
+        document.getElementById('actions-body').innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted)">Aucune action enregistrée</div>';
+        return;
+    }
+    let html = '<table class="data-table"><thead><tr><th style="width:80px">Source</th><th>Action</th><th style="width:100px">Responsable</th><th style="width:80px;text-align:center">Date</th></tr></thead><tbody>';
+    p.plan_actions.forEach(a => {
+        html += `<tr><td><span class="badge badge-r2">${a.source}</span></td><td>${a.action}</td><td>${a.responsable||'—'}</td><td style="text-align:center;color:var(--muted)">${a.date||'—'}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('actions-body').innerHTML = html;
+}
+
+// ── Calculs de cotation ────────────────────────────────────────
+function calcPP() {
+    const f = parseInt(document.getElementById('pp-f').value)||0;
+    const i = parseInt(document.getElementById('pp-i').value)||0;
+    const score = f*i;
+    const el = document.getElementById('pp-score');
+    if (!f||!i) { el.textContent='—'; el.style.color=''; return; }
+    let niveau='R1', color='var(--green-dk)';
+    if (score>=100) {niveau='R4';color='#DC2626';}
+    else if (score>=40) {niveau='R3';color='#D97706';}
+    else if (score>=20) {niveau='R2';color='#4F46E5';}
+    el.textContent = score + ' → ' + niveau;
+    el.style.color = color;
+}
+function calcRisque() {
+    const i = parseInt(document.getElementById('r-impact').value)||0;
+    const p = parseInt(document.getElementById('r-proba').value)||0;
+    const note = i*p;
+    const el = document.getElementById('r-note');
+    if (!i||!p) { el.textContent='—'; el.style.color=''; return; }
+    let color='var(--green-dk)';
+    if (note>=12) color='#DC2626';
+    else if (note>=8) color='#D97706';
+    else if (note>=4) color='#4F46E5';
+    el.textContent = note;
+    el.style.color = color;
+}
+function calcOpp() {
+    const i = parseInt(document.getElementById('o-impact').value)||0;
+    const f = parseInt(document.getElementById('o-fais').value)||0;
+    const note = i*f;
+    const el = document.getElementById('o-note');
+    if (!i||!f) { el.textContent='—'; el.style.color=''; return; }
+    el.textContent = note;
+    el.style.color = note>=12?'#DC2626':note>=8?'#D97706':'var(--green-dk)';
+}
+
+// ── Formulaires ────────────────────────────────────────────────
+function openAddPP() { document.getElementById('form-pp').style.display='block'; }
+function openAddRisque() { document.getElementById('form-risque').style.display='block'; }
+function openAddOpp() { document.getElementById('form-opp').style.display='block'; }
+function openAddKPI() { document.getElementById('form-kpi').style.display='block'; }
+function openAddAction() { document.getElementById('form-action').style.display='block'; }
+
+async function savePP() {
+    const nom = document.getElementById('pp-nom').value.trim();
+    const f = document.getElementById('pp-f').value;
+    const i = document.getElementById('pp-i').value;
+    const besoins = document.getElementById('pp-besoins').value.trim();
+    if (!nom) { showToast('Nom obligatoire',false); return; }
+    const score = f && i ? String(parseInt(f)*parseInt(i)) : '';
+    let niveau = '';
+    if (score) { const s=parseInt(score); niveau=s>=100?'R4':s>=40?'R3':s>=20?'R2':'R1'; }
+    const entry = {nom,F:f,I:i,score,niveau,besoins};
+    PROCESSUS_DATA[currentCode].parties_prenantes.push(entry);
+    try {
+        await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveISO9001PP',processus:currentCode,data:entry})});
+    } catch(e) {}
+    renderPP();
+    document.getElementById('form-pp').style.display='none';
+    document.getElementById('pp-nom').value='';
+    showToast('Partie prenante ajoutée',true);
+}
+
+async function saveRisque() {
+    const desc = document.getElementById('r-desc').value.trim();
+    const impact = document.getElementById('r-impact').value;
+    const proba = document.getElementById('r-proba').value;
+    const action = document.getElementById('r-action').value.trim();
+    const resp = document.getElementById('r-resp').value.trim();
+    const delai = document.getElementById('r-delai').value;
+    if (!desc) { showToast('Description obligatoire',false); return; }
+    const note = impact && proba ? String(parseInt(impact)*parseInt(proba)) : '';
+    const id = 'M' + String(PROCESSUS_DATA[currentCode].menaces.length+1).padStart(2,'0');
+    const entry = {id,desc,impact,probabilite:proba,note};
+    PROCESSUS_DATA[currentCode].menaces.push(entry);
+    if (action && resp) {
+        await saveActionToGSheet('Risque identifié — ' + currentCode, resp, action, delai);
+    }
+    try { await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveISO9001Risque',processus:currentCode,data:entry})}); } catch(e) {}
+    renderRisques();
+    document.getElementById('form-risque').style.display='none';
+    showToast('Risque enregistré'+(action?' · Action créée':''),true);
+}
+
+async function saveOpp() {
+    const desc = document.getElementById('o-desc').value.trim();
+    const impact = document.getElementById('o-impact').value;
+    const fais = document.getElementById('o-fais').value;
+    const action = document.getElementById('o-action').value.trim();
+    const resp = document.getElementById('o-resp').value.trim();
+    const delai = document.getElementById('o-delai').value;
+    if (!desc) { showToast('Description obligatoire',false); return; }
+    const note = impact && fais ? String(parseInt(impact)*parseInt(fais)) : '';
+    const id = 'O' + String(PROCESSUS_DATA[currentCode].opportunites.length+1).padStart(2,'0');
+    const entry = {id,desc,impact,faisabilite:fais,note};
+    PROCESSUS_DATA[currentCode].opportunites.push(entry);
+    if (action && resp) {
+        await saveActionToGSheet('Opportunité identifiée — ' + currentCode, resp, action, delai);
+    }
+    try { await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveISO9001Opp',processus:currentCode,data:entry})}); } catch(e) {}
+    renderOpps();
+    document.getElementById('form-opp').style.display='none';
+    showToast('Opportunité enregistrée'+(action?' · Action créée':''),true);
+}
+
+async function saveKPI() {
+    const lib = document.getElementById('kpi-lib').value.trim();
+    const obj = document.getElementById('kpi-obj').value.trim();
+    const freq = document.getElementById('kpi-freq').value;
+    const val = document.getElementById('kpi-val').value.trim();
+    if (!lib) { showToast('Libellé obligatoire',false); return; }
+    const entry = {libelle:lib,objectif:obj,frequence:freq,valeur:val};
+    PROCESSUS_DATA[currentCode].indicateurs.push(entry);
+    try { await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveISO9001KPI',processus:currentCode,data:entry})}); } catch(e) {}
+    renderKPI();
+    document.getElementById('form-kpi').style.display='none';
+    showToast('KPI enregistré',true);
+}
+
+async function saveAction() {
+    const desc = document.getElementById('act-desc').value.trim();
+    const resp = document.getElementById('act-resp').value.trim();
+    const delai = document.getElementById('act-delai').value;
+    const origine = document.getElementById('act-origine').value;
+    if (!desc||!resp) { showToast('Description et responsable obligatoires',false); return; }
+    const av = document.getElementById('act-av').value;
+    const statut = document.getElementById('act-statut').value;
+    const cmt = document.getElementById('act-cmt').value.trim();
+    await saveActionToGSheet(origine + ' — ' + PROCESSUS_DATA[currentCode].nom, resp, desc, delai, av, statut, cmt);
+    PROCESSUS_DATA[currentCode].plan_actions.push({source:origine,date:delai,responsable:resp,action:desc});
+    renderActions();
+    document.getElementById('form-action').style.display='none';
+    showToast('Action créée dans le plan d'actions',true);
+}
+
+async function saveActionToGSheet(origine, resp, desc, delai, av, statut, cmt) {
+    try {
+        await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveAction',data:{
+            id:Date.now()+Math.random(),
+            auditId:'ISO9001-'+currentCode,
+            site:'Réseau',
+            auditDate:new Date().toISOString().split('T')[0],
+            sectionKey:'iso9001',criteriaIdx:0,
+            origin:origine,
+            description:desc,
+            responsable:resp,
+            delai:delai||'',
+            avancement:av||0,commentaire:cmt||'',efficace:'',
+            createdAt:new Date().toISOString()
+        }})});
+    } catch(e) { console.warn(e); }
+}
+
+function showToast(msg,ok) {
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.style.background=ok?'var(--green-dk)':'var(--steel-dk)';
+    t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// Init
+renderPP(); renderRisques(); renderOpps(); renderKPI(); renderActions();
+</script>
+</body>
+</html>
