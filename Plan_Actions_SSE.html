@@ -34,15 +34,13 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 .btn-danger{background:var(--bad-bg);color:var(--bad-tc);border:1px solid #fca5a5}
 .btn-blue{background:var(--blue-bg);color:var(--blue-tc);border:1px solid #93c5fd}
 .btn-sm{height:28px;padding:0 10px;font-size:11px}
-/* Stats */
 .stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 .stat-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 18px;flex:1;min-width:120px;text-align:center}
 .stat-val{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:800;color:var(--steel-dk)}
 .stat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
-/* Action card */
 .action-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden;border-left:4px solid var(--border)}
 .action-card.todo{border-left-color:#94a3b8}
-.action-card.inprogress{border-left-color:var(--amber,#d97706)}
+.action-card.inprogress{border-left-color:#d97706}
 .action-card.done{border-left-color:var(--green)}
 .action-card.efficace{border-left-color:#4f46e5}
 .action-hd{padding:12px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;cursor:pointer}
@@ -68,12 +66,8 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 .fld-range{width:100%;accent-color:var(--green)}
 .range-val{font-family:'Exo 2',sans-serif;font-size:16px;font-weight:700;color:var(--green-dk);text-align:center}
 .efficace-row{display:flex;gap:10px;align-items:center;margin-bottom:10px;padding:10px;background:var(--green-xlt);border-radius:7px}
-.efficace-row label{font-size:13px;font-weight:600;color:var(--green-dk)}
 .radio-grp{display:flex;gap:8px}
 .radio-grp label{display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer}
-.origin-box{background:var(--steel-xlt);border-radius:7px;padding:10px;margin-bottom:10px;font-size:12px;color:var(--steel-dk)}
-.origin-box strong{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:3px}
-/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
 .modal{background:var(--white);border-radius:var(--radius);box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:600px;max-height:90vh;overflow-y:auto}
 .modal-hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -92,14 +86,14 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
   <div>
     <div class="ph-tag">Service QSSE</div>
     <div class="ph-title">📋 Plan d'Actions SSE</div>
-    <div class="ph-sub">Suivi des actions correctives issues des audits</div>
+    <div class="ph-sub">Suivi des actions correctives — Toutes origines confondues</div>
   </div>
 </div>
 <div class="nav-bar">
   <button class="nav-btn" onclick="window.location.href='Accueil_SSE.html'">🏠 Accueil</button>
   <button class="nav-btn" onclick="window.location.href='Bibliotheque_Audits_SSE.html'">📚 Bibliothèque audits</button>
   <button class="nav-btn" onclick="window.location.href='Bibliotheque_Accidents_SSE.html'">📂 Bibliothèque accidents</button>
-  <button class="nav-btn active" onclick="window.location.href='Plan_Actions_SSE.html'">📋 Plan d'actions</button>
+  <button class="nav-btn active">📋 Plan d'actions</button>
 </div>
 
 <div class="wrapper">
@@ -112,7 +106,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 
   <div class="card">
     <div class="card-hd">
-      <span class="card-title">📋 Actions correctives</span>
+      <span class="card-title">📋 Actions correctives — Toutes origines</span>
       <button class="btn btn-primary" onclick="openNewModal()">➕ Nouvelle action</button>
     </div>
     <div class="filters">
@@ -126,10 +120,21 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
       </select>
       <select class="fld-sel" id="f-origine" onchange="render()">
         <option value="">Toutes origines</option>
-        <option value="audit">📋 Audits</option>
-        <option value="accident">🚑 Faits accidentels</option>
+        <option value="Audit de conformité">📋 Audit de conformité SSE</option>
+        <option value="Accident">🚑 Accident / Fait accidentel</option>
+        <option value="FNC">📋 FNC / Remontée opérationnelle</option>
+        <option value="Visite">🔍 Visite mensuelle SSE</option>
+        <option value="Causerie">💬 Causerie QSSE</option>
+        <option value="GMAO">🔩 GMAO</option>
+        <option value="Revue processus">🗺️ Revue de processus</option>
+        <option value="Risques">🗺️ Revue processus — Risques &amp; Opportunités</option>
+        <option value="Parties prenantes">🗺️ Revue processus — Parties prenantes</option>
+        <option value="Amelioration">🗺️ Revue processus — Amélioration continue</option>
+        <option value="Indicateur hors objectif">📊 Indicateur hors objectif</option>
+        <option value="Projet">⭐ Projet QSSE</option>
+        <option value="Audit interne">🔎 Audit interne ISO 9001</option>
+        <option value="CODIR">🏢 CODIR / Direction</option>
       </select>
-      <select class="fld-sel" id="f-section" onchange="render()"><option value="">Toutes sections</option></select>
       <select class="fld-sel" id="f-responsable" onchange="render()"><option value="">Tous responsables</option></select>
       <input class="fld-inp" id="f-search" placeholder="Rechercher..." oninput="render()" style="min-width:160px">
     </div>
@@ -149,7 +154,6 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
       <input type="hidden" id="m-audit-id">
       <input type="hidden" id="m-section-key">
       <input type="hidden" id="m-criteria-idx">
-
       <div class="form-row">
         <div class="fld">
           <label class="fld-lbl">Site *</label>
@@ -159,19 +163,38 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
             <option value="89">89</option><option value="47">47</option>
             <option value="37">37</option><option value="17">17</option>
             <option value="72">72</option><option value="72bis">72bis</option>
+            <option value="Réseau">Réseau</option>
           </select>
         </div>
         <div class="fld">
           <label class="fld-lbl">Origine de l'action</label>
-          <input class="fld-inp" id="m-origin" placeholder="Ex: Audit DUERP, Fait accidentel..." style="height:36px">
+          <select class="fld-sel" id="m-origin-sel" style="height:36px" onchange="updateOriginField()">
+            <option value="">— Sélectionner —</option>
+            <option value="Audit de conformité SSE">📋 Audit de conformité SSE</option>
+            <option value="Accident - Fait accidentel">🚑 Accident / Fait accidentel</option>
+            <option value="FNC - Remontée opérationnelle">📋 FNC / Remontée opérationnelle</option>
+            <option value="Visite mensuelle SSE">🔍 Visite mensuelle SSE</option>
+            <option value="Causerie QSSE">💬 Causerie QSSE</option>
+            <option value="GMAO - Non-conformité équipement">🔩 GMAO — Non-conformité équipement</option>
+            <option value="Revue processus - Risques et Opportunités">🗺️ Revue processus — Risques &amp; Opportunités</option>
+            <option value="Revue processus - Parties prenantes">🗺️ Revue processus — Parties prenantes</option>
+            <option value="Revue processus - Amélioration continue">🗺️ Revue processus — Amélioration continue</option>
+            <option value="Indicateur hors objectif">📊 Indicateur hors objectif</option>
+            <option value="Projet QSSE">⭐ Projet QSSE</option>
+            <option value="Audit interne ISO 9001">🔎 Audit interne ISO 9001</option>
+            <option value="CODIR - Direction">🏢 CODIR / Direction</option>
+            <option value="Autre">Autre</option>
+          </select>
         </div>
       </div>
-
+      <div class="fld" style="margin-bottom:10px">
+        <label class="fld-lbl">Précision de l'origine</label>
+        <input class="fld-inp" id="m-origin" placeholder="Ex: Processus DIRECTION, Site 38, KPI Taux de satisfaction..." style="height:36px">
+      </div>
       <div class="fld" style="margin-bottom:10px">
         <label class="fld-lbl">Description de l'action *</label>
         <textarea class="fld-txt" id="m-description" placeholder="Décrivez l'action corrective à mener..."></textarea>
       </div>
-
       <div class="form-row">
         <div class="fld">
           <label class="fld-lbl">Responsable *</label>
@@ -196,17 +219,14 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
         <label class="fld-lbl">Livrable</label>
         <input class="fld-inp" id="m-livrable" placeholder="Ex: Rapport, Outil, Formation..." style="height:36px">
       </div>
-
       <div class="fld" style="margin-bottom:10px">
         <label class="fld-lbl">Avancement : <span id="m-avancement-val" style="color:var(--green-dk);font-weight:700">0%</span></label>
         <input type="range" class="fld-range" id="m-avancement" min="0" max="100" step="5" value="0" oninput="updateAvancement(this.value)">
       </div>
-
       <div class="fld" style="margin-bottom:10px">
         <label class="fld-lbl">Commentaire</label>
         <textarea class="fld-txt" id="m-commentaire" placeholder="Commentaires sur l'avancement..." style="min-height:50px"></textarea>
       </div>
-
       <div class="efficace-row" id="m-efficace-row" style="display:none">
         <label class="fld-lbl" style="margin:0">Action efficace ?</label>
         <div class="radio-grp">
@@ -227,331 +247,28 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 
 <script>
 const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
-
-const SECTIONS=[
-  {
-    "key": "accueil",
-    "label": "Accueil sécurité",
-    "icon": "👷",
-    "criteria": [
-      "L’accueil sécurité présente les règles, consignes et comportements attendus sur le site",
-      "L’accueil sécurité informe sur les risques pour la santé et la sécurité du salarié",
-      "L’accueil sécurité précise les moyens de prévention et les procédures d’urgence à suivre",
-      "Chaque salarié est formé aux gestes, postures, procédures et équipements propres à son poste",
-      "La formation sécurité est renouvelée en cas de changement de poste, de nouvelle technologie ou de reprise après absence prolongée",
-      "Arrivée d\'un nouveau salarié dans les 3 derniers mois",
-      "Appel à l\'interim dans les 3 derniers mois",
-      "Chaque nouveau collaborateur bénéficie d’un accueil sécurité dès son arrivée"
-    ]
-  },
-  {
-    "key": "attitude",
-    "label": "Attitude, droits et devoirs",
-    "icon": "🤝",
-    "criteria": [
-      "Le salarié adopte une attitude interrogative : analyse de son environnement avant de commencer à travailler",
-      "Le droit d’alerte est exercé correctement (signalement immédiat d’un danger)"
-    ]
-  },
-  {
-    "key": "controle_reg",
-    "label": "Contrôle réglementaire des installations et équipements",
-    "icon": "🔧",
-    "criteria": [
-      "Le matériel possède une étiquette ou un registre de contrôle à jour",
-      "La date de dernière inspection est conforme aux exigences",
-      "Le matériel est en bon état : pas de défaut visible (usure, jeu, fuite, fissure…)",
-      "Aucun matériel périmé, modifié ou potentiellement dangereux n’est utilisé",
-      "Analyse rapide du poste de travail avant de commencer",
-      "Signalement immédiat de toute anomalie ou doute"
-    ]
-  },
-  {
-    "key": "eco",
-    "label": "Engagement éco-responsable",
-    "icon": "♻️",
-    "criteria": [
-      "Des indicateurs de suivi environnemental sont mis en place (consommations, déchets, énergie, eau).",
-      "Les consommations d’électricité et de gaz sont suivies mensuellement.",
-      "Une consigne est établie en cas de déversements accidentels (huiles, carburants, fluides)"
-    ]
-  },
-  {
-    "key": "epi",
-    "label": "EPI",
-    "icon": "🦺",
-    "criteria": [
-      "Pantalon de travail",
-      "Gilet haute visibilité pour aller sur le parc",
-      "Chaussures de sécurité",
-      "Gants mécanicien/manutention selon le poste",
-      "Lunettes de protection/visière",
-      "Bouchon d\'oreilles/ Casques protection auditive",
-      "Casquette de sécurité",
-      "Visière et gants d\'électricien (démontage batterie)"
-    ]
-  },
-  {
-    "key": "equipements",
-    "label": "Equipements",
-    "icon": "⚙️",
-    "criteria": [
-      "Les carters de protection des machines sont présents et en bon état (pas de retrait, pas de modification).",
-      "Aucune machine n’est utilisée si un carter est manquant ou défectueux (mise hors service et signalisation).",
-      "Les consignes de consignation sont connues et respectées par l’opérateur.",
-      "Les risques liés aux machines ont été identifiés (électrisation, écrasement, happement, brûlure, incendie…).",
-      "Fontaine de lavage des pièce présente avec EPI à porter",
-      "Les portes automatiques sont en bon état, sans trou.",
-      "Garde-corps sécurisés",
-      "Matériel \"maison\" limité à des chariots/étagères",
-      "Installation d\'une nouvelle machine dans les 3 derniers mois"
-    ]
-  },
-  {
-    "key": "exploitation",
-    "label": "Exploitation",
-    "icon": "🏭",
-    "criteria": [
-      "Il existe une salle de repos qui est tenue propre et disponible pour les salariés",
-      "Le site dispose d\'un plan des zones mis à jour et modifiable facilement",
-      "Les espaces de travail sont propres et non encombrées",
-      "Il n\'y a pas de bouilloires/micro-ondes aux postes de travail",
-      "Les zones de stockage de véhicules ne sont pas surchargées",
-      "Le platin n\'est empilé que sur 2 hauteurs (3m max)",
-      "Attitude interrogative des salariés",
-      "Déplacement des véhicules sur chariot ok (visibilité, vitesse adaptée, alarme de recul)",
-      "Manutention des charges lourdes réalisées à 2 ou avec aide mécanique",
-      "Absence d\'outil à point chaud (meuleuse, chalumeau)",
-      "Absence de branchements électriques sauvages",
-      "Consignes claires pour la pince hydraulique",
-      "Des mesures de bruits sont réalisées régulièrement au poste de démontage/démonte pneu",
-      "Les réservoirs sont vidangés avec un matériel de perforation étanche",
-      "Il y a une cuve pour les carburants : gasoil/essence/carburant souillé",
-      "Il n\'y a pas de transvasement manuel de carburant d\'un bidon à une cuve",
-      "Il existe une pompe pour passer le carburant du bidon à la cuve.",
-      "Le carburant souillé est évacué avec les déchets dangereux.",
-      "Il y a un contrôle qualité du carburant avant déversement dans les cuves.",
-      "Les véhicules sont systématiquement dépollués avant démontage des pièces mécaniques",
-      "Garde-corps mezzanine en bon état"
-    ]
-  },
-  {
-    "key": "gestion_d_un_acciden",
-    "label": "Gestion d’un accident du travail",
-    "icon": "📋",
-    "criteria": [
-      "Tout accident du travail, même bénin, est déclaré à la Sécurité sociale dans les délais légaux (48h CDI / 24h intérimaires)",
-      "En cas d\'accident, le salarié informe immédiatement son responsable",
-      "Un registre des accidents bénins est tenu conformément à l’article L.441-4 du Code de la sécurité sociale",
-      "Les services RH et QSSE sont immédiatement informés en cas d’accident",
-      "Une analyse des causes et un plan d’action sont systématiquement réalisés après un accident de travail",
-      "Une alerte accident est diffusée à l’ensemble des sites",
-      "Le suivi du plan d’actions issu de l\'analyse des causes est documenté et vérifié"
-    ]
-  },
-  {
-    "key": "icpe",
-    "label": "ICPE",
-    "icon": "📋",
-    "criteria": [
-      "Le site dispose d\'un plan des réseaux à jour",
-      "Pompage des séparateurs hydrocarbures annuel",
-      "Il y a un poteau incendie à moins de 100m de tout point du site",
-      "Analyse des rejets EP annuelle"
-    ]
-  },
-  {
-    "key": "manutention",
-    "label": "Manutentions manuelles & Postures de travail",
-    "icon": "💪",
-    "criteria": [
-      "Les aides à la manutention sont disponibles aux postes de démontage des pièces lourdes",
-      "Pas de transport de pièces encombrantes dans les escaliers",
-      "Pas de transport de pièces supérieures à 10kg dans les escaliers.",
-      "Vérification des conditions de sécurité du matériel (palans, chariots, etc.)",
-      "Formation Gestes et Postures du personnel il y a moins de 5 ans.",
-      "Maintenance préventive des équipements de manutention"
-    ]
-  },
-  {
-    "key": "obligation_de_l_empl",
-    "label": "Obligation de l’employeur",
-    "icon": "📋",
-    "criteria": [
-      "Un Document Unique d’Évaluation des Risques Professionnels (DUERP) est en place et prend en compte tous les postes de travail",
-      "Le DUERP est mis à jour au moins une fois par an,  à chaque modification importante et en cas d\'accident de travail",
-      "Les formations sont documentées et tracées (liste des participants, dates, sujets abordés)",
-      "Les missions nécessitant une habilitation sont clairement identifiées",
-      "Les formations électriques sont à jour pour chacun des salariés concerné.",
-      "Les formations chariot sont à jour",
-      "Les salariés habilités ont été formés, évalués et jugés aptes à exercer en sécurité",
-      "Il existe un plan de prévention réactualisé chaque année pour tous les intervenants extérieurs.",
-      "Il existe un protocole de chargement pour les entreprises de transport des déchets",
-      "Les autorisations de conduite chariot de l\'employeur sont à jour",
-      "Les autorisations électriques de l\'employeur sont à jour"
-    ]
-  },
-  {
-    "key": "organisation",
-    "label": "Organisation",
-    "icon": "🗂️",
-    "criteria": [
-      "Il existe des routines régulières de rangement des espaces de travail",
-      "Présence d\'un chef d\'équipe/atelier",
-      "Polyvalence des opérateurs",
-      "Les équipes sont complètes"
-    ]
-  },
-  {
-    "key": "outils",
-    "label": "Outils à main et électroportatifs",
-    "icon": "🔨",
-    "criteria": [
-      "Le salarié est formé et/ou sensibilisé à l’utilisation des outils à main et électroportatifs",
-      "L’état des outils est vérifié avant utilisation",
-      "Chaque outil est utilisé uniquement pour la fonction prévue",
-      "Les Cutter à disposition (expédition) sont à lame auto rétractable",
-      "Le salarié adopte une posture correcte et sécurisée",
-      "L’environnement de travail est propre, dégagé et sécurisé"
-    ]
-  },
-  {
-    "key": "parc",
-    "label": "Parc véhicules",
-    "icon": "🚗",
-    "criteria": [
-      "Le site possède un plan de circulation à jour",
-      "La signalisation « Piétons » est respectée par les opérateurs.",
-      "L\'état du béton du parc est correct, pas de trop nombreux nids de poule",
-      "Les sols et chemins de circulation sont dégagés (pas d’encombrement, pas d’obstacles).",
-      "Aucun objet ne gêne ou n’obstrue la vue lors du déplacement.",
-      "Les déplacements se font sans téléphone et sans distraction.",
-      "Il existe une signalétique spécifique pour le picking sur site.",
-      "Les zones dangereuses (circulation engins, levage, manœuvres) sont respectées et non traversées.",
-      "Signalisation des différentes zones de stockage claire"
-    ]
-  },
-  {
-    "key": "cmr",
-    "label": "Risque CMR",
-    "icon": "⚗️",
-    "criteria": [
-      "Il n\'y a pas de carburant à l\'air libre dans l\'atelier de démontage : réservoir chaudière, chariot vidange",
-      "Le carburant par directement en cuve lors de la vidange du réservoir"
-    ]
-  },
-  {
-    "key": "incendie",
-    "label": "Risque incendie",
-    "icon": "🔥",
-    "criteria": [
-      "Les voies d’évacuation et issues de secours sont aménagées et maintenues en état",
-      "Les accès et voies de circulation pompiers sont dégagées et connues",
-      "Les extincteurs, RIA, alarmes et systèmes de détection sont présents et vérifiés périodiquement",
-      "Il existe un plan d\'évacuation avec la localisation des extincteurs et des déclencheurs d\'alarme à jour",
-      "Les salariés sont formés à la manipulation des extincteurs et aux conduites à tenir en cas d’incendie",
-      "Le plan d\'évacuation est affiché aux différents postes de travail et dans l\'accueil visiteurs.",
-      "Un plan de défense incendie est mis à jour et à disposition des salariés.",
-      "Le process de mise sur rétention du site est connu.",
-      "Le matériel de mise sur rétention est en état de fonctionnement.",
-      "Un registre de sécurité consignant les contrôles, exercices et vérifications réglementaires est disponible",
-      "Les zones de stockage des déchets sont identifiées et propres",
-      "Il n\'y a pas de déchets isolés sur le site",
-      "La zone ATEX est identifiée",
-      "Les rondes de surveillances sont effectuées tous les jours. Le plan et la liste d\'émargement sont disponibles.",
-      "Le stockage des produits chimiques en bidons est correct : rétentions/compatibilités",
-      "Affichage des pictogrammes de danger et explication des risques",
-      "Les matières combustibles sont séparées des sources d’inflammation",
-      "Des exercices d’évacuation sont organisés tous les 6 mois.",
-      "La réactivité et la coordination des salariés sont évaluées lors des exercices"
-    ]
-  },
-  {
-    "key": "routier",
-    "label": "Risque routier et Transport",
-    "icon": "🛣️",
-    "criteria": [
-      "Bon état de fonctionnement du véhicule / engin",
-      "Respect du poids maximal du véhicule",
-      "Permis de conduire valide",
-      "Le salarié signale immédiatement toute situation dangereuse rencontrée sur la route ou sur site",
-      "Tout incident, presque-accident ou anomalie est remonté via le formulaire adapté (retour d’expérience)",
-      "Le salarié respecte le code de la route (vitesse, panneaux, port de la ceinture, règles du site)",
-      "Les équipements, outils et charges sont correctement rangés (et sanglés)"
-    ]
-  },
-  {
-    "key": "stockage",
-    "label": "Stockage pièces détachées",
-    "icon": "📦",
-    "criteria": [
-      "Les escabeaux sont en bon état",
-      "Les racks de stockage sont en bon état",
-      "Les pieds des racks de stockages sont protégés par des sabots",
-      "Le stock mort de pièces détachées est jeté une fois par an",
-      "Un inventaire du stock est réalisé une fois par an"
-    ]
-  },
-  {
-    "key": "dechets",
-    "label": "Tri, gestion des déchets et des fluides",
-    "icon": "♻️",
-    "criteria": [
-      "Les déchets sont collectés et évacués par des filières agréées avec BSD à jour",
-      "Le registre des déchets est tenu à jour et conforme à la réglementation en vigueur.",
-      "Les grilles d\'évacuation sont nettoyées tous les 6 mois",
-      "Les rétentions d\'huiles sont pompées et nettoyées tous les 2 mois ?",
-      "Les bordereaux de suivi des déchets (BSD) sont correctement renseignés, archivés et disponibles pour consultation.",
-      "Les prestataires de traitement disposent d’agréments et de certifications valides",
-      "Les produits dangereux et fluides sont stockés en rétention étanche, de capacité suffisante, correctement étiquetés et protégé",
-      "Des contrôles réguliers sont effectués pour détecter fuites ou dégradations éventuelles",
-      "AdBlue evacué comme déchet dangereux ?",
-      "Pompage des rétentions huiles et carburant",
-      "La Check-list ADR est remplie par un salarié formé à l\'ADR."
-    ]
-  },
-  {
-    "key": "vhe",
-    "label": "Véhicules électriques et hybrides",
-    "icon": "⚡",
-    "criteria": [
-      "Zone de Stockage Temporaire (ZST) pour VE existante avec signalétique",
-      "La dépose des batteries VE/VH est faite par un salarié habilité B2XL + formation dépose",
-      "Les câbles orange de la chaine de traction sont débranchés et non coupés lorsque les prises IP2X sont en bon état.",
-      "Des EPI isolants + outils isolants sont disponibles pour les salariés habilités B2XL lors de la dépose de la batterie",
-      "Les batteries VE/VH usagées sont stockées dans un espace sécurisé : zone de 5m autour ou murs REI120",
-      "VE/VH identifié par sticker aux différentes étapes de traitement : dépluggé/hors tension/dangereux",
-      "Film plastique sur vitres, pare-brise, hayons cassés pour les VE/VH",
-      "Système de détection incendie",
-      "La structure du batiment est au moins R60",
-      "Les toitures et couvertures de toiture répondent à la classe BROOF (t3)"
-    ]
-  }
-];
-
 let ACTIONS=[];
 
-// ─── API JSONP pour lecture ───
 function jsonpGetActions(){
-  return new Promise((resolve,reject)=>{
-    const cb='_cb'+Date.now();
+  return new Promise(function(resolve,reject){
+    var cb='_cb'+Date.now();
     window[cb]=function(d){
       delete window[cb];
-      const el=document.getElementById('_jsonp_actions');
+      var el=document.getElementById('_jsonp_actions');
       if(el)el.remove();
-      const data=(d.data||[]).map(row=>({
+      var data=(d.data||[]).map(function(row){return{
         id:row[0],auditId:row[1],site:row[2],auditDate:row[3],
         sectionKey:row[4],criteriaIdx:Number(row[5]),origin:row[6],
         description:row[7],responsable:row[8],delai:row[9],
         avancement:Number(row[10]||0),commentaire:row[11],
         efficace:row[12]||'',createdAt:row[13]
-      }));
+      };});
       resolve(data);
     };
-    const s=document.createElement('script');
+    var s=document.createElement('script');
     s.id='_jsonp_actions';
     s.src=GSHEET_URL+'?action=getActions&callback='+cb;
-    s.onerror=()=>reject(new Error('JSONP failed'));
+    s.onerror=function(){reject(new Error('JSONP failed'));};
     document.head.appendChild(s);
   });
 }
@@ -566,23 +283,20 @@ async function apiUpdateAuditNC(auditId,sectionKey,criteriaIdx){
   await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'checkAndUpdateNC',auditId,sectionKey,criteriaIdx})});
 }
 
-// ─── Init ───
 async function init(){
-  SECTIONS.forEach(s=>{
-    const o=document.createElement('option');
-    o.value=s.key;o.textContent=s.icon+' '+s.label;
-    document.getElementById('f-section').appendChild(o);
-  });
   try{
     ACTIONS=await jsonpGetActions();
   }catch(e){
-    console.warn('Fallback local',e);
-    ACTIONS=JSON.parse(localStorage.getItem('sse_actions')||'[]');
+    console.warn('Erreur chargement actions',e);
+    ACTIONS=[];
   }
-  // Peupler filtre sites
-  const sites=[...new Set(ACTIONS.map(a=>a.site))].filter(Boolean);
-  const fSite=document.getElementById('f-site');
-  sites.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent='Site '+s;fSite.appendChild(o);});
+  var sites=[...new Set(ACTIONS.map(function(a){return a.site;}).filter(Boolean))].sort();
+  var fSite=document.getElementById('f-site');
+  sites.forEach(function(s){
+    var o=document.createElement('option');
+    o.value=s; o.textContent='Site '+s;
+    fSite.appendChild(o);
+  });
   render();
 }
 
@@ -598,90 +312,100 @@ function statutLabel(st){
   if(st==='inprogress')return'<span class="action-badge badge-inprogress">⏳ En cours</span>';
   return'<span class="action-badge badge-todo">📌 À faire</span>';
 }
-function getSec(key){return SECTIONS.find(s=>s.key===key)||{label:key,icon:''};}
 
 function render(){
-  const site=document.getElementById('f-site').value;
-  const statut=document.getElementById('f-statut').value;
-  const section=document.getElementById('f-section').value;
-  const search=document.getElementById('f-search').value.toLowerCase();
+  var fSite=document.getElementById('f-site').value;
+  var fStatut=document.getElementById('f-statut').value;
+  var fOrigine=document.getElementById('f-origine').value.toLowerCase();
+  var fSearch=document.getElementById('f-search').value.toLowerCase();
+  var fResp=document.getElementById('f-responsable').value;
 
-  const origine=document.getElementById('f-origine').value;
-  const responsable=document.getElementById('f-responsable').value;
+  // Populate responsable
+  var respSel=document.getElementById('f-responsable');
+  var cur=respSel.value;
+  var allResp=[...new Set(ACTIONS.map(function(a){return a.responsable;}).filter(Boolean))].sort();
+  respSel.innerHTML='<option value="">Tous responsables</option>'+allResp.map(function(r){return'<option value="'+r+'"'+(r===cur?' selected':'')+'>'+r+'</option>';}).join('');
 
-  // Populate responsable dropdown
-  const respSel=document.getElementById('f-responsable');
-  const currentResp=respSel.value;
-  const allResp=[...new Set(ACTIONS.map(a=>a.responsable).filter(Boolean))].sort();
-  respSel.innerHTML='<option value="">Tous responsables</option>'+allResp.map(r=>'<option value="'+r+'"'+(r===currentResp?' selected':'')+'>'+r+'</option>').join('');
-
-  let lib=ACTIONS.filter(a=>{
-    if(site&&a.site!==site)return false;
-    if(section&&a.sectionKey!==section)return false;
-    if(statut&&getStatut(a)!==statut)return false;
-    if(responsable&&a.responsable!==responsable)return false;
-    if(origine){
-      const isAcc=String(a.auditId||'').startsWith('ACC-');
-      if(origine==='audit'&&isAcc)return false;
-      if(origine==='accident'&&!isAcc)return false;
+  var lib=ACTIONS.filter(function(a){
+    if(fSite&&a.site!==fSite)return false;
+    if(fStatut&&getStatut(a)!==fStatut)return false;
+    if(fResp&&a.responsable!==fResp)return false;
+    if(fOrigine){
+      var orig=(a.origin||'').toLowerCase();
+      if(!orig.includes(fOrigine))return false;
     }
-    if(search&&!(a.description.toLowerCase().includes(search)||a.responsable.toLowerCase().includes(search)||a.origin.toLowerCase().includes(search)))return false;
+    if(fSearch){
+      var hay=(a.description||'').toLowerCase()+(a.responsable||'').toLowerCase()+(a.origin||'').toLowerCase();
+      if(!hay.includes(fSearch))return false;
+    }
     return true;
   });
 
   document.getElementById('st-total').textContent=ACTIONS.length;
-  document.getElementById('st-open').textContent=ACTIONS.filter(a=>getStatut(a)==='inprogress').length;
-  document.getElementById('st-done').textContent=ACTIONS.filter(a=>['done','efficace'].includes(getStatut(a))).length;
-  document.getElementById('st-efficace').textContent=ACTIONS.filter(a=>a.efficace==='oui').length;
+  document.getElementById('st-open').textContent=ACTIONS.filter(function(a){return getStatut(a)==='inprogress';}).length;
+  document.getElementById('st-done').textContent=ACTIONS.filter(function(a){return['done','efficace'].includes(getStatut(a));}).length;
+  document.getElementById('st-efficace').textContent=ACTIONS.filter(function(a){return a.efficace==='oui';}).length;
 
-  const el=document.getElementById('action-list');
+  var el=document.getElementById('action-list');
   if(!lib.length){
-    el.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">'+(ACTIONS.length===0?'Aucune action planifiée':'Aucun résultat')+'</div><div style="font-size:12px;margin-top:4px">'+(ACTIONS.length===0?'Les actions sont créées depuis la bibliothèque des audits sur les NC détectées.':'Modifiez vos filtres.')+'</div></div>';
+    el.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">'+(ACTIONS.length===0?'Aucune action planifiée':'Aucun résultat')+'</div></div>';
     return;
   }
 
-  el.innerHTML=lib.map(a=>{
-    const st=getStatut(a);
-    const sec=getSec(a.sectionKey);
-    const delaiStr=a.delai?new Date(a.delai).toLocaleDateString('fr-FR'):'—';
-    const retard=a.delai&&a.avancement<100&&new Date(a.delai)<new Date()?'<span style="color:var(--bad-tc);font-size:10px;font-weight:700"> ⚠️ En retard</span>':'';
-    return`<div class="action-card ${st}" id="ac-${a.id}">
-      <div class="action-hd" onclick="togAction('${a.id}')">
-        <div style="flex:1">
-          <div class="action-origin">${a.origin ? a.origin : (sec.icon+' '+sec.label+' · Site '+a.site)}</div>
-          <div class="action-desc">${a.description||'—'}</div>
-          <div class="action-meta">
-            ${statutLabel(st)}
-            <span class="action-badge" style="background:var(--steel-xlt);color:var(--steel-dk)">👤 ${a.responsable||'—'}</span>
-            <span class="action-badge" style="background:var(--steel-xlt);color:var(--steel-dk)">📅 ${delaiStr}${retard}</span>
-          </div>
-        </div>
-        <div class="action-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width:${a.avancement}%"></div></div>
-          <span style="font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk);min-width:32px;text-align:right">${a.avancement}%</span>
-        </div>
-      </div>
-      <div class="action-body" id="ab-${a.id}">
-        <div style="font-size:12px;color:var(--muted);margin-bottom:8px"><strong>Origine :</strong> ${a.origin}</div>
-        ${a.commentaire?'`<div style="font-size:12px;color:var(--charcoal);margin-bottom:8px;padding:8px;background:var(--slate);border-radius:6px">💬 '+(a.commentaire)+'</div>`':''}
-        ${a.efficace==='oui'?'<div style="padding:6px 10px;background:var(--ok-bg);color:var(--ok-tc);border-radius:6px;font-size:12px;font-weight:600;margin-bottom:8px">✅ Action jugée efficace</div>':''}
-        ${a.efficace==='non'?'<div style="padding:6px 10px;background:var(--bad-bg);color:var(--bad-tc);border-radius:6px;font-size:12px;font-weight:600;margin-bottom:8px">❌ Action jugée non efficace</div>':''}
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-blue btn-sm" onclick="editAction('${a.id}')">✏️ Modifier</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteAction('${a.id}')">🗑️ Supprimer</button>
-        </div>
-      </div>
-    </div>`;
+  el.innerHTML=lib.map(function(a){
+    var st=getStatut(a);
+    var delaiStr=a.delai?new Date(a.delai).toLocaleDateString('fr-FR'):'—';
+    var retard=a.delai&&a.avancement<100&&new Date(a.delai)<new Date()?'<span style="color:var(--bad-tc);font-size:10px;font-weight:700"> ⚠️ En retard</span>':'';
+    var originLabel=a.origin||'—';
+    return'<div class="action-card '+st+'" id="ac-'+a.id+'">'
+      +'<div class="action-hd" onclick="togAction(\''+a.id+'\')">'
+      +'<div style="flex:1">'
+      +'<div class="action-origin">'+originLabel+'</div>'
+      +'<div class="action-desc">'+(a.description||'—')+'</div>'
+      +'<div class="action-meta">'+statutLabel(st)
+      +'<span class="action-badge" style="background:var(--steel-xlt);color:var(--steel-dk)">👤 '+(a.responsable||'—')+'</span>'
+      +'<span class="action-badge" style="background:var(--steel-xlt);color:var(--steel-dk)">📅 '+delaiStr+retard+'</span>'
+      +'</div></div>'
+      +'<div class="action-progress"><div class="progress-bar"><div class="progress-fill" style="width:'+a.avancement+'%"></div></div>'
+      +'<span style="font-size:13px;font-weight:700;color:var(--steel-dk);min-width:32px;text-align:right">'+a.avancement+'%</span>'
+      +'</div></div>'
+      +'<div class="action-body" id="ab-'+a.id+'">'
+      +(a.commentaire?'<div style="font-size:12px;margin-bottom:8px;padding:8px;background:var(--slate);border-radius:6px">💬 '+a.commentaire+'</div>':'')
+      +(a.efficace==='oui'?'<div style="padding:6px 10px;background:var(--ok-bg);color:var(--ok-tc);border-radius:6px;font-size:12px;font-weight:600;margin-bottom:8px">✅ Action jugée efficace</div>':'')
+      +(a.efficace==='non'?'<div style="padding:6px 10px;background:var(--bad-bg);color:var(--bad-tc);border-radius:6px;font-size:12px;font-weight:600;margin-bottom:8px">❌ Action jugée non efficace</div>':'')
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
+      +'<button class="btn btn-blue btn-sm" onclick="editAction(\''+a.id+'\')">✏️ Modifier</button>'
+      +'<button class="btn btn-danger btn-sm" onclick="deleteAction(\''+a.id+'\')">🗑️ Supprimer</button>'
+      +'</div></div></div>';
   }).join('');
 }
 
 function togAction(id){
-  const b=document.getElementById('ab-'+id);
+  var b=document.getElementById('ab-'+id);
   if(b)b.classList.toggle('open');
 }
 
-// ─── Modal ───
-let editingId=null;
+function updateOriginField(){
+  var sel=document.getElementById('m-origin-sel').value;
+  var inp=document.getElementById('m-origin');
+  var isProjet=sel.includes('Projet');
+  document.getElementById('m-projet-fields').style.display=isProjet?'grid':'none';
+  document.getElementById('m-livrable-fld').style.display=isProjet?'block':'none';
+  // Pre-fill precision field hint based on selection
+  if(sel.includes('Revue processus')){
+    inp.placeholder='Ex: Processus DIRECTION, Processus VENTE...';
+  } else if(sel.includes('GMAO')){
+    inp.placeholder='Ex: Pont elevateur — Site 38';
+  } else if(sel.includes('Indicateur')){
+    inp.placeholder='Ex: KPI Taux satisfaction — Processus VEN';
+  } else if(sel.includes('Audit de conformite')||sel.includes('Audit de conformité')){
+    inp.placeholder='Ex: Section incendie — Site 41';
+  } else {
+    inp.placeholder='Preciser si necessaire...';
+  }
+}
+
+var editingId=null;
 function openNewModal(auditId,site,auditDate,sectionKey,criteriaIdx,origin){
   editingId=null;
   document.getElementById('modal-title').textContent='Nouvelle action';
@@ -690,35 +414,32 @@ function openNewModal(auditId,site,auditDate,sectionKey,criteriaIdx,origin){
   document.getElementById('m-site').value=site||'';
   document.getElementById('m-section-key').value=sectionKey||'';
   document.getElementById('m-criteria-idx').value=criteriaIdx!=null?criteriaIdx:'';
+  document.getElementById('m-origin-sel').value='';
   document.getElementById('m-origin').value=origin||'';
-  var isProjet=(origin||'').includes('Projet') || (auditId||'').startsWith('PROJ-');
-  document.getElementById('m-projet-fields').style.display=isProjet?'grid':'none';
-  document.getElementById('m-livrable-fld').style.display=isProjet?'block':'none';
-  document.getElementById('m-origin').value=origin||'';
-  var isProjet=(origin||'').includes('Projet') || (auditId||'').startsWith('PROJ-');
-  document.getElementById('m-projet-fields').style.display=isProjet?'grid':'none';
-  document.getElementById('m-livrable-fld').style.display=isProjet?'block':'none';
+  document.getElementById('m-projet-fields').style.display='none';
+  document.getElementById('m-livrable-fld').style.display='none';
   document.getElementById('m-description').value='';
   document.getElementById('m-responsable').value='';
   document.getElementById('m-delai').value='';
   document.getElementById('m-avancement').value=0;
   document.getElementById('m-avancement-val').textContent='0%';
   document.getElementById('m-commentaire').value='';
-  document.querySelectorAll('input[name="efficace"]').forEach(r=>r.checked=r.value==='');
+  document.querySelectorAll('input[name="efficace"]').forEach(function(r){r.checked=r.value==='';});
   document.getElementById('m-efficace-row').style.display='none';
   document.getElementById('modal').style.display='flex';
 }
 
 function editAction(id){
-  const a=ACTIONS.find(x=>String(x.id)===String(id));
+  var a=ACTIONS.find(function(x){return String(x.id)===String(id);});
   if(!a)return;
   editingId=id;
-  document.getElementById('modal-title').textContent='Modifier l\'action';
+  document.getElementById('modal-title').textContent='Modifier l action';
   document.getElementById('m-id').value=a.id;
   document.getElementById('m-audit-id').value=a.auditId;
   document.getElementById('m-site').value=a.site;
   document.getElementById('m-section-key').value=a.sectionKey;
   document.getElementById('m-criteria-idx').value=a.criteriaIdx;
+  document.getElementById('m-origin-sel').value='';
   document.getElementById('m-origin').value=a.origin||'';
   var isP=(a.origin||'').includes('Projet')||(String(a.auditId||'')).startsWith('PROJ-');
   document.getElementById('m-projet-fields').style.display=isP?'grid':'none';
@@ -732,9 +453,9 @@ function editAction(id){
   document.getElementById('m-avancement').value=a.avancement||0;
   document.getElementById('m-avancement-val').textContent=(a.avancement||0)+'%';
   document.getElementById('m-commentaire').value=a.commentaire||'';
-  const av=Number(a.avancement||0);
+  var av=Number(a.avancement||0);
   document.getElementById('m-efficace-row').style.display=av>=100?'flex':'none';
-  document.querySelectorAll('input[name="efficace"]').forEach(r=>r.checked=r.value===(a.efficace||''));
+  document.querySelectorAll('input[name="efficace"]').forEach(function(r){r.checked=r.value===(a.efficace||'');});
   document.getElementById('modal').style.display='flex';
 }
 
@@ -742,29 +463,31 @@ function updateAvancement(v){
   document.getElementById('m-avancement-val').textContent=v+'%';
   document.getElementById('m-efficace-row').style.display=Number(v)>=100?'flex':'none';
   if(Number(v)<100){
-    document.querySelectorAll('input[name="efficace"]').forEach(r=>r.checked=r.value==='');
+    document.querySelectorAll('input[name="efficace"]').forEach(function(r){r.checked=r.value==='';});
   }
 }
 function updateEfficace(){}
-
 function closeModal(){document.getElementById('modal').style.display='none';}
 function closeModalOutside(e){if(e.target===document.getElementById('modal'))closeModal();}
 
 async function saveAction(){
-  const desc=document.getElementById('m-description').value.trim();
-  const resp=document.getElementById('m-responsable').value.trim();
-  const delai=document.getElementById('m-delai').value;
-  if(!desc||!resp||!delai){showToast('Description, responsable et délai obligatoires',false);return;}
-
-  const efficaceEl=document.querySelector('input[name="efficace"]:checked');
-  const action={
+  var desc=document.getElementById('m-description').value.trim();
+  var resp=document.getElementById('m-responsable').value.trim();
+  var delai=document.getElementById('m-delai').value;
+  if(!desc||!resp||!delai){showToast('Description, responsable et delai obligatoires',false);return;}
+  var efficaceEl=document.querySelector('input[name="efficace"]:checked');
+  // Build full origin: type + precision
+  var originSel=document.getElementById('m-origin-sel').value;
+  var originPrec=document.getElementById('m-origin').value.trim();
+  var fullOrigin=originSel?(originSel+(originPrec?' — '+originPrec:'')):originPrec;
+  var action={
     id:document.getElementById('m-id').value||Date.now(),
     auditId:document.getElementById('m-audit-id').value,
     site:document.getElementById('m-site').value,
     auditDate:'',
     sectionKey:document.getElementById('m-section-key').value,
     criteriaIdx:document.getElementById('m-criteria-idx').value,
-    origin:document.getElementById('m-origin').value,
+    origin:fullOrigin,
     description:desc,
     responsable:resp,
     delai:delai,
@@ -773,20 +496,17 @@ async function saveAction(){
     efficace:efficaceEl?efficaceEl.value:'',
     createdAt:new Date().toISOString()
   };
-
   showToast('Enregistrement...',false);
   try{
     await apiSaveAction(action);
-    // Vérifier si toutes les actions liées à cette NC sont efficaces → mettre à jour l'audit
     if(action.efficace==='oui'){
       await apiUpdateAuditNC(action.auditId,action.sectionKey,Number(action.criteriaIdx));
     }
-    // Mettre à jour localement
-    const idx=ACTIONS.findIndex(a=>String(a.id)===String(action.id));
+    var idx=ACTIONS.findIndex(function(a){return String(a.id)===String(action.id);});
     if(idx>=0)ACTIONS[idx]=action;else ACTIONS.push(action);
     closeModal();
     render();
-    showToast('Action enregistrée !',true);
+    showToast('Action enregistree !',true);
   }catch(e){
     showToast('Erreur: '+e.message,false);
   }
@@ -796,36 +516,26 @@ async function deleteAction(id){
   if(!confirm('Supprimer cette action ?'))return;
   try{
     await apiDeleteAction(id);
-    ACTIONS=ACTIONS.filter(a=>String(a.id)!==String(id));
+    ACTIONS=ACTIONS.filter(function(a){return String(a.id)!==String(id);});
     render();
-    showToast('Action supprimée',true);
+    showToast('Action supprimee',true);
   }catch(e){showToast('Erreur: '+e.message,false);}
 }
 
 function showToast(msg,ok){
-  const t=document.getElementById('toast');
+  var t=document.getElementById('toast');
   t.textContent=msg;
   t.style.background=ok?'var(--green-dk)':'var(--steel-dk)';
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+  setTimeout(function(){t.classList.remove('show');},3000);
 }
 
-init().then(()=>{
-  // Si on arrive depuis la bibliothèque avec une NC en paramètre
-  const p=new URLSearchParams(window.location.search);
+init().then(function(){
+  var p=new URLSearchParams(window.location.search);
   if(p.get('auditId')){
-    const sk=p.get('sectionKey'),ci=Number(p.get('criteriaIdx'));
-    const sec=SECTIONS.find(s=>s.key===sk)||{label:sk,icon:'',criteria:[]};
-    const originFromUrl=p.get('origin')?decodeURIComponent(p.get('origin')):'';
-    const originText=originFromUrl||(sec.icon+' '+sec.label+(sec.criteria[ci]?' — Critère '+(ci+1)+' : '+sec.criteria[ci]:''));
-    openNewModal(
-      p.get('auditId'),
-      p.get('site'),
-      '',
-      sk,
-      ci,
-      originText
-    );
+    var sk=p.get('sectionKey'),ci=Number(p.get('criteriaIdx'));
+    var originFromUrl=p.get('origin')?decodeURIComponent(p.get('origin')):'';
+    openNewModal(p.get('auditId'),p.get('site'),'',sk,ci,originFromUrl);
   }
 });
 </script>
