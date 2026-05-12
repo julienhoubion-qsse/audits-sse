@@ -752,6 +752,20 @@ async function saveNewProcess() {
 }
 
 
+// Handle tab param
+var tabParam = params.get('tab');
+if (tabParam) {
+    document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+    var tabEl = document.getElementById('tab-'+tabParam);
+    if (tabEl) tabEl.classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(function(b){
+        if (b.getAttribute('onclick') && b.getAttribute('onclick').indexOf("'"+tabParam+"'") !== -1) {
+            b.classList.add('active');
+        }
+    });
+}
+
 // Init
 renderInfos(); renderPP(); renderRisques(); renderOpps(); renderKPI(); renderActions();
 </script>

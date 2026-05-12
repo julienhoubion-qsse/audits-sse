@@ -76,6 +76,32 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
   <div id="kpi-sections"></div>
 </div>
 <script src="iso9001_data.js">
+function editKPIInline(code, idx, libelle, objectif, frequence) {
+    var newLib = prompt('Libelle du KPI:', libelle);
+    if (newLib === null) return;
+    var newObj = prompt('Objectif 2025:', objectif);
+    if (newObj === null) return;
+    var newFreq = prompt('Frequence (Mensuelle/Trimestrielle/Semestrielle/Annuelle):', frequence);
+    if (newFreq === null) return;
+    if (PROCESSUS_DATA[code] && PROCESSUS_DATA[code].indicateurs[idx]) {
+        PROCESSUS_DATA[code].indicateurs[idx].libelle = newLib;
+        PROCESSUS_DATA[code].indicateurs[idx].objectif = newObj;
+        PROCESSUS_DATA[code].indicateurs[idx].frequence = newFreq;
+    }
+    var libEl = document.getElementById('klib-'+code+'-'+idx);
+    var objEl = document.getElementById('kobj-'+code+'-'+idx);
+    var freqEl = document.getElementById('kfreq-'+code+'-'+idx);
+    if (libEl) libEl.textContent = newLib;
+    if (objEl) objEl.textContent = 'Objectif : ' + (newObj||'A definir');
+    if (freqEl) freqEl.textContent = newFreq||'—';
+    fetch('https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec', {method:'POST', body:JSON.stringify({
+        action:'saveISO9001KPI', processus:code,
+        data:{libelle:newLib, objectif:newObj, frequence:newFreq, idx:idx}
+    })}).catch(function(e){});
+    showToast('KPI mis a jour', true);
+}
+
+
 var currentFNCCode = '';
 var currentFNCLib = '';
 var currentFNCObj = '';
@@ -95,11 +121,11 @@ function openFNCModal(code, libelle, objectif) {
     document.getElementById('fnc-resp').value = '';
     document.getElementById('fnc-delai').value = '';
     document.getElementById('fnc-redacteur').value = '';
-    document.getElementById('fnc-modal').classList.add('open');
+    document.getElementById('fnc-modal').style.display='flex';
 }
 
 function closeFNCModal() {
-    document.getElementById('fnc-modal').classList.remove('open');
+    document.getElementById('fnc-modal').style.display='none';
 }
 
 function checkKPI(input, objectif, code, libelle) {
@@ -221,15 +247,20 @@ Object.entries(PROCESSUS_DATA).forEach(([code, p]) => {
     } else {
         html += '<div class="kpi-row">';
         p.indicateurs.forEach((ind,i) => {
+            var codeEsc = code.replace(/"/g,'&quot;');
+            var libEsc = ind.libelle.replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+            var objEsc = (ind.objectif||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+            var freqEsc = (ind.frequence||'').replace(/"/g,'&quot;');
             html += '<div class="kpi-cell" id="kcell-'+code+'-'+i+'">';
-            html += '<div class="kpi-lib">'+ind.libelle+'</div>';
-            html += '<div class="kpi-obj">Objectif : '+(ind.objectif||'A definir')+'</div>';
-            html += '<span class="kpi-freq">'+(ind.frequence||'—')+'</span>';
-            html += '<div class="kpi-val-zone" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">';
-            html += '<div style="display:flex;gap:6px;align-items:center">';
-            html += '<input class="kpi-val-inp" placeholder="Valeur actuelle..." id="kval-'+code+'-'+i+'" style="flex:1;height:30px;border:1px solid var(--border);border-radius:6px;padding:0 8px;font-size:12px" onchange="checkKPI(this,'+JSON.stringify(ind.objectif||'')+','+JSON.stringify(code)+','+JSON.stringify(ind.libelle)+')">';
+            html += '<div class="kpi-lib" id="klib-'+code+'-'+i+'">'+ind.libelle+'</div>';
+            html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">';
+            html += '<div class="kpi-obj" id="kobj-'+code+'-'+i+'">Objectif : '+(ind.objectif||'A definir')+'</div>';
+            html += '<button style="background:none;border:none;font-size:11px;color:var(--steel);cursor:pointer;padding:0 4px" onclick="editKPIInline(''+code+'','+i+',''+libEsc+'',''+objEsc+'',''+freqEsc+'')" title="Modifier">✏️</button>';
             html += '</div>';
-            html += '<button class="kpi-fnc-btn" onclick="openFNCModal('+JSON.stringify(code)+','+JSON.stringify(ind.libelle)+','+JSON.stringify(ind.objectif||'')+')">🚨 Créer une FNC (hors objectif)</button>';
+            html += '<span class="kpi-freq" id="kfreq-'+code+'-'+i+'">'+(ind.frequence||'—')+'</span>';
+            html += '<div class="kpi-val-zone" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">';
+            html += '<input class="kpi-val-inp" placeholder="Valeur actuelle..." id="kval-'+code+'-'+i+'" style="width:100%;height:30px;border:1px solid var(--border);border-radius:6px;padding:0 8px;font-size:12px">';
+            html += '<button class="kpi-fnc-btn" data-code="'+codeEsc+'" data-lib="'+libEsc+'" data-obj="'+objEsc+'" onclick="openFNCModal(this.dataset.code,this.dataset.lib,this.dataset.obj)">🚨 Créer une FNC (hors objectif)</button>';
             html += '</div></div>';
         });
         html += '</div>';
@@ -238,6 +269,32 @@ Object.entries(PROCESSUS_DATA).forEach(([code, p]) => {
     html += '</div></div>';
 });
 document.getElementById('kpi-sections').innerHTML = html;
+
+function editKPIInline(code, idx, libelle, objectif, frequence) {
+    var newLib = prompt('Libelle du KPI:', libelle);
+    if (newLib === null) return;
+    var newObj = prompt('Objectif 2025:', objectif);
+    if (newObj === null) return;
+    var newFreq = prompt('Frequence (Mensuelle/Trimestrielle/Semestrielle/Annuelle):', frequence);
+    if (newFreq === null) return;
+    if (PROCESSUS_DATA[code] && PROCESSUS_DATA[code].indicateurs[idx]) {
+        PROCESSUS_DATA[code].indicateurs[idx].libelle = newLib;
+        PROCESSUS_DATA[code].indicateurs[idx].objectif = newObj;
+        PROCESSUS_DATA[code].indicateurs[idx].frequence = newFreq;
+    }
+    var libEl = document.getElementById('klib-'+code+'-'+idx);
+    var objEl = document.getElementById('kobj-'+code+'-'+idx);
+    var freqEl = document.getElementById('kfreq-'+code+'-'+idx);
+    if (libEl) libEl.textContent = newLib;
+    if (objEl) objEl.textContent = 'Objectif : ' + (newObj||'A definir');
+    if (freqEl) freqEl.textContent = newFreq||'—';
+    fetch('https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec', {method:'POST', body:JSON.stringify({
+        action:'saveISO9001KPI', processus:code,
+        data:{libelle:newLib, objectif:newObj, frequence:newFreq, idx:idx}
+    })}).catch(function(e){});
+    showToast('KPI mis a jour', true);
+}
+
 
 var currentFNCCode = '';
 var currentFNCLib = '';
@@ -258,11 +315,11 @@ function openFNCModal(code, libelle, objectif) {
     document.getElementById('fnc-resp').value = '';
     document.getElementById('fnc-delai').value = '';
     document.getElementById('fnc-redacteur').value = '';
-    document.getElementById('fnc-modal').classList.add('open');
+    document.getElementById('fnc-modal').style.display='flex';
 }
 
 function closeFNCModal() {
-    document.getElementById('fnc-modal').classList.remove('open');
+    document.getElementById('fnc-modal').style.display='none';
 }
 
 function checkKPI(input, objectif, code, libelle) {
@@ -356,7 +413,7 @@ function showToast(msg, ok) {
 
 </script>
 <!-- Modal FNC KPI hors objectif -->
-<div class="modal-overlay" id="fnc-modal">
+<div class="modal-overlay" id="fnc-modal" style="display:none">
   <div class="modal-box">
     <div class="modal-hd">
       <span class="modal-title">🚨 Créer une FNC — Indicateur hors objectif</span>
