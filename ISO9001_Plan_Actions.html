@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ISO 9001 — Plan d'actions</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;--steel:#4A6880;--steel-dk:#2E4558;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;--charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;--indigo:#4F46E5;--indigo-lt:#EEF2FF;--amber:#D97706;--amber-lt:#FEF3C7;--red:#DC2626;--red-lt:#FEE2E2;--radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10)}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:18px 28px;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#a5b4fc;margin-bottom:4px}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:11px 16px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block;transition:all .15s}
+.nav-btn:hover{color:#fff}
+.nav-btn.active{color:#fff!important;border-bottom-color:var(--green)!important}
+.wrapper{max-width:1300px;margin:0 auto;padding:20px 24px 60px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
+.card-hd{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-title{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk);flex:1}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.kpi-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px;text-align:center;border-left:4px solid var(--border)}
+.kpi-val{font-family:'Exo 2',sans-serif;font-size:24px;font-weight:800;line-height:1.1}
+.kpi-lbl{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:3px}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;background:var(--slate);border-bottom:1px solid var(--border)}
+.fld-sel,.fld-inp{height:32px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;background:var(--white)}
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table thead th{background:var(--steel-dk);color:#fff;padding:9px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.data-table tbody tr{border-bottom:1px solid var(--border)}
+.data-table tbody tr:hover{background:var(--slate)}
+.data-table tbody td{padding:9px 12px;vertical-align:middle}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;white-space:nowrap}
+.badge-ok{background:var(--green-lt);color:var(--green-dk)}
+.badge-cours{background:var(--indigo-lt);color:var(--indigo)}
+.badge-todo{background:var(--steel-xlt);color:var(--muted)}
+.badge-retard{background:var(--red-lt);color:var(--red)}
+.badge-origine{background:var(--amber-lt);color:var(--amber)}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="ph-tag">ISO 9001 — Plan d'actions</div>
+  <div class="ph-title">📋 Plan d'actions — Revues de processus</div>
+</div>
+<div class="nav-bar">
+  <a class="nav-btn" href="Accueil_SSE.html">🏠 Site SSE</a>
+  <a class="nav-btn" href="ISO9001_Cartographie.html">🗺️ Accueil ISO 9001</a>
+  <a class="nav-btn" href="ISO9001_Parties_Prenantes.html">👥 Parties prenantes</a>
+  <a class="nav-btn" href="ISO9001_Risques_Opportunites.html">⚡ Risques &amp; Opps</a>
+  <a class="nav-btn" href="ISO9001_KPI_Dashboard.html">📊 KPI Dashboard</a>
+  <a class="nav-btn active" href="ISO9001_Plan_Actions.html">📋 Plan d'actions</a>
+</div>
+<div class="wrapper">
+  <div class="kpi-row" id="kpi-row"></div>
+  <div class="card">
+    <div class="card-hd">
+      <span style="font-size:18px">📋</span>
+      <span class="card-title">Actions issues des revues de processus</span>
+      <button style="background:var(--indigo);color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer" onclick="location.href='Plan_Actions_SSE.html'">Voir le plan d'actions global →</button>
+    </div>
+    <div class="filter-bar">
+      <select class="fld-sel" id="f-proc" onchange="render()"><option value="">Tous les processus</option></select>
+      <select class="fld-sel" id="f-orig" onchange="render()">
+        <option value="">Toutes origines</option>
+        <option value="Revue de processus">Revue de processus</option>
+        <option value="Risque identifié">Risque identifié</option>
+        <option value="Opportunité identifiée">Opportunité identifiée</option>
+        <option value="Audit interne">Audit interne</option>
+        <option value="Non-conformité">Non-conformité</option>
+        <option value="Partie prenante">Partie prenante</option>
+      </select>
+      <select class="fld-sel" id="f-statut" onchange="render()">
+        <option value="">Tous statuts</option>
+        <option value="A faire">À faire</option>
+        <option value="En cours">En cours</option>
+        <option value="Clôturée">Clôturée</option>
+      </select>
+      <input class="fld-inp" id="f-search" placeholder="Rechercher..." oninput="render()" style="min-width:180px">
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>Processus</th><th style="width:120px">Origine</th><th>Action</th><th style="width:100px">Responsable</th><th style="width:80px">Date</th><th style="width:80px">Statut</th></tr></thead>
+        <tbody id="actions-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="iso9001_data.js"></script>
+<script>
+
+const GSHEET_URL = 'https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec';
+
+// Collect all actions
+let allActions = [];
+Object.entries(PROCESSUS_DATA).forEach(([code,p]) => {
+    p.plan_actions.forEach(a => {
+        allActions.push({
+            code,
+            source: a.source,
+            date: a.date,
+            responsable: a.responsable,
+            action: a.action,
+            statut: 'A faire'
+        });
+    });
+});
+
+// Populate process filter
+const procSel = document.getElementById('f-proc');
+Object.keys(PROCESSUS_DATA).forEach(code => {
+    const opt = document.createElement('option');
+    opt.value = code; opt.textContent = PROCESS_ICONS[code]+' '+code;
+    procSel.appendChild(opt);
+});
+
+function getStatutBadge(s) {
+    if (!s||s==='A faire') return '<span class="badge badge-todo">À faire</span>';
+    if (s==='En cours') return '<span class="badge badge-cours">En cours</span>';
+    if (s==='Clôturée') return '<span class="badge badge-ok">Clôturée</span>';
+    return '<span class="badge badge-todo">'+s+'</span>';
+}
+
+function render() {
+    const fp = document.getElementById('f-proc').value;
+    const fo = document.getElementById('f-orig').value;
+    const fs2 = document.getElementById('f-statut').value;
+    const fs = document.getElementById('f-search').value.toLowerCase();
+    let rows = allActions.filter(a => {
+        if (fp && a.code !== fp) return false;
+        if (fo && !a.source.includes(fo)) return false;
+        if (fs2 && a.statut !== fs2) return false;
+        if (fs && !(a.action.toLowerCase().includes(fs)||a.responsable.toLowerCase().includes(fs))) return false;
+        return true;
+    });
+    // KPIs
+    document.getElementById('kpi-row').innerHTML = `
+        <div class="kpi-card" style="border-left-color:var(--indigo)"><div class="kpi-val" style="color:var(--indigo)">${allActions.length}</div><div class="kpi-lbl">Actions total</div></div>
+        <div class="kpi-card" style="border-left-color:var(--amber)"><div class="kpi-val" style="color:var(--amber)">${allActions.filter(a=>a.statut==='En cours').length}</div><div class="kpi-lbl">En cours</div></div>
+        <div class="kpi-card" style="border-left-color:var(--green)"><div class="kpi-val" style="color:var(--green-dk)">${allActions.filter(a=>a.statut==='Clôturée').length}</div><div class="kpi-lbl">Clôturées</div></div>
+        <div class="kpi-card" style="border-left-color:var(--steel)"><div class="kpi-val" style="color:var(--steel)">${allActions.filter(a=>!a.statut||a.statut==='A faire').length}</div><div class="kpi-lbl">À faire</div></div>
+    `;
+    const tbody = document.getElementById('actions-tbody');
+    if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted)">Aucune action</td></tr>';
+        return;
+    }
+    tbody.innerHTML = rows.map(a => `
+        <tr>
+            <td><a href="ISO9001_Processus.html?p=${a.code}" style="color:var(--indigo);font-weight:700;text-decoration:none">${PROCESS_ICONS[a.code]} ${a.code}</a></td>
+            <td><span class="badge badge-origine">${a.source||'Revue de processus'}</span></td>
+            <td style="font-size:12px">${a.action}</td>
+            <td style="color:var(--muted)">${a.responsable||'—'}</td>
+            <td style="color:var(--muted);font-size:11px">${a.date||'—'}</td>
+            <td>${getStatutBadge(a.statut)}</td>
+        </tr>`).join('');
+}
+render();
+</script></body></html>
