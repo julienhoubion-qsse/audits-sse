@@ -23,7 +23,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 .proc-hd-link{font-size:12px;color:var(--green-lt);text-decoration:none}
 .proc-body{background:var(--white);border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow)}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px;background:var(--border)}
-.kpi-cell{background:var(--white);padding:14px 16px}
+.kpi-cell{background:var(--white);padding:14px 16px;position:relative}
 .kpi-lib{font-size:12px;font-weight:600;color:var(--charcoal);margin-bottom:6px}
 .kpi-obj{font-size:11px;color:var(--muted)}
 .kpi-freq{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--indigo-lt);color:var(--indigo);margin-top:4px}
@@ -77,28 +77,48 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 </div>
 <script src="iso9001_data.js"></script>
 <script>
+function initDashboard() {
+    if (typeof PROCESSUS_DATA === 'undefined') {
+        setTimeout(initDashboard, 100);
+        return;
+    }
+
 function editKPIInline(code, idx, libelle, objectif, frequence) {
-    var newLib = prompt('Libelle du KPI:', libelle);
-    if (newLib === null) return;
-    var newObj = prompt('Objectif 2025:', objectif);
-    if (newObj === null) return;
-    var newFreq = prompt('Frequence (Mensuelle/Trimestrielle/Semestrielle/Annuelle):', frequence);
-    if (newFreq === null) return;
+    // Use modal instead of prompt (prompt blocked on some browsers)
+    document.getElementById('kpi-edit-code').value = code;
+    document.getElementById('kpi-edit-idx').value = idx;
+    document.getElementById('kpi-edit-lib').value = libelle;
+    document.getElementById('kpi-edit-obj').value = objectif;
+    document.getElementById('kpi-edit-freq').value = frequence;
+    document.getElementById('kpi-edit-modal').style.display = 'flex';
+}
+
+function saveKPIEdit() {
+    var code = document.getElementById('kpi-edit-code').value;
+    var idx = parseInt(document.getElementById('kpi-edit-idx').value);
+    var newLib = document.getElementById('kpi-edit-lib').value.trim();
+    var newObj = document.getElementById('kpi-edit-obj').value.trim();
+    var newFreq = document.getElementById('kpi-edit-freq').value;
+    if (!newLib) { alert('Le libelle est obligatoire'); return; }
+    // Update local data
     if (PROCESSUS_DATA[code] && PROCESSUS_DATA[code].indicateurs[idx]) {
         PROCESSUS_DATA[code].indicateurs[idx].libelle = newLib;
         PROCESSUS_DATA[code].indicateurs[idx].objectif = newObj;
         PROCESSUS_DATA[code].indicateurs[idx].frequence = newFreq;
     }
+    // Update display on dashboard
     var libEl = document.getElementById('klib-'+code+'-'+idx);
     var objEl = document.getElementById('kobj-'+code+'-'+idx);
     var freqEl = document.getElementById('kfreq-'+code+'-'+idx);
     if (libEl) libEl.textContent = newLib;
     if (objEl) objEl.textContent = 'Objectif : ' + (newObj||'A definir');
     if (freqEl) freqEl.textContent = newFreq||'—';
+    // Save to GSheets
     fetch('https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec', {method:'POST', body:JSON.stringify({
         action:'saveISO9001KPI', processus:code,
         data:{libelle:newLib, objectif:newObj, frequence:newFreq, idx:idx}
     })}).catch(function(e){});
+    document.getElementById('kpi-edit-modal').style.display = 'none';
     showToast('KPI mis a jour', true);
 }
 
@@ -244,55 +264,71 @@ Object.entries(PROCESSUS_DATA).forEach(([code, p]) => {
         <div class="proc-body">`;
 
     if (!p.indicateurs.length) {
-        html += `<div class="no-kpi">⚠️ Aucun indicateur défini pour ce processus — <a href="ISO9001_Processus.html?p=${code}" style="color:var(--indigo)">Ajouter des KPI</a></div>`;
+        html += '<div class="no-kpi">Aucun indicateur defini — <a href="ISO9001_Processus.html?p='+code+'&tab=kpi" style="color:var(--indigo)">Ajouter des KPI</a></div>';
     } else {
         html += '<div class="kpi-row">';
-        p.indicateurs.forEach((ind,i) => {
+        p.indicateurs.forEach(function(ind,i) {
             var codeEsc = code.replace(/"/g,'&quot;');
-            var libEsc = ind.libelle.replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+            var libEsc = (ind.libelle||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
             var objEsc = (ind.objectif||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
             var freqEsc = (ind.frequence||'').replace(/"/g,'&quot;');
             html += '<div class="kpi-cell" id="kcell-'+code+'-'+i+'">';
+            html += '<div style="display:flex;align-items:center;justify-content:space-between">';
             html += '<div class="kpi-lib" id="klib-'+code+'-'+i+'">'+ind.libelle+'</div>';
-            html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">';
-            html += '<div class="kpi-obj" id="kobj-'+code+'-'+i+'">Objectif : '+(ind.objectif||'A definir')+'</div>';
-            html += '<button style="background:none;border:none;font-size:11px;color:var(--steel);cursor:pointer;padding:0 4px" data-code="'+codeEsc+'" data-idx="'+i+'" data-lib="'+libEsc+'" data-obj="'+objEsc+'" data-freq="'+freqEsc+'" onclick="editKPIInline(this.dataset.code,this.dataset.idx,this.dataset.lib,this.dataset.obj,this.dataset.freq)">✏️</button>';
+            html += '<button style="background:#EAF1F6;border:1px solid #C8D8E4;border-radius:5px;font-size:12px;cursor:pointer;color:#2E4558;padding:2px 6px;font-weight:600" title="Modifier ce KPI"';
+            html += ' data-code="'+codeEsc+'" data-idx="'+i+'" data-lib="'+libEsc+'" data-obj="'+objEsc+'" data-freq="'+freqEsc+'"';
+            html += ' onclick="editKPIInline(this.dataset.code,this.dataset.idx,this.dataset.lib,this.dataset.obj,this.dataset.freq)">✏️</button>';
             html += '</div>';
+            html += '<div class="kpi-obj" id="kobj-'+code+'-'+i+'">Objectif : '+(ind.objectif||'A definir')+'</div>';
             html += '<span class="kpi-freq" id="kfreq-'+code+'-'+i+'">'+(ind.frequence||'—')+'</span>';
             html += '<div class="kpi-val-zone" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">';
             html += '<input class="kpi-val-inp" placeholder="Valeur actuelle..." id="kval-'+code+'-'+i+'" style="width:100%;height:30px;border:1px solid var(--border);border-radius:6px;padding:0 8px;font-size:12px">';
-            html += '<button class="kpi-fnc-btn" data-code="'+codeEsc+'" data-lib="'+libEsc+'" data-obj="'+objEsc+'" onclick="openFNCModal(this.dataset.code,this.dataset.lib,this.dataset.obj)">🚨 Créer une FNC (hors objectif)</button>';
+            html += '<button class="kpi-fnc-btn" data-code="'+codeEsc+'" data-lib="'+libEsc+'" data-obj="'+objEsc+'" onclick="openFNCModal(this.dataset.code,this.dataset.lib,this.dataset.obj)">🚨 Creer une FNC</button>';
             html += '</div></div>';
         });
         html += '</div>';
     }
-    html += `<div style="padding:10px 14px"><button class="add-kpi-btn" onclick="location.href='ISO9001_Processus.html?p=${code}'">➕ Ajouter un KPI pour ce processus</button></div>`;
+    html += '<div style="padding:10px 14px"><button class="add-kpi-btn" onclick="location.href='ISO9001_Processus.html?p='+code+'&tab=kpi'">➕ Ajouter un KPI pour ce processus</button></div>';
     html += '</div></div>';
 });
 document.getElementById('kpi-sections').innerHTML = html;
 
 function editKPIInline(code, idx, libelle, objectif, frequence) {
-    var newLib = prompt('Libelle du KPI:', libelle);
-    if (newLib === null) return;
-    var newObj = prompt('Objectif 2025:', objectif);
-    if (newObj === null) return;
-    var newFreq = prompt('Frequence (Mensuelle/Trimestrielle/Semestrielle/Annuelle):', frequence);
-    if (newFreq === null) return;
+    // Use modal instead of prompt (prompt blocked on some browsers)
+    document.getElementById('kpi-edit-code').value = code;
+    document.getElementById('kpi-edit-idx').value = idx;
+    document.getElementById('kpi-edit-lib').value = libelle;
+    document.getElementById('kpi-edit-obj').value = objectif;
+    document.getElementById('kpi-edit-freq').value = frequence;
+    document.getElementById('kpi-edit-modal').style.display = 'flex';
+}
+
+function saveKPIEdit() {
+    var code = document.getElementById('kpi-edit-code').value;
+    var idx = parseInt(document.getElementById('kpi-edit-idx').value);
+    var newLib = document.getElementById('kpi-edit-lib').value.trim();
+    var newObj = document.getElementById('kpi-edit-obj').value.trim();
+    var newFreq = document.getElementById('kpi-edit-freq').value;
+    if (!newLib) { alert('Le libelle est obligatoire'); return; }
+    // Update local data
     if (PROCESSUS_DATA[code] && PROCESSUS_DATA[code].indicateurs[idx]) {
         PROCESSUS_DATA[code].indicateurs[idx].libelle = newLib;
         PROCESSUS_DATA[code].indicateurs[idx].objectif = newObj;
         PROCESSUS_DATA[code].indicateurs[idx].frequence = newFreq;
     }
+    // Update display on dashboard
     var libEl = document.getElementById('klib-'+code+'-'+idx);
     var objEl = document.getElementById('kobj-'+code+'-'+idx);
     var freqEl = document.getElementById('kfreq-'+code+'-'+idx);
     if (libEl) libEl.textContent = newLib;
     if (objEl) objEl.textContent = 'Objectif : ' + (newObj||'A definir');
     if (freqEl) freqEl.textContent = newFreq||'—';
+    // Save to GSheets
     fetch('https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec', {method:'POST', body:JSON.stringify({
         action:'saveISO9001KPI', processus:code,
         data:{libelle:newLib, objectif:newObj, frequence:newFreq, idx:idx}
     })}).catch(function(e){});
+    document.getElementById('kpi-edit-modal').style.display = 'none';
     showToast('KPI mis a jour', true);
 }
 
@@ -412,6 +448,9 @@ function showToast(msg, ok) {
     setTimeout(function(){ t.classList.remove('show'); }, 3500);
 }
 
+
+}
+document.addEventListener('DOMContentLoaded', initDashboard);
 </script>
 <!-- Modal FNC KPI hors objectif -->
 <div class="modal-overlay" id="fnc-modal" style="display:none">
@@ -476,5 +515,42 @@ function showToast(msg, ok) {
   </div>
 </div>
 <div class="toast" id="toast"></div>
+
+
+<!-- Modal édition KPI -->
+<div id="kpi-edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:480px">
+    <div style="padding:14px 18px;border-bottom:1px solid #D0DDE8;display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:15px;font-weight:700;color:#2E4558">✏️ Modifier le KPI</span>
+      <button onclick="document.getElementById('kpi-edit-modal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:#6B7D8A">✕</button>
+    </div>
+    <div style="padding:16px 18px">
+      <input type="hidden" id="kpi-edit-code">
+      <input type="hidden" id="kpi-edit-idx">
+      <div style="margin-bottom:12px">
+        <label style="font-size:11px;font-weight:700;color:#2E4558;text-transform:uppercase;display:block;margin-bottom:4px">Libellé de l indicateur *</label>
+        <input id="kpi-edit-lib" style="width:100%;height:36px;border:1px solid #D0DDE8;border-radius:7px;padding:0 10px;font-size:13px">
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="font-size:11px;font-weight:700;color:#2E4558;text-transform:uppercase;display:block;margin-bottom:4px">Objectif 2025</label>
+        <input id="kpi-edit-obj" placeholder="Ex: >= 90%, < 5, ..." style="width:100%;height:36px;border:1px solid #D0DDE8;border-radius:7px;padding:0 10px;font-size:13px">
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:700;color:#2E4558;text-transform:uppercase;display:block;margin-bottom:4px">Fréquence de revue</label>
+        <select id="kpi-edit-freq" style="width:100%;height:36px;border:1px solid #D0DDE8;border-radius:7px;padding:0 10px;font-size:13px">
+          <option value="">— Sélectionner —</option>
+          <option value="Mensuelle">Mensuelle</option>
+          <option value="Trimestrielle">Trimestrielle</option>
+          <option value="Semestrielle">Semestrielle</option>
+          <option value="Annuelle">Annuelle</option>
+        </select>
+      </div>
+    </div>
+    <div style="padding:12px 18px;border-top:1px solid #D0DDE8;display:flex;justify-content:flex-end;gap:8px">
+      <button onclick="document.getElementById('kpi-edit-modal').style.display='none'" style="height:36px;padding:0 16px;border:1px solid #D0DDE8;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;background:#EAF1F6;color:#2E4558">Annuler</button>
+      <button onclick="saveKPIEdit()" style="height:36px;padding:0 16px;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;background:#6BBF1F;color:#fff">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
 
 </body></html>
