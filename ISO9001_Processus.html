@@ -657,7 +657,7 @@ function renderInfos() {
 
     // SIPOC table
     var sipoc = p.sipoc||[];
-    html += '<div style="font-family:'Exo 2',sans-serif;font-size:12px;font-weight:700;color:var(--steel-dk);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Activites du processus — Format SIPOC</div>';
+    html += '<div style="font-family:sans-serif,sans-serif;font-size:12px;font-weight:700;color:var(--steel-dk);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Activites du processus — Format SIPOC</div>';
     if (!sipoc.length) {
         html += '<div style="background:var(--slate);border-radius:8px;padding:16px;color:var(--muted);font-style:italic;text-align:center">Aucune activite definie</div>';
     } else {
@@ -760,7 +760,7 @@ renderInfos(); renderPP(); renderRisques(); renderOpps(); renderKPI(); renderAct
 <div class="modal-overlay" id="modal-new-proc" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px">
   <div class="modal" style="background:#fff;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:600px;max-height:90vh;overflow-y:auto">
     <div style="padding:14px 18px;border-bottom:1px solid #D0DDE8;display:flex;align-items:center;justify-content:space-between;background:#fff;position:sticky;top:0">
-      <span style="font-family:'Exo 2',sans-serif;font-size:15px;font-weight:700;color:#2E4558">➕ Nouveau processus</span>
+      <span style="font-family:sans-serif;font-size:15px;font-weight:700;color:#2E4558">➕ Nouveau processus</span>
       <button style="background:none;border:none;font-size:20px;cursor:pointer;color:#6B7D8A" onclick="closeNewProcess()">✕</button>
     </div>
     <div style="padding:16px 18px">
