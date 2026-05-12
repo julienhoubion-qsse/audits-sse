@@ -1,3 +1,4 @@
+<!-- SSE Plan Actions v48 - 202605121115 -->
 <!-- SSE — Plan d'Actions -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
@@ -377,8 +378,8 @@ function render(){
     html += '<div class="action-body" id="ab-'+a.id+'">';
     html += commentHtml + efficaceHtml;
     html += '<div style="display:flex;gap:8px;flex-wrap:wrap">';
-    html += '<button class="btn btn-blue btn-sm" onclick="editAction(''+a.id+'')">✏️ Modifier</button>';
-    html += '<button class="btn btn-danger btn-sm" onclick="deleteAction(''+a.id+'')">🗑️ Supprimer</button>';
+    html += '<button class="btn btn-blue btn-sm" data-id="'+a.id+'" onclick="editAction(this.dataset.id)">✏️ Modifier</button>';
+    html += '<button class="btn btn-danger btn-sm" data-id="'+a.id+'" onclick="deleteAction(this.dataset.id)">🗑️ Supprimer</button>';
     html += '</div></div></div>';
   });
   el.innerHTML = html;
