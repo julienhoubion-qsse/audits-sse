@@ -136,6 +136,55 @@ document.getElementById('kpi-row').innerHTML = `
     const codes = Object.keys(PROCESS_TYPES).filter(c => PROCESS_TYPES[c].toLowerCase() === type);
     document.getElementById('grid-'+type).innerHTML = codes.map(buildCard).join('');
 });
+
+function createProcessFromCarto() {
+    var code = document.getElementById('carto-np-code').value.trim().toUpperCase();
+    var nom = document.getElementById('carto-np-nom').value.trim();
+    var type = document.getElementById('carto-np-type').value;
+    var pilote = document.getElementById('carto-np-pilote').value.trim();
+    var finalite = document.getElementById('carto-np-finalite').value.trim();
+    if (!code||!nom) { alert('Code et nom obligatoires'); return; }
+    if (PROCESSUS_DATA[code]) { alert('Ce code existe deja'); return; }
+    PROCESSUS_DATA[code] = {code:code,nom:nom,pilote:pilote,copilote:'',finalite:finalite,activites:[],ressources_humaines:'',ressources_materielles:'',indicateurs:[],parties_prenantes:[],menaces:[],opportunites:[],plan_actions:[]};
+    PROCESS_TYPES[code] = type;
+    PROCESS_NAMES[code] = nom;
+    PROCESS_ICONS[code] = '📋';
+    document.getElementById('modal-new-proc-carto').style.display='none';
+    location.href = 'ISO9001_Processus.html?p='+code;
+}
+
 </script>
+
+<div id="modal-new-proc-carto" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:560px">
+    <div style="padding:14px 18px;border-bottom:1px solid #D0DDE8;display:flex;align-items:center;justify-content:space-between">
+      <span style="font-family:'Exo 2',sans-serif;font-size:15px;font-weight:700;color:#2E4558">➕ Nouveau processus</span>
+      <button onclick="document.getElementById('modal-new-proc-carto').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:#6B7D8A">✕</button>
+    </div>
+    <div style="padding:16px 18px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+        <div><label style="font-size:11px;font-weight:700;color:#2E4558;text-transform:uppercase;display:block;margin-bottom:4px">Code *</label>
+          <input id="carto-np-code" maxlength="5" placeholder="Ex: COM" style="height:36px;border:1px solid #D0DDE8;border-radius:7px;padding:0 10px;font-size:13px;width:100%;text-transform:uppercase"></div>
+        <div><label style="font-size:11px;font-weight:700;color:#2E4558;text-transform:uppercase;display:block;margin-bottom:4px">Type *</label>
+          <select id="carto-np-type" style="height:36px;border:1px solid #D0DDE8;border-radius:7px;padding:0 10px;font-size:13px;width:100%">
+            <option value="pilotage">Pilotage</option>
+            <option value="operationnel">Operationnel</option>
+            <option value="support">Support</option>
+          </select></div>
+      </div>
+      <div style="margin-bottom:12px"><label style="font-size:11px;font-weight:700;color:#2E4558;text-transform:uppercase;display:block;margin-bottom:4px">Nom du processus *</label>
+        <input id="carto-np-nom" placeholder="Ex: Communication externe" style="height:36px;border:1px solid #D0DDE8;border-radius:7px;padding:0 10px;font-size:13px;width:100%"></div>
+      <div style="margin-bottom:12px"><label style="font-size:11px;font-weight:700;color:#2E4558;text-transform:uppercase;display:block;margin-bottom:4px">Pilote</label>
+        <input id="carto-np-pilote" placeholder="Nom Prenom" style="height:36px;border:1px solid #D0DDE8;border-radius:7px;padding:0 10px;font-size:13px;width:100%"></div>
+      <div><label style="font-size:11px;font-weight:700;color:#2E4558;text-transform:uppercase;display:block;margin-bottom:4px">Finalite</label>
+        <textarea id="carto-np-finalite" placeholder="Decrire la finalite du processus..." style="border:1px solid #D0DDE8;border-radius:7px;padding:8px 10px;font-size:12px;resize:vertical;min-height:60px;width:100%"></textarea></div>
+    </div>
+    <div style="padding:12px 18px;border-top:1px solid #D0DDE8;display:flex;justify-content:flex-end;gap:8px">
+      <button onclick="document.getElementById('modal-new-proc-carto').style.display='none'" style="height:36px;padding:0 16px;border:1px solid #D0DDE8;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;background:#EAF1F6;color:#2E4558">Annuler</button>
+      <button onclick="createProcessFromCarto()" style="height:36px;padding:0 16px;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;background:#4F46E5;color:#fff">💾 Creer et ouvrir la fiche</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

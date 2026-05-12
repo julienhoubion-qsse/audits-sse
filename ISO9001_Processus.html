@@ -100,7 +100,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 </div>
 <div class="wrapper">
   <!-- Sélecteur processus -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div class="process-nav" id="proc-nav" style="flex:1"></div><button class="btn btn-primary" onclick="openNewProcess()" style="flex-shrink:0;margin-left:12px">➕ Nouveau processus</button></div>
+  <div class="process-nav" id="proc-nav"></div>
   <!-- Tabs -->
   <div class="tab-bar">
     <button class="tab-btn active" onclick="showTab('infos')">📋 Informations générales</button>
@@ -639,6 +639,95 @@ function showToast(msg,ok) {
     t.textContent=msg; t.style.background=ok?'var(--green-dk)':'var(--steel-dk)';
     t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000);
 }
+
+function fiche_item(label, val) {
+    return '<div style="background:var(--slate);border-radius:7px;padding:9px 11px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:2px">'+label+'</div><div style="font-size:13px;font-weight:600;color:var(--charcoal)">'+val+'</div></div>';
+}
+
+function renderInfos() {
+    var p = PROCESSUS_DATA[currentCode];
+    if (!p) return;
+    var typeLabel = PROCESS_TYPES[currentCode]==='pilotage'?'Pilotage':PROCESS_TYPES[currentCode]==='operationnel'?'Operationnel':'Support';
+    var activites = p.activites||[];
+    var actHtml = activites.length ? activites.map(function(a){ return '<li style="margin-bottom:6px;font-size:12px">'+a+'</li>'; }).join('') : '<li style="color:var(--muted);font-style:italic">Aucune activite definie</li>';
+    var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">';
+    html += fiche_item('Code processus', currentCode);
+    html += fiche_item('Type', typeLabel);
+    html += fiche_item('Pilote', p.pilote||'A definir');
+    html += fiche_item('Co-pilote', p.copilote||'A definir');
+    html += '</div>';
+    html += '<div style="background:var(--green-xlt);border-left:4px solid var(--green);border-radius:8px;padding:14px;margin-bottom:14px">';
+    html += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--green-dk);margin-bottom:6px">Finalite du processus</div>';
+    html += '<div style="font-size:13px;color:var(--charcoal)">'+(p.finalite||'<span style="color:var(--muted);font-style:italic">Non definie</span>')+'</div></div>';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">';
+    html += '<div style="background:var(--slate);border-radius:8px;padding:14px">';
+    html += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Activites principales</div>';
+    html += '<ul style="padding-left:18px">'+actHtml+'</ul></div>';
+    html += '<div style="background:var(--slate);border-radius:8px;padding:14px">';
+    html += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Ressources</div>';
+    html += '<div style="font-size:11px;font-weight:600;color:var(--steel-dk);margin-bottom:3px">Humaines</div>';
+    html += '<div style="font-size:12px;margin-bottom:10px">'+(p.ressources_humaines||'<span style="color:var(--muted)">Non renseignees</span>')+'</div>';
+    html += '<div style="font-size:11px;font-weight:600;color:var(--steel-dk);margin-bottom:3px">Materielles / Logicielles</div>';
+    html += '<div style="font-size:12px">'+(p.ressources_materielles||'<span style="color:var(--muted)">Non renseignees</span>')+'</div>';
+    html += '</div></div>';
+    var el = document.getElementById('infos-body');
+    if (el) el.innerHTML = html;
+}
+
+function openEditInfos() {
+    var p = PROCESSUS_DATA[currentCode];
+    document.getElementById('inf-nom').value = p.nom||'';
+    document.getElementById('inf-pilote').value = p.pilote||'';
+    document.getElementById('inf-copilote').value = p.copilote||'';
+    document.getElementById('inf-type').value = PROCESS_TYPES[currentCode]||'support';
+    document.getElementById('inf-finalite').value = p.finalite||'';
+    document.getElementById('inf-activites').value = (p.activites||[]).join('\n');
+    document.getElementById('inf-rh').value = p.ressources_humaines||'';
+    document.getElementById('inf-mat').value = p.ressources_materielles||'';
+    document.getElementById('form-infos').style.display='block';
+}
+
+async function saveInfos() {
+    var p = PROCESSUS_DATA[currentCode];
+    p.nom = document.getElementById('inf-nom').value.trim();
+    p.pilote = document.getElementById('inf-pilote').value.trim();
+    p.copilote = document.getElementById('inf-copilote').value.trim();
+    p.finalite = document.getElementById('inf-finalite').value.trim();
+    p.activites = document.getElementById('inf-activites').value.split('\n').filter(function(l){return l.trim();});
+    p.ressources_humaines = document.getElementById('inf-rh').value.trim();
+    p.ressources_materielles = document.getElementById('inf-mat').value.trim();
+    PROCESS_TYPES[currentCode] = document.getElementById('inf-type').value;
+    try { await fetch('https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec',{method:'POST',body:JSON.stringify({action:'saveISO9001Infos',processus:currentCode,data:p})}); } catch(e){}
+    updateHeader();
+    renderInfos();
+    document.getElementById('form-infos').style.display='none';
+    showToast('Informations mises a jour',true);
+}
+
+function openNewProcess() {
+    document.getElementById('modal-new-proc').style.display='flex';
+}
+function closeNewProcess() {
+    document.getElementById('modal-new-proc').style.display='none';
+}
+async function saveNewProcess() {
+    var code = document.getElementById('np-code').value.trim().toUpperCase();
+    var nom = document.getElementById('np-nom').value.trim();
+    var pilote = document.getElementById('np-pilote').value.trim();
+    var type = document.getElementById('np-type').value;
+    var finalite = document.getElementById('np-finalite').value.trim();
+    if (!code||!nom) { showToast('Code et nom obligatoires',false); return; }
+    if (PROCESSUS_DATA[code]) { showToast('Ce code existe deja',false); return; }
+    PROCESSUS_DATA[code] = {code:code,nom:nom,pilote:pilote,copilote:'',finalite:finalite,activites:[],ressources_humaines:'',ressources_materielles:'',indicateurs:[],parties_prenantes:[],menaces:[],opportunites:[],plan_actions:[]};
+    PROCESS_TYPES[code] = type;
+    PROCESS_NAMES[code] = nom;
+    PROCESS_ICONS[code] = '📋';
+    try { await fetch('https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec',{method:'POST',body:JSON.stringify({action:'saveISO9001Processus',code:code,data:PROCESSUS_DATA[code]})}); } catch(e){}
+    closeNewProcess();
+    showToast('Processus '+code+' cree',true);
+    setTimeout(function(){ location.href='?p='+code; },1200);
+}
+
 
 // Init
 renderInfos(); renderPP(); renderRisques(); renderOpps(); renderKPI(); renderActions();
