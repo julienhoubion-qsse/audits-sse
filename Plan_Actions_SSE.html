@@ -352,35 +352,40 @@ function render(){
     return;
   }
 
-  el.innerHTML=lib.map(function(a){
+  var html = '';
+  lib.forEach(function(a){
     var st=getStatut(a);
     var delaiStr=a.delai?new Date(a.delai).toLocaleDateString('fr-FR'):'—';
     var retard=a.delai&&a.avancement<100&&new Date(a.delai)<new Date()?'<span style="color:var(--bad-tc);font-size:10px;font-weight:700"> ⚠️ En retard</span>':'';
     var originLabel=a.origin||'—';
-    return'<div class="action-card '+st+'" id="ac-'+a.id+'">'
-      +'<div class="action-hd" onclick="togAction(\''+a.id+'\')">'
-      +'<div style="flex:1">'
-      +'<div class="action-origin">'+originLabel+'</div>'
-      +'<div class="action-desc">'+(a.description||'—')+'</div>'
-      +'<div class="action-meta">'+statutLabel(st)
-      +'<span class="action-badge" style="background:var(--steel-xlt);color:var(--steel-dk)">👤 '+(a.responsable||'—')+'</span>'
-      +'<span class="action-badge" style="background:var(--steel-xlt);color:var(--steel-dk)">📅 '+delaiStr+retard+'</span>'
-      +'</div></div>'
-      +'<div class="action-progress"><div class="progress-bar"><div class="progress-fill" style="width:'+a.avancement+'%"></div></div>'
-      +'<span style="font-size:13px;font-weight:700;color:var(--steel-dk);min-width:32px;text-align:right">'+a.avancement+'%</span>'
-      +'</div></div>'
-      +'<div class="action-body" id="ab-'+a.id+'">'
-      +(a.commentaire?'<div style="font-size:12px;margin-bottom:8px;padding:8px;background:var(--slate);border-radius:6px">💬 '+a.commentaire+'</div>':'')
-      +(a.efficace==='oui'?'<div style="padding:6px 10px;background:var(--ok-bg);color:var(--ok-tc);border-radius:6px;font-size:12px;font-weight:600;margin-bottom:8px">✅ Action jugée efficace</div>':'')
-      +(a.efficace==='non'?'<div style="padding:6px 10px;background:var(--bad-bg);color:var(--bad-tc);border-radius:6px;font-size:12px;font-weight:600;margin-bottom:8px">❌ Action jugée non efficace</div>':'')
-      +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
-      +'<button class="btn btn-blue btn-sm" onclick="editAction(\''+a.id+'\')">✏️ Modifier</button>'
-      +'<button class="btn btn-danger btn-sm" onclick="deleteAction(\''+a.id+'\')">🗑️ Supprimer</button>'
-      +'</div></div></div>';
-  }).join('');
+    var commentHtml=a.commentaire?'<div style="font-size:12px;margin-bottom:8px;padding:8px;background:var(--slate);border-radius:6px">💬 '+a.commentaire+'</div>':'';
+    var efficaceHtml='';
+    if(a.efficace==='oui')efficaceHtml='<div style="padding:6px 10px;background:var(--ok-bg);color:var(--ok-tc);border-radius:6px;font-size:12px;font-weight:600;margin-bottom:8px">✅ Action jugée efficace</div>';
+    if(a.efficace==='non')efficaceHtml='<div style="padding:6px 10px;background:var(--bad-bg);color:var(--bad-tc);border-radius:6px;font-size:12px;font-weight:600;margin-bottom:8px">❌ Action jugée non efficace</div>';
+    html += '<div class="action-card '+st+'" id="ac-'+a.id+'">';
+    html += '<div class="action-hd" onclick="togAction(this)" data-id="'+a.id+'">';
+    html += '<div style="flex:1">';
+    html += '<div class="action-origin">'+originLabel+'</div>';
+    html += '<div class="action-desc">'+(a.description||'—')+'</div>';
+    html += '<div class="action-meta">'+statutLabel(st);
+    html += '<span class="action-badge" style="background:var(--steel-xlt);color:var(--steel-dk)">👤 '+(a.responsable||'—')+'</span>';
+    html += '<span class="action-badge" style="background:var(--steel-xlt);color:var(--steel-dk)">📅 '+delaiStr+retard+'</span>';
+    html += '</div></div>';
+    html += '<div class="action-progress"><div class="progress-bar"><div class="progress-fill" style="width:'+a.avancement+'%"></div></div>';
+    html += '<span style="font-size:13px;font-weight:700;color:var(--steel-dk);min-width:32px;text-align:right">'+a.avancement+'%</span>';
+    html += '</div></div>';
+    html += '<div class="action-body" id="ab-'+a.id+'">';
+    html += commentHtml + efficaceHtml;
+    html += '<div style="display:flex;gap:8px;flex-wrap:wrap">';
+    html += '<button class="btn btn-blue btn-sm" onclick="editAction(''+a.id+'')">✏️ Modifier</button>';
+    html += '<button class="btn btn-danger btn-sm" onclick="deleteAction(''+a.id+'')">🗑️ Supprimer</button>';
+    html += '</div></div></div>';
+  });
+  el.innerHTML = html;
 }
 
-function togAction(id){
+function togAction(el){
+  var id=el.dataset.id;
   var b=document.getElementById('ab-'+id);
   if(b)b.classList.toggle('open');
 }
