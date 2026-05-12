@@ -75,7 +75,8 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
   <div class="summary-card" id="summary"></div>
   <div id="kpi-sections"></div>
 </div>
-<script src="iso9001_data.js">
+<script src="iso9001_data.js"></script>
+<script>
 function editKPIInline(code, idx, libelle, objectif, frequence) {
     var newLib = prompt('Libelle du KPI:', libelle);
     if (newLib === null) return;
@@ -255,7 +256,7 @@ Object.entries(PROCESSUS_DATA).forEach(([code, p]) => {
             html += '<div class="kpi-lib" id="klib-'+code+'-'+i+'">'+ind.libelle+'</div>';
             html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">';
             html += '<div class="kpi-obj" id="kobj-'+code+'-'+i+'">Objectif : '+(ind.objectif||'A definir')+'</div>';
-            html += '<button style="background:none;border:none;font-size:11px;color:var(--steel);cursor:pointer;padding:0 4px" onclick="editKPIInline(''+code+'','+i+',''+libEsc+'',''+objEsc+'',''+freqEsc+'')" title="Modifier">✏️</button>';
+            html += '<button style="background:none;border:none;font-size:11px;color:var(--steel);cursor:pointer;padding:0 4px" data-code="'+codeEsc+'" data-idx="'+i+'" data-lib="'+libEsc+'" data-obj="'+objEsc+'" data-freq="'+freqEsc+'" onclick="editKPIInline(this.dataset.code,this.dataset.idx,this.dataset.lib,this.dataset.obj,this.dataset.freq)">✏️</button>';
             html += '</div>';
             html += '<span class="kpi-freq" id="kfreq-'+code+'-'+i+'">'+(ind.frequence||'—')+'</span>';
             html += '<div class="kpi-val-zone" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">';
