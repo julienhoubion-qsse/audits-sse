@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<title>Sync ISO9001 → Google Sheets</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:700px;margin:40px auto;padding:20px;background:#F2F6F9}
+h2{color:#2E4558}.log{background:#fff;border:1px solid #D0DDE8;border-radius:8px;padding:16px;margin-top:16px;font-size:12px;max-height:400px;overflow-y:auto}
+.ok{color:#4D8A12}.err{color:#DC2626}.info{color:#4A6880}
+button{background:#6BBF1F;color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px}
+button:disabled{background:#ccc;cursor:not-allowed}
+.progress{margin-top:12px;font-size:13px;color:#2E4558;font-weight:600}
+</style>
+</head><body>
+<h2>🔄 Synchronisation ISO 9001 → Google Sheets</h2>
+<p>Cette page envoie les 17 actions issues des revues de processus vers Google Sheets (onglet Actions).</p>
+<p><strong>À n'exécuter qu'une seule fois.</strong></p>
+<button id="btn" onclick="startSync()">▶️ Lancer la synchronisation</button>
+<div class="progress" id="progress"></div>
+<div class="log" id="log"></div>
+
+<script>
+const GSHEET_URL = "https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+
+const ACTIONS = [{"id": "ISO9001-DIR-2-1778584928193", "auditId": "ISO9001-DIR", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Risques & Opportunités — Direction Stratégie", "description": "Réorganisation AGEC, RECRUTEMENT", "responsable": "Service RH", "delai": "2025", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-DIR-3-1778584928193", "auditId": "ISO9001-DIR", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Opportunités — Direction Stratégie", "description": "Suivi du planning d'acquisition CATANE", "responsable": "A définir", "delai": "", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-DIR-4-1778584928193", "auditId": "ISO9001-DIR", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Opportunités — Direction Stratégie", "description": "Acquérir des CVHU en Europe hors de France", "responsable": "A définir", "delai": "2026-2027", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-DIR-5-1778584928193", "auditId": "ISO9001-DIR", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Opportunités — Direction Stratégie", "description": "Postuler à un éco-organisme en Europe", "responsable": "A définir", "delai": "2026-2027", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-AMP-7-1778584928193", "auditId": "ISO9001-AMP", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Risques & Opportunités — Amélioration continue et performances", "description": "Mettre en place des flashs QSSE mensuels pour sensibiliser/informer le personnel au SMI QSSE", "responsable": "DV", "delai": "2025-03-30 00:00:00", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-AMP-8-1778584928193", "auditId": "ISO9001-AMP", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Risques & Opportunités — Amélioration continue et performances", "description": "Mettre en place un système de récupération des dysfonctionnements et suggestion d'amélioration disponible pour les collaborateurs", "responsable": "SG", "delai": "2025-09-30 00:00:00", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-AMP-9-1778584928193", "auditId": "ISO9001-AMP", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Opportunités — Amélioration continue et performances", "description": "Mettre en place un système de récupération des réclamations de tout nos clients", "responsable": "SG", "delai": "2025-09-30 00:00:00", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-AMP-10-1778584928193", "auditId": "ISO9001-AMP", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Opportunités — Amélioration continue et performances", "description": "Dématérialiser les outils du système QSSE : FNC, Audits, Causerie, plan d'actions", "responsable": "JH", "delai": "2025-12-31 00:00:00", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-DECO-12-1778584928193", "auditId": "ISO9001-DECO", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Risques & Opportunités — Déconstruction", "description": "Mettre en conformité les Sites pour le  traitement des VeH", "responsable": "CB", "delai": "", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-DECO-13-1778584928193", "auditId": "ISO9001-DECO", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Opportunités — Déconstruction", "description": "Démontage pertinent des pièces : application expertise OPISTO mobile", "responsable": "Resp.sites", "delai": "", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-GD-15-1778584928193", "auditId": "ISO9001-GD", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Opportunités — Gestion administrative et physique des véhicules", "description": "Mettre en place un process commun avec les principaux cabinets d'experts en délégation de gestion", "responsable": "A définir", "delai": "", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-SI-20-1778584928193", "auditId": "ISO9001-SI", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Risques & Opportunités — Système d'Information", "description": "Lancer le projet de remplacement de la V2", "responsable": "Vincent VOINOT", "delai": "Voir avec VV", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-SI-21-1778584928193", "auditId": "ISO9001-SI", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Risques & Opportunités — Système d'Information", "description": "Lancer une enquête de besoins SI (matériels, logiciel) auprès des services INDRA", "responsable": "Vincent VOINOT", "delai": "Voir avec VV", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-SI-22-1778584928193", "auditId": "ISO9001-SI", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Opportunités — Système d'Information", "description": "Former le personnel aux outils M365 souhaités: Powerapp, sharepoint, treams, etc.", "responsable": "Vincent VOINOT", "delai": "Voir avec VV", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-SI-23-1778584928193", "auditId": "ISO9001-SI", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Opportunités — Système d'Information", "description": "Trouver un logiciel BI adapté", "responsable": "Vincent VOINOT", "delai": "Voir avec VV", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-SOU-25-1778584928193", "auditId": "ISO9001-SOU", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Opportunités — Sourcing", "description": "Embaucher un KAM afin d'organiser le suivi et le dvpt des contrats existants", "responsable": "Mickaël ARGOUD", "delai": "2025-02-01 00:00:00", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}, {"id": "ISO9001-SOU-26-1778584928193", "auditId": "ISO9001-SOU", "site": "Réseau", "auditDate": "", "sectionKey": "iso9001", "criteriaIdx": 0, "origin": "Revue processus — Opportunités — Sourcing", "description": "Statuer sur une organisation de la prospection adaptée aux contexte prospects/clients", "responsable": "A définir", "delai": "", "avancement": 0, "commentaire": "", "efficace": "", "createdAt": "2025-01-01T00:00:00.000Z", "phase": "", "livrable": "", "dateDebut": ""}];
+
+function log(msg, cls) {
+    const el = document.getElementById('log');
+    const div = document.createElement('div');
+    div.className = cls || 'info';
+    div.textContent = msg;
+    el.appendChild(div);
+    el.scrollTop = el.scrollHeight;
+}
+
+async function sendAction(action) {
+    const resp = await fetch(GSHEET_URL, {
+        method: 'POST',
+        body: JSON.stringify({action: 'saveAction', data: action})
+    });
+    return resp.ok;
+}
+
+async function startSync() {
+    const btn = document.getElementById('btn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Synchronisation en cours...';
+    log('Démarrage de la synchronisation — ' + ACTIONS.length + ' actions', 'info');
+    
+    let ok = 0, err = 0;
+    for (let i = 0; i < ACTIONS.length; i++) {
+        const a = ACTIONS[i];
+        document.getElementById('progress').textContent = `Envoi ${i+1}/${ACTIONS.length} : ${a.description.substring(0,50)}...`;
+        try {
+            const success = await sendAction(a);
+            if (success) {
+                log(`✓ [${i+1}/${ACTIONS.length}] ${a.origin.substring(0,45)} — ${a.description.substring(0,40)}`, 'ok');
+                ok++;
+            } else {
+                log(`✗ Erreur HTTP: ${a.description.substring(0,40)}`, 'err');
+                err++;
+            }
+        } catch(e) {
+            log(`✗ Erreur: ${e.message}`, 'err');
+            err++;
+        }
+        // Small delay to avoid rate limiting
+        await new Promise(r => setTimeout(r, 300));
+    }
+    
+    document.getElementById('progress').textContent = `✅ Terminé — ${ok} envoyées, ${err} erreurs`;
+    btn.textContent = ok === ACTIONS.length ? '✅ Synchronisation terminée !' : `⚠️ ${ok}/${ACTIONS.length} envoyées`;
+    btn.style.background = ok === ACTIONS.length ? '#4D8A12' : '#D97706';
+    log(`\n=== Résumé: ${ok} succès, ${err} erreurs ===`, ok === ACTIONS.length ? 'ok' : 'err');
+}
+</script>
+</body></html>
