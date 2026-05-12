@@ -288,7 +288,7 @@ Object.entries(PROCESSUS_DATA).forEach(([code, p]) => {
         });
         html += '</div>';
     }
-    html += '<div style="padding:10px 14px"><button class="add-kpi-btn" onclick="location.href='ISO9001_Processus.html?p='+code+'&tab=kpi'">➕ Ajouter un KPI pour ce processus</button></div>';
+    html += '<div style="padding:10px 14px"><button class="add-kpi-btn" onclick="location.href=\"ISO9001_Processus.html?p='+code+'&tab=kpi\"">➕ Ajouter un KPI pour ce processus</button></div>';
     html += '</div></div>';
 });
 document.getElementById('kpi-sections').innerHTML = html;
