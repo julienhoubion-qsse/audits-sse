@@ -32,6 +32,26 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
 .no-kpi{padding:16px 18px;color:var(--muted);font-style:italic;font-size:12px}
 .add-kpi-btn{background:none;border:1px dashed var(--border);border-radius:6px;padding:8px 12px;color:var(--muted);font-size:12px;cursor:pointer;width:100%;text-align:center;transition:all .15s}
 .add-kpi-btn:hover{border-color:var(--indigo);color:var(--indigo)}
+.kpi-fnc-btn{background:none;border:1px solid var(--red-lt);border-radius:5px;padding:3px 8px;font-size:10px;font-weight:700;color:var(--red);cursor:pointer;margin-top:6px;width:100%;transition:all .15s}
+.kpi-fnc-btn:hover{background:var(--red-lt)}
+.kpi-hors-obj{border-left:3px solid var(--red)!important;background:var(--red-lt)!important}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:580px;max-height:90vh;overflow-y:auto}
+.modal-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff}
+.modal-title{font-family:sans-serif;font-size:15px;font-weight:700;color:var(--steel-dk)}
+.modal-body{padding:16px 18px}
+.modal-foot{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:#fff}
+.fld{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.fld-lbl{font-size:11px;font-weight:700;color:var(--steel-dk);text-transform:uppercase;letter-spacing:.5px}
+.m-inp,.m-sel{height:36px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:13px;width:100%}
+.m-txt{border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;resize:vertical;min-height:70px;width:100%}
+.btn{height:36px;padding:0 16px;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--red);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
 .summary-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;margin-bottom:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
 .sum-item{text-align:center}
 .sum-val{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:800}
@@ -55,7 +75,123 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
   <div class="summary-card" id="summary"></div>
   <div id="kpi-sections"></div>
 </div>
-<script src="iso9001_data.js"></script>
+<script src="iso9001_data.js">
+var currentFNCCode = '';
+var currentFNCLib = '';
+var currentFNCObj = '';
+
+function openFNCModal(code, libelle, objectif) {
+    currentFNCCode = code;
+    currentFNCLib = libelle;
+    currentFNCObj = objectif;
+    var processNom = PROCESSUS_DATA[code] ? PROCESSUS_DATA[code].nom : code;
+    document.getElementById('fnc-kpi-info').textContent = 'KPI : ' + libelle + ' | Objectif : ' + (objectif||'Non defini') + ' | Processus : ' + processNom;
+    document.getElementById('fnc-processus').value = processNom;
+    document.getElementById('fnc-ref').value = 'FNC-KPI-' + new Date().getFullYear() + '-' + String(Date.now()).slice(-3);
+    document.getElementById('fnc-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('fnc-desc').value = 'Indicateur hors objectif : ' + libelle + ' - Objectif fixe : ' + (objectif||'Non defini');
+    document.getElementById('fnc-causes').value = '';
+    document.getElementById('fnc-action').value = '';
+    document.getElementById('fnc-resp').value = '';
+    document.getElementById('fnc-delai').value = '';
+    document.getElementById('fnc-redacteur').value = '';
+    document.getElementById('fnc-modal').classList.add('open');
+}
+
+function closeFNCModal() {
+    document.getElementById('fnc-modal').classList.remove('open');
+}
+
+function checkKPI(input, objectif, code, libelle) {
+    var cell = document.getElementById('kcell-'+code+'-'+Array.from(document.querySelectorAll('[id^="kval-'+code+'-"]')).indexOf(input));
+    // Visual feedback - just highlight if value entered
+    if (input.value) {
+        input.style.borderColor = '#DC2626';
+        input.style.background = '#FEE2E2';
+    } else {
+        input.style.borderColor = '';
+        input.style.background = '';
+    }
+}
+
+async function saveFNC() {
+    var ref = document.getElementById('fnc-ref').value.trim();
+    var redacteur = document.getElementById('fnc-redacteur').value.trim();
+    var desc = document.getElementById('fnc-desc').value.trim();
+    var causes = document.getElementById('fnc-causes').value.trim();
+    var action = document.getElementById('fnc-action').value.trim();
+    var resp = document.getElementById('fnc-resp').value.trim();
+    var delai = document.getElementById('fnc-delai').value;
+    var dateVal = document.getElementById('fnc-date').value;
+
+    if (!ref || !redacteur || !desc) {
+        showToast('Reference, redacteur et description obligatoires', false);
+        return;
+    }
+
+    var processNom = PROCESSUS_DATA[currentFNCCode] ? PROCESSUS_DATA[currentFNCCode].nom : currentFNCCode;
+    var origine = 'Indicateur hors objectif — ' + currentFNCLib + ' — Processus ' + processNom;
+
+    // Save FNC to Google Sheets
+    var fncData = {
+        id: Date.now(),
+        titre: ref,
+        redacteur: redacteur,
+        type: 'Non-Conformite',
+        site: 'Reseau',
+        date: dateVal,
+        description: desc,
+        statut: 'Ouvert',
+        actionImm: '',
+        actionPar: resp,
+        actionDate: delai,
+        causes: causes,
+        lien: '',
+        actionPlanifier: true,
+        dateCloture: '',
+        createdAt: new Date().toISOString()
+    };
+
+    try {
+        await fetch('https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec', {method:'POST', body:JSON.stringify({action:'saveFNC', data:fncData})});
+    } catch(e) {}
+
+    // If action filled, also save to plan d'actions
+    if (action && resp) {
+        var actionData = {
+            id: Date.now() + 1,
+            auditId: 'FNC-' + ref,
+            site: 'Reseau',
+            auditDate: dateVal,
+            sectionKey: 'kpi',
+            criteriaIdx: 0,
+            origin: origine,
+            description: action,
+            responsable: resp,
+            delai: delai,
+            avancement: 0,
+            commentaire: '',
+            efficace: '',
+            createdAt: new Date().toISOString()
+        };
+        try {
+            await fetch('https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec', {method:'POST', body:JSON.stringify({action:'saveAction', data:actionData})});
+        } catch(e) {}
+    }
+
+    closeFNCModal();
+    showToast('FNC creee' + (action ? ' + action corrective ajoutee au plan actions' : ''), true);
+}
+
+function showToast(msg, ok) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = ok ? 'var(--green-dk)' : 'var(--steel-dk)';
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 3500);
+}
+
+</script>
 <script>
 
 const totalKPI = Object.values(PROCESSUS_DATA).reduce((s,p) => s+p.indicateurs.length, 0);
@@ -85,14 +221,16 @@ Object.entries(PROCESSUS_DATA).forEach(([code, p]) => {
     } else {
         html += '<div class="kpi-row">';
         p.indicateurs.forEach((ind,i) => {
-            html += `<div class="kpi-cell">
-                <div class="kpi-lib">${ind.libelle}</div>
-                <div class="kpi-obj">Objectif : ${ind.objectif||'À définir'}</div>
-                <span class="kpi-freq">${ind.frequence||'—'}</span>
-                <div class="kpi-val-zone">
-                    <input class="kpi-val-inp" placeholder="Valeur actuelle..." id="kval-${code}-${i}">
-                </div>
-            </div>`;
+            html += '<div class="kpi-cell" id="kcell-'+code+'-'+i+'">';
+            html += '<div class="kpi-lib">'+ind.libelle+'</div>';
+            html += '<div class="kpi-obj">Objectif : '+(ind.objectif||'A definir')+'</div>';
+            html += '<span class="kpi-freq">'+(ind.frequence||'—')+'</span>';
+            html += '<div class="kpi-val-zone" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">';
+            html += '<div style="display:flex;gap:6px;align-items:center">';
+            html += '<input class="kpi-val-inp" placeholder="Valeur actuelle..." id="kval-'+code+'-'+i+'" style="flex:1;height:30px;border:1px solid var(--border);border-radius:6px;padding:0 8px;font-size:12px" onchange="checkKPI(this,'+JSON.stringify(ind.objectif||'')+','+JSON.stringify(code)+','+JSON.stringify(ind.libelle)+')">';
+            html += '</div>';
+            html += '<button class="kpi-fnc-btn" onclick="openFNCModal('+JSON.stringify(code)+','+JSON.stringify(ind.libelle)+','+JSON.stringify(ind.objectif||'')+')">🚨 Créer une FNC (hors objectif)</button>';
+            html += '</div></div>';
         });
         html += '</div>';
     }
@@ -100,4 +238,185 @@ Object.entries(PROCESSUS_DATA).forEach(([code, p]) => {
     html += '</div></div>';
 });
 document.getElementById('kpi-sections').innerHTML = html;
-</script></body></html>
+
+var currentFNCCode = '';
+var currentFNCLib = '';
+var currentFNCObj = '';
+
+function openFNCModal(code, libelle, objectif) {
+    currentFNCCode = code;
+    currentFNCLib = libelle;
+    currentFNCObj = objectif;
+    var processNom = PROCESSUS_DATA[code] ? PROCESSUS_DATA[code].nom : code;
+    document.getElementById('fnc-kpi-info').textContent = 'KPI : ' + libelle + ' | Objectif : ' + (objectif||'Non defini') + ' | Processus : ' + processNom;
+    document.getElementById('fnc-processus').value = processNom;
+    document.getElementById('fnc-ref').value = 'FNC-KPI-' + new Date().getFullYear() + '-' + String(Date.now()).slice(-3);
+    document.getElementById('fnc-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('fnc-desc').value = 'Indicateur hors objectif : ' + libelle + ' - Objectif fixe : ' + (objectif||'Non defini');
+    document.getElementById('fnc-causes').value = '';
+    document.getElementById('fnc-action').value = '';
+    document.getElementById('fnc-resp').value = '';
+    document.getElementById('fnc-delai').value = '';
+    document.getElementById('fnc-redacteur').value = '';
+    document.getElementById('fnc-modal').classList.add('open');
+}
+
+function closeFNCModal() {
+    document.getElementById('fnc-modal').classList.remove('open');
+}
+
+function checkKPI(input, objectif, code, libelle) {
+    var cell = document.getElementById('kcell-'+code+'-'+Array.from(document.querySelectorAll('[id^="kval-'+code+'-"]')).indexOf(input));
+    // Visual feedback - just highlight if value entered
+    if (input.value) {
+        input.style.borderColor = '#DC2626';
+        input.style.background = '#FEE2E2';
+    } else {
+        input.style.borderColor = '';
+        input.style.background = '';
+    }
+}
+
+async function saveFNC() {
+    var ref = document.getElementById('fnc-ref').value.trim();
+    var redacteur = document.getElementById('fnc-redacteur').value.trim();
+    var desc = document.getElementById('fnc-desc').value.trim();
+    var causes = document.getElementById('fnc-causes').value.trim();
+    var action = document.getElementById('fnc-action').value.trim();
+    var resp = document.getElementById('fnc-resp').value.trim();
+    var delai = document.getElementById('fnc-delai').value;
+    var dateVal = document.getElementById('fnc-date').value;
+
+    if (!ref || !redacteur || !desc) {
+        showToast('Reference, redacteur et description obligatoires', false);
+        return;
+    }
+
+    var processNom = PROCESSUS_DATA[currentFNCCode] ? PROCESSUS_DATA[currentFNCCode].nom : currentFNCCode;
+    var origine = 'Indicateur hors objectif — ' + currentFNCLib + ' — Processus ' + processNom;
+
+    // Save FNC to Google Sheets
+    var fncData = {
+        id: Date.now(),
+        titre: ref,
+        redacteur: redacteur,
+        type: 'Non-Conformite',
+        site: 'Reseau',
+        date: dateVal,
+        description: desc,
+        statut: 'Ouvert',
+        actionImm: '',
+        actionPar: resp,
+        actionDate: delai,
+        causes: causes,
+        lien: '',
+        actionPlanifier: true,
+        dateCloture: '',
+        createdAt: new Date().toISOString()
+    };
+
+    try {
+        await fetch('https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec', {method:'POST', body:JSON.stringify({action:'saveFNC', data:fncData})});
+    } catch(e) {}
+
+    // If action filled, also save to plan d'actions
+    if (action && resp) {
+        var actionData = {
+            id: Date.now() + 1,
+            auditId: 'FNC-' + ref,
+            site: 'Reseau',
+            auditDate: dateVal,
+            sectionKey: 'kpi',
+            criteriaIdx: 0,
+            origin: origine,
+            description: action,
+            responsable: resp,
+            delai: delai,
+            avancement: 0,
+            commentaire: '',
+            efficace: '',
+            createdAt: new Date().toISOString()
+        };
+        try {
+            await fetch('https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec', {method:'POST', body:JSON.stringify({action:'saveAction', data:actionData})});
+        } catch(e) {}
+    }
+
+    closeFNCModal();
+    showToast('FNC creee' + (action ? ' + action corrective ajoutee au plan actions' : ''), true);
+}
+
+function showToast(msg, ok) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = ok ? 'var(--green-dk)' : 'var(--steel-dk)';
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 3500);
+}
+
+</script>
+<!-- Modal FNC KPI hors objectif -->
+<div class="modal-overlay" id="fnc-modal">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <span class="modal-title">🚨 Créer une FNC — Indicateur hors objectif</span>
+      <button style="background:none;border:none;font-size:20px;cursor:pointer;color:#6B7D8A" onclick="closeFNCModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:#FEE2E2;border:1px solid #fca5a5;border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12px">
+        <strong style="color:#DC2626">📊 KPI hors objectif détecté</strong><br>
+        <span id="fnc-kpi-info" style="color:#7F1D1D"></span>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Processus concerné</label>
+        <input class="m-inp" id="fnc-processus" readonly style="background:#f8fafc">
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Référence FNC *</label>
+        <input class="m-inp" id="fnc-ref" placeholder="Ex: FNC-KPI-2025-001">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fld">
+          <label class="fld-lbl">Rédacteur *</label>
+          <input class="m-inp" id="fnc-redacteur" placeholder="Nom Prenom">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Date de détection</label>
+          <input type="date" class="m-inp" id="fnc-date">
+        </div>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Description du constat *</label>
+        <textarea class="m-txt" id="fnc-desc"></textarea>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Causes identifiées</label>
+        <textarea class="m-txt" id="fnc-causes" placeholder="Quelles sont les causes de cette dérive ?"></textarea>
+      </div>
+      <div style="background:#EEF8D8;border:1px solid #6BBF1F;border-radius:8px;padding:12px 14px;margin-top:4px">
+        <div style="font-size:11px;font-weight:700;color:#4D8A12;margin-bottom:10px">✅ Action corrective associée</div>
+        <div class="fld">
+          <label class="fld-lbl">Description action *</label>
+          <textarea class="m-txt" id="fnc-action" placeholder="Quelle action mettre en oeuvre pour corriger ?"></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="fld">
+            <label class="fld-lbl">Responsable *</label>
+            <input class="m-inp" id="fnc-resp" placeholder="Nom Prenom">
+          </div>
+          <div class="fld">
+            <label class="fld-lbl">Délai</label>
+            <input type="date" class="m-inp" id="fnc-delai">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeFNCModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveFNC()">🚨 Créer la FNC + Action corrective</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+</body></html>
