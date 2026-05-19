@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DUERP — Unité de travail</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;
+  --steel:#4A6880;--steel-dk:#2E4558;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;
+  --charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;
+  --red:#DC2626;--red-lt:#FEE2E2;--orange:#D97706;--orange-lt:#FEF3C7;
+  --indigo:#4F46E5;--indigo-lt:#EEF2FF;--teal:#0891B2;--teal-lt:#CFFAFE;
+  --emerald:#059669;--emerald-lt:#D1FAE5;
+  --radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10);--shadow-md:0 6px 28px rgba(46,69,88,.16)
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:18px 28px;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#a5b4fc;margin-bottom:4px}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:11px 16px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block;transition:all .15s}
+.nav-btn:hover{color:#fff}
+.nav-btn.active{color:#fff!important;border-bottom-color:var(--green)!important}
+.wrapper{max-width:1300px;margin:0 auto;padding:20px 24px 60px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
+.card-hd{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-icon{font-size:18px}
+.card-title{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk);flex:1}
+.card-body{padding:16px 18px}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.kpi-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;text-align:center;border-left:4px solid var(--border)}
+.kpi-val{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:800;line-height:1.1}
+.kpi-lbl{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:3px}
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table thead th{background:var(--steel-dk);color:#fff;padding:9px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.data-table tbody tr{border-bottom:1px solid var(--border)}
+.data-table tbody tr:hover{background:var(--slate)}
+.data-table tbody td{padding:9px 12px;vertical-align:top}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;white-space:nowrap}
+.badge-critique{background:#FEE2E2;color:#DC2626}
+.badge-eleve{background:#FEF3C7;color:#D97706}
+.badge-modere{background:#EEF2FF;color:#4F46E5}
+.badge-faible{background:var(--green-xlt);color:var(--green-dk)}
+.badge-na{background:var(--slate);color:var(--muted)}
+.fld{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.fld-lbl{font-size:11px;font-weight:700;color:var(--steel-dk);text-transform:uppercase;letter-spacing:.5px}
+.fld-inp,.fld-sel{height:36px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:13px;width:100%}
+.fld-inp:focus,.fld-sel:focus{outline:none;border-color:var(--indigo)}
+.fld-txt{border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;resize:vertical;min-height:60px;width:100%}
+.form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.btn{height:36px;padding:0 16px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--indigo);color:#fff}
+.btn-green{background:var(--green);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-sm{height:28px;padding:0 10px;font-size:11px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:700px;max-height:90vh;overflow-y:auto}
+.modal-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff}
+.modal-title{font-family:'Exo 2',sans-serif;font-size:15px;font-weight:700;color:var(--steel-dk)}
+.modal-body{padding:16px 18px}
+.modal-foot{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:#fff}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+/* Risque criticité couleurs */
+.risk-row-critique{background:#fff5f5!important}
+.risk-row-eleve{background:#fffbeb!important}
+.risk-row-modere{background:#f0f4ff!important}
+.progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;border-radius:3px;background:var(--green)}
+
+.risk-row{cursor:pointer}
+.risk-row:hover td{background:var(--slate)}
+.cotation-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.cot-item{background:var(--slate);border-radius:7px;padding:10px;text-align:center}
+.cot-val{font-family:"Exo 2",sans-serif;font-size:20px;font-weight:800}
+.cot-lbl{font-size:10px;color:var(--muted);text-transform:uppercase}
+.famille-badge{font-size:10px;padding:2px 8px;border-radius:10px;background:var(--steel-xlt);color:var(--steel-dk);font-weight:600}
+.tab-bar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;display:flex}
+.tab-btn{background:none;border:none;border-bottom:3px solid transparent;padding:11px 18px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
+.tab-btn.active{color:var(--indigo);border-bottom-color:var(--indigo)}
+.tab-content{display:none}.tab-content.active{display:block}
+.range-inp{width:100%;accent-color:var(--green)}
+.maitrise-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
+.mait-opt{border:2px solid var(--border);border-radius:8px;padding:10px;cursor:pointer;text-align:center;transition:all .15s}
+.mait-opt:hover{border-color:var(--green)}
+.mait-opt.selected{border-color:var(--green);background:var(--green-xlt)}
+.mait-opt .mait-coef{font-family:"Exo 2",sans-serif;font-size:18px;font-weight:800;color:var(--green-dk)}
+.mait-opt .mait-lbl{font-size:11px;color:var(--charcoal)}
+</style></head><body>
+<div class="page-header">
+  <div class="ph-tag">ISO 45001 — DUERP</div>
+  <div class="ph-title">DUERP — Évaluation des risques</div>
+  <div class="ph-sub">Unité de travail · Cotation · Mesures de prévention · Actions</div>
+</div>
+<div class="nav-bar">
+  <a class="nav-btn " href="Accueil_SSE.html">🏠 Site SSE</a>
+  <a class="nav-btn " href="DUERP_Accueil.html">🦺 DUERP Accueil</a>
+  <a class="nav-btn active" href="DUERP_Site.html">📋 Par site</a>
+  <a class="nav-btn " href="DUERP_CMR.html">☣️ Registre CMR</a>
+  <a class="nav-btn " href="Plan_Actions_SSE.html">📋 Plan d'actions</a>
+  </div>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('risques',this)">⚡ Risques</button>
+  <button class="tab-btn" onclick="showTab('fiche',this)">📋 Fiche de poste</button>
+  <button class="tab-btn" onclick="showTab('actions',this)">📋 Actions correctives</button>
+  <button class="tab-btn" onclick="showTab('cmr',this)">☣️ Exposition CMR</button>
+</div>
+<div class="wrapper">
+  <!-- Header unité -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+    <a href="DUERP_Site.html?site=__SITE__" id="back-link" style="color:var(--muted);text-decoration:none;font-size:12px">← Retour site</a>
+    <div id="ut-header" style="flex:1"></div>
+    <div class="kpi-row" id="ut-kpis" style="margin:0;gap:8px"></div>
+  </div>
+
+  <!-- TAB: Risques -->
+  <div class="tab-content active" id="tab-risques">
+    <div class="card">
+      <div class="card-hd">
+        <span class="card-icon">⚡</span>
+        <span class="card-title">Évaluation des risques</span>
+        <button class="btn btn-sm btn-primary" onclick="openAddRisk()">➕ Ajouter un risque</button>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr>
+              <th>Famille de risque</th><th>Situation dangereuse</th>
+              <th style="text-align:center;width:70px">G</th>
+              <th style="text-align:center;width:70px">F</th>
+              <th style="text-align:center;width:80px">Avant MP</th>
+              <th>Mesures existantes</th>
+              <th style="text-align:center;width:70px">M</th>
+              <th style="text-align:center;width:100px">Après MP</th>
+              <th style="width:80px"></th>
+            </tr></thead>
+            <tbody id="risks-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Fiche de poste -->
+  <div class="tab-content" id="tab-fiche">
+    <div class="card" style="margin-top:16px">
+      <div class="card-hd"><span class="card-icon">📋</span><span class="card-title">Fiche de poste</span>
+        <button class="btn btn-sm btn-ghost" onclick="openFichePoste()">✏️ Compléter</button>
+      </div>
+      <div class="card-body" id="fiche-body">
+        <div style="text-align:center;padding:30px;color:var(--muted)">
+          Fiche de poste non encore renseignée.<br>
+          <button class="btn btn-primary" style="margin-top:12px" onclick="openFichePoste()">📋 Créer la fiche de poste</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Actions -->
+  <div class="tab-content" id="tab-actions">
+    <div class="card" style="margin-top:16px">
+      <div class="card-hd"><span class="card-icon">📋</span><span class="card-title">Actions correctives liées à cette unité</span>
+        <button class="btn btn-sm btn-green" onclick="openAddAction()">➕ Nouvelle action</button>
+      </div>
+      <div class="card-body" id="actions-body">
+        <div style="text-align:center;padding:24px;color:var(--muted)">Chargement...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: CMR -->
+  <div class="tab-content" id="tab-cmr">
+    <div class="card" style="margin-top:16px">
+      <div class="card-hd"><span class="card-icon">☣️</span><span class="card-title">Registre d exposition aux agents CMR</span>
+        <button class="btn btn-sm btn-primary" onclick="openAddCMR()">➕ Ajouter une exposition</button>
+      </div>
+      <div class="card-body" id="cmr-body">
+        <div style="text-align:center;padding:24px;color:var(--muted)">Chargement...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal évaluation risque -->
+<div class="modal-overlay" id="modal-risk">
+  <div class="modal-box" style="max-width:800px">
+    <div class="modal-hd">
+      <span class="modal-title" id="modal-risk-title">Évaluation du risque</span>
+      <button onclick="closeRiskModal()" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="r-id">
+      <div class="fld"><label class="fld-lbl">Famille de risque *</label>
+        <select class="fld-sel" id="r-famille">
+          <option value="">— Sélectionner —</option>
+        </select></div>
+      <div class="fld"><label class="fld-lbl">Situation dangereuse *</label>
+        <textarea class="fld-txt" id="r-situation" placeholder="Décrivez la situation dangereuse identifiée..." style="min-height:80px"></textarea></div>
+      
+      <div style="background:var(--steel-xlt);border-radius:8px;padding:14px;margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:var(--steel-dk);margin-bottom:10px">COTATION INITIALE (avant mesures de prévention)</div>
+        <div class="form-row">
+          <div class="fld"><label class="fld-lbl">Gravité (1-4)</label>
+            <select class="fld-sel" id="r-gravite" onchange="calcRisque()">
+              <option value="">—</option>
+              <option value="1">1 — Blessure bénigne</option>
+              <option value="2">2 — AT &lt; 15 jours</option>
+              <option value="3">3 — AT &gt; 15 jours</option>
+              <option value="4">4 — Invalidité / Décès</option>
+            </select></div>
+          <div class="fld"><label class="fld-lbl">Fréquence exposition (1-4)</label>
+            <select class="fld-sel" id="r-frequence" onchange="calcRisque()">
+              <option value="">—</option>
+              <option value="1">1 — Quelques fois/an</option>
+              <option value="2">2 — Quelques fois/mois</option>
+              <option value="3">3 — Quelques fois/semaine</option>
+              <option value="4">4 — Plusieurs fois/jour</option>
+            </select></div>
+          <div class="fld"><label class="fld-lbl">Résultat G×F</label>
+            <div id="r-avant" style="height:36px;background:var(--white);border:1px solid var(--border);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:sans-serif;font-weight:700;font-size:16px">—</div></div>
+        </div>
+      </div>
+
+      <div class="fld"><label class="fld-lbl">Mesures de prévention existantes</label>
+        <textarea class="fld-txt" id="r-mesures" placeholder="Décrire les EPC, EPI, formations, procédures en place..."></textarea></div>
+
+      <div style="background:var(--green-xlt);border-radius:8px;padding:14px;margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:var(--green-dk);margin-bottom:10px">MAÎTRISE DU RISQUE</div>
+        <div class="maitrise-grid" id="maitrise-grid"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+          <span style="font-size:12px;color:var(--muted)">Résultat après mesures = G × F × Maîtrise</span>
+          <div id="r-apres" style="font-family:sans-serif;font-weight:800;font-size:18px;color:var(--steel-dk)">—</div>
+        </div>
+      </div>
+
+      <div style="background:var(--orange-lt);border-radius:8px;padding:14px" id="action-requise" style="display:none">
+        <div style="font-size:12px;font-weight:700;color:var(--orange);margin-bottom:10px">⚠️ Résultat &gt; 8 — Nouvelles mesures requises</div>
+        <div class="fld"><label class="fld-lbl">Nouvelles mesures de prévention</label>
+          <textarea class="fld-txt" id="r-nouvelles-mesures" placeholder="Quelles nouvelles mesures prévoir ?"></textarea></div>
+        <div class="form-row">
+          <div class="fld"><label class="fld-lbl">Responsable</label><input class="fld-inp" id="r-responsable" placeholder="Nom Prénom"></div>
+          <div class="fld"><label class="fld-lbl">Délai</label><input type="date" class="fld-inp" id="r-delai"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeRiskModal()">Annuler</button>
+      <button class="btn btn-green" onclick="saveRisk()">💾 Enregistrer + créer action si nécessaire</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal CMR -->
+<div class="modal-overlay" id="modal-cmr">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <span class="modal-title">☣️ Exposition CMR</span>
+      <button onclick="document.getElementById('modal-cmr').classList.remove('open')" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="fld"><label class="fld-lbl">Nom du salarié *</label><input class="fld-inp" id="cmr-nom" placeholder="Nom Prénom"></div>
+        <div class="fld"><label class="fld-lbl">Poste occupé</label><input class="fld-inp" id="cmr-poste" placeholder="Ex: Opérateur dépollution"></div>
+      </div>
+      <div class="fld"><label class="fld-lbl">Substance CMR *</label>
+        <select class="fld-sel" id="cmr-substance">
+          <option value="">— Sélectionner —</option>
+          <option>Gasoil</option><option>Essence</option><option>Huile moteur</option>
+          <option>Liquide de refroidissement</option><option>Liquide de frein</option>
+          <option>Amiante (véhicules anciens)</option><option>Autre</option>
+        </select></div>
+      <div class="fld"><label class="fld-lbl">Nature de l exposition</label>
+        <textarea class="fld-txt" id="cmr-nature" placeholder="Ex: Perçage du réservoir — Projections gasoil/essence"></textarea></div>
+      <div class="form-row">
+        <div class="fld"><label class="fld-lbl">Durée d exposition</label><input class="fld-inp" id="cmr-duree" placeholder="Ex: 5×10min/jour"></div>
+        <div class="fld"><label class="fld-lbl">Degré d exposition</label>
+          <select class="fld-sel" id="cmr-degre">
+            <option value="">—</option>
+            <option>Faible</option><option>Modéré</option><option>Fort</option>
+          </select></div>
+      </div>
+      <div class="fld"><label class="fld-lbl">EPI portés</label><input class="fld-inp" id="cmr-epi" placeholder="Ex: Gants, lunettes, masque..."></div>
+      <div class="fld"><label class="fld-lbl">Suivi médical renforcé</label>
+        <select class="fld-sel" id="cmr-suivi"><option value="">—</option><option>Oui</option><option>Non</option></select></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="document.getElementById('modal-cmr').classList.remove('open')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveCMR()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal action corrective -->
+<div class="modal-overlay" id="modal-action">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <span class="modal-title">📋 Nouvelle action corrective</span>
+      <button onclick="document.getElementById('modal-action').classList.remove('open')" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fld"><label class="fld-lbl">Description de l action *</label>
+        <textarea class="fld-txt" id="act-desc" placeholder="Décrire l action corrective..."></textarea></div>
+      <div class="form-row">
+        <div class="fld"><label class="fld-lbl">Responsable *</label><input class="fld-inp" id="act-resp" placeholder="Nom Prénom"></div>
+        <div class="fld"><label class="fld-lbl">Délai *</label><input type="date" class="fld-inp" id="act-delai"></div>
+      </div>
+      <div class="fld"><label class="fld-lbl">Origine</label>
+        <select class="fld-sel" id="act-origine">
+          <option value="DUERP - Risque identifié">DUERP — Risque identifié</option>
+          <option value="DUERP - Risque critique">DUERP — Risque critique</option>
+          <option value="DUERP - CMR">DUERP — Exposition CMR</option>
+          <option value="DUERP - Visite terrain">DUERP — Visite terrain</option>
+        </select></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="document.getElementById('modal-action').classList.remove('open')">Annuler</button>
+      <button class="btn btn-green" onclick="saveAction()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GSHEET_URL = "https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+
+const SITES = ["17", "37", "38", "41", "47", "72", "72bis", "89"];
+const UNITES_TRAVAIL = [{"id": "env_global", "nom": "Environnement global", "icon": "🏭"}, {"id": "depollution", "nom": "Dépollution", "icon": "🛢️"}, {"id": "demontage", "nom": "Démontage", "icon": "🔧"}, {"id": "cariste", "nom": "Cariste", "icon": "🚛"}, {"id": "chauffeur", "nom": "Chauffeur camion", "icon": "🚚"}, {"id": "magasin", "nom": "Magasin", "icon": "📦"}, {"id": "montage", "nom": "Atelier montage rapide", "icon": "⚙️"}, {"id": "labo_photo", "nom": "Laboratoire Photo", "icon": "📷"}, {"id": "expeditions", "nom": "Expéditions", "icon": "📤"}];
+const FAMILLES_RISQUES = ["R01 Risque de chute de plain-pied", "R02 Risque de chute de hauteur", "R03 Risques liés aux circulations internes de véhicules", "R04 Risques routiers en mission", "R05 Risques liés à la charge physique de travail", "R06 Risques liés à la manutention mécanique", "R07 Risques liés aux produits chimiques, aux émissions et aux agents CMR", "R08 Risques liés aux agents biologiques", "R09 Risques liés aux équipements de travail", "R10 Risques liés aux effondrements et aux chutes d'objets", "R11 Risques et nuisances liés aux bruits", "R12 Risques liés aux ambiances thermiques", "R13 Risques d'incendie et d'explosion", "R14 Risques liés à l'électricité", "R15 Risques liés aux ambiances lumineuses", "R16 Risques liés aux rayonnements", "R17 Risques psychosociaux", "R18 Risques liés aux vibrations", "R19 Risques de heurt et cognement", "R20 Risques liés aux pratiques addictives"];
+const OBJECTIFS_QSSE = [{"axe": "Santé / Sécurité", "indicateur": "Situations dangereuses repérées", "objectif": "≥ 15 / site", "frequence": "Mensuelle"}, {"axe": "Santé / Sécurité", "indicateur": "Accidents avec arrêt", "objectif": "≤ 3 / site", "frequence": "Mensuelle"}, {"axe": "Santé / Sécurité", "indicateur": "Consultations collaborateurs", "objectif": "≥ 6 / an", "frequence": "Bimestrielle"}, {"axe": "Santé / Sécurité", "indicateur": "Suggestions d'amélioration", "objectif": "1 / collaborateur", "frequence": "Annuelle"}, {"axe": "Qualité", "indicateur": "Satisfaction réseau CVHU", "objectif": "≥ 85%", "frequence": "Annuelle"}, {"axe": "Qualité", "indicateur": "Contrats signés", "objectif": "≥ 600", "frequence": "Annuelle"}, {"axe": "Environnement", "indicateur": "Émissions GES", "objectif": "≤ 75 kg CO2eq/k€ CA", "frequence": "Annuelle"}, {"axe": "Environnement", "indicateur": "Consommation énergie", "objectif": "< 643 881 kWh", "frequence": "Mensuelle"}];
+const POLITIQUE_AXES = [{"axe": "Qualité", "icon": "⭐", "color": "#4F46E5", "engagements": ["Assurer le meilleur niveau de satisfaction de nos clients partenaires", "Constituer un réseau de CVHU répondant aux nouvelles exigences de nos clients"]}, {"axe": "Santé / Sécurité", "icon": "🦺", "color": "#DC2626", "engagements": ["Repérer les situations dangereuses sur l'ensemble de nos sites", "S'appuyer sur la consultation et la participation active de tous les collaborateurs", "Déployer la culture santé/sécurité auprès de l'ensemble des collaborateurs"]}, {"axe": "Environnement", "icon": "♻️", "color": "#059669", "engagements": ["Réduire l'impact de notre activité sur l'environnement", "Maîtriser notre consommation d'énergie", "Démonter plus de pièces de qualité destinées au ré-emploi", "Extraire des VHU plus de matières recyclables"]}];
+const DUERP_TEMPLATE = {"Environnement global": [{"famille": "R01 Risque de chute de plain pied", "situation": "Chute dans l'escalier.\nTrébucher sur des fils électriques.\nTrébucher sur des pièces détachées dans l'atelier.\nTrébucher à cause de trous dans le sol.\nTrébucher à cause de souillure du sol : carburants", "gravite": 1, "frequence": 4, "mesures_existantes": "Rampe d'escaliers, marches antidérapantes.\nMise à disposition de chariots pour déposer les pièces détachées démontées.\nSignalement par les opérateurs des trous dans le sol pour réparation rapide. \nNettoyage du sol de l'atelier tous les soirs au balai.\nNettoyage du sol du parc tous les 15 jours au ba", "maitrise": 0.1}, {"famille": "R02 Risque de chute de hauteur", "situation": "Défaut du garde corps de l'étage de stockage carrosserie.", "gravite": 4, "frequence": 2, "mesures_existantes": "", "maitrise": 1.0}, {"famille": "R03 Risques liés aux circulations interne de véhicules et d'engins", "situation": "Collision camion/chariot, camion/piéton, chariot/piéton sur le parc. \nCollision chariot/démonteur lors du démontage sur parc. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Sens de circulation sur site. \nInterdiction de musique et téléphone dans les chariots.\nFormation CACES + autorisation de conduite chariot pour les chauffeurs. \nPlan de prévention et protocole de sécurité pour les entreprises extérieures.\nSignalisation du démonteur parc avec le Kangoo. ", "maitrise": 0.6}, {"famille": "R04 Risque routiers en mission", "situation": "Accident de voiture sur les trajets domicile/travail.\nAccident de voiture lors de déplacements professionnels. ", "gravite": 3, "frequence": 3, "mesures_existantes": "\nPrésence de gilet jaune et triangle dans les voitures de l'entreprise. ", "maitrise": 0.5}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Dégradation de l'état de conservation de la toiture en amiante ciment repéré dans le DTA.", "gravite": 2, "frequence": 2, "mesures_existantes": "Surveillance interne annuelle de l'état de conservation: pas de traces particulières ou d'évènement climatique  (à formaliser sur le tableau de suivi des vérification périodiques).\nEn cas d'évènement climatique exceptionnel ou de dégradations constatées, ré-évaluation de l'état de conservation par u", "maitrise": 1.0}, {"famille": "R08 Risques liés aux agents biologiques", "situation": "Non renouvellement de l'air intérieur, transmission de maladie contagieuses. \nEnvironnement de travail sale.", "gravite": 1, "frequence": 4, "mesures_existantes": "Ventilation quotidienne des bureaux et ateliers.\nNettoyage régulier des sanitaires.", "maitrise": 0.1}, {"famille": "R08 Risques liés aux agents biologiques", "situation": "Réalisation d'activités salissantes", "gravite": 1, "frequence": 4, "mesures_existantes": "Mise à disposition de lavabos et savon.\nTenue de travail fournie et nettoyée par l'employeur.", "maitrise": 0.1}, {"famille": "R09 Risques liés aux équipements de travail", "situation": "Projection de métal lors du grappinage du platin sur le parc VHU. ", "gravite": 1, "frequence": 2, "mesures_existantes": "Interdiction de traverser la zone.", "maitrise": 0.6}, {"famille": "R09 Risques liés aux équipements de travail", "situation": "Mauvaise posture devant l'ordinateur.", "gravite": 1, "frequence": 4, "mesures_existantes": "Mise à disposition d'écrans réglables et de chaises ergonomiques. \nConsignes gestes et postures. ", "maitrise": 0.5}, {"famille": "R12 Risques liés aux ambiances thermiques", "situation": "Mauvaise isolation des bâtiments : froid l'hiver, chaud l'été.", "gravite": 1, "frequence": 4, "mesures_existantes": "Fourniture de vêtements de travail adaptés pour l'atelier. \nClimatisation/chauffage des bureaux seulement.\nAdaptation des horaires l'été. \nDistributeur d'eau fraîche, salle de pause avec réfrigérateur. ", "maitrise": 0.1}, {"famille": "R13 Risques d'incendie et d'explosion", "situation": "Départ de feu sur des batteries de puissance issues des véhicules électriques. \nPropagation du feu aux zones de stockage des déchets ou à des véhicules non dépollués.", "gravite": 3, "frequence": 2, "mesures_existantes": "Zones dédiées pour les véhicules électriques et hybrides, séparées de 5m de toute autre zone de stockage. \nBenne d'immersion.\nBox de blocs REI120 pour le stockage des batteries accidentées et véhicules électriques accidentés. \nStockage des déchets bien identifiés en benne métalliques, éloignées des ", "maitrise": 0.1}, {"famille": "R13 Risques d'incendie et d'explosion", "situation": "Promiscuité de source de chaleur et de matières inflammables.", "gravite": 2, "frequence": 2, "mesures_existantes": "Interdiction d'utilisation de disqueuse ou chalumeau lors du démontage de véhicule. \nZone fumeurs délimitée.\nExtincteurs à proximité des zones dangereuses. ", "maitrise": 0.5}, {"famille": "R14 Risques liés à l'électricité", "situation": "Présence d'installations électriques", "gravite": 1, "frequence": 4, "mesures_existantes": "Vérifications périodiques à jour. ", "maitrise": 0.1}, {"famille": "R15 Risques liés aux ambiances lumineuses", "situation": "Mauvais éclairage de la zone de travail.\nMauvais éclairage du stock. ", "gravite": 1, "frequence": 4, "mesures_existantes": "Remplacement des ampoules défectueuses.\nStock d'ampoules à l'atelier pour une maintenance rapide. \nAmpoules LED dans le stock.", "maitrise": 0.5}, {"famille": "R17 Risques psychosociaux", "situation": "Pression de résultats de la hiérarche.", "gravite": 1, "frequence": 4, "mesures_existantes": "Réalisation d'entretiens annuels\nSalle de pause", "maitrise": 0.5}, {"famille": "R20 Risques liés aux pratiques addictives", "situation": "Consommation d'alcool, de médicaments ou de stupéfiants. ", "gravite": 2, "frequence": 2, "mesures_existantes": "Ethylotest à disposition sur le site.\nSensibilisation des salariés au danger de l'alcool et des drogues dans l'accueil sécurité.\nManagers à l'écoute pour guider les salariés dans le besoin vers des professionnels.", "maitrise": 0.6}, {"famille": "R20 Risques liés aux pratiques addictives", "situation": "Dépendance au téléphone portable et troubles de la concentration.\nAddiction aux réseaux sociaux.", "gravite": 1, "frequence": 2, "mesures_existantes": "VIgilence à porter les uns, les autres sur la concentration au travail.", "maitrise": 0.6}], "Dépollution": [{"famille": "R05 Risques liés à la charge physique de travail", "situation": "Manutention manuelle de charges encombrantes ou lourdes (>15kg)\nManutention répétitives de pièces.\nCoupure à cause des pièces détachées ou des vitres cassées.\nEcrasement des pieds. \nPincement des doig", "gravite": 2, "frequence": 4, "mesures_existantes": "Mise à disposition d'outils d'aide à la manutention pour les pièces détachées (palan, transpalette, chariot....)\nCauseries sur le port de charges.\nPort de gants et de chaussures de sécurité.", "maitrise": 0.1}, {"famille": "R05 Risques liés à la charge physique de travail", "situation": "Postures contraignantes à l'atelier et pour le démonteur parc.", "gravite": 2, "frequence": 4, "mesures_existantes": "Ponts élévateurs et retourneurs pour le démontage des véhicules en atelier. ", "maitrise": 0.5}, {"famille": "R06 Risques liés à la manutention mécanique", "situation": "Coups par les palans suspendus.\nMauvais réglage du retourneur.\nVéhicule mal placé sur le pont élévateur ou sur le chariot jaune.", "gravite": 3, "frequence": 1, "mesures_existantes": "Interdiction de travail sous un chariot.\nVérifications périodiques suivies. ", "maitrise": 0.6}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Respiration des gaz de clim, gaz d'échappement.", "gravite": 2, "frequence": 3, "mesures_existantes": "Test des moteurs au poste dépollution, à côté de la porte toujours ouverte.", "maitrise": 0.6}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Projections de produits CMR (carburants) dans les yeux, sur la peau, sur les vêtements.", "gravite": 2, "frequence": 4, "mesures_existantes": "Vêtements de travail adaptés et régulièrement nettoyés par l'employeur.\nPort de gants. \nSystème de perforation étanche du réservoir.", "maitrise": 0.1}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Fuite de produits chimiques lors du retrait des batteries de démarrage.", "gravite": 1, "frequence": 2, "mesures_existantes": "Port de gants.", "maitrise": 0.5}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Manipulation et stockage de pneumatiques usagés.", "gravite": 1, "frequence": 3, "mesures_existantes": "Stockage abrité en extérieur. \nPort de gants.\nSanitaires pour lavage de mains régulier.", "maitrise": 0.1}, {"famille": "R09 Risques liés aux équipements de travail", "situation": "Projection de plastique/métal en utilisant le pied de biche. \nCoupure par outils tranchants.\nEntrainement de doigt par outil électroportatif (pièces en rotation)\nFuite de liquide sur la cisaille hydra", "gravite": 2, "frequence": 4, "mesures_existantes": "Vérification du bon état des outils avant utilisation. \nFormation des opérateurs à chaque poste de travail en doublon pour les nouveaux arrivants. \nPort de gants\nVérifications périodiques des machines.", "maitrise": 0.6}, {"famille": "R09 Risques liés aux équipements de travail", "situation": "Présence d'air sous pression : équipements pneumatiques", "gravite": 2, "frequence": 1, "mesures_existantes": "Contrôles périodiques du compresseur\nIsolement du compresseur.", "maitrise": 0}, {"famille": "R09 Risques liés aux équipements de travail", "situation": "Chariot/gerbeur électrique défectueux.\nConduite du chariot dangereuse. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Vérifications périodiques à jour.\nEntretien régulier du chariot. \nAutorisation de conduite INDRA.\nInterdiction de musique ou téléphone dans les chariots.", "maitrise": 0.1}, {"famille": "R10 Risques liés aux effondrements et aux chutes d'objets", "situation": "Chute d'un véhicule lors des opérations de déchargement du camion, lors du transport sur parc, lors de la dépose à l'atelier. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Port de chaussures de sécurité. \nNombre limité de caristes effectuant le déchargement.", "maitrise": 0.5}, {"famille": "R10 Risques liés aux effondrements et aux chutes d'objets", "situation": "Chute d'un véhicule du pont élévateur. \nChute d'un véhicule du berceau (chariot jaune).", "gravite": 3, "frequence": 3, "mesures_existantes": "Commande déportée pour le pont élévateur.\nSurveillance des abords du pont élévateur lorsque le véhicule est en l'air. \nVérifications périodiques pour le pont élévateur.\nPort de chaussures de sécurité. ", "maitrise": 0.5}, {"famille": "R11 Risques et nuisances liés aux bruits", "situation": "Exposition au bruit en continu avec pics dans l'atelier de démontage. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Protections auditives à disposition.", "maitrise": 0.6}, {"famille": "R13 Risques d'incendie et d'explosion", "situation": "Fuites de produits chimiques dans les zones de stockage dédiées. ", "gravite": 1, "frequence": 4, "mesures_existantes": "Respect des incompatibilités. \nStockage en armoire métalliques avec rétentions. \nSignalétique claire affichée.\nKit d'absorption à disposition. ", "maitrise": 0.1}, {"famille": "R14 Risques liés à l'électricité", "situation": "Electrisation lors du démontage de véhicules électriques", "gravite": 2, "frequence": 2, "mesures_existantes": "Consignation de la batterie VE avant transport par le cariste formé B2XL \"Chargement/déchargement\"\nEPI spécifiques : gants isolés, visière \nOutils spécifiques isolants. ", "maitrise": 0.5}, {"famille": "R18 Risques liés aux vibrations", "situation": "Utilisation fréquente d'outils électroportatifs : clé à chocs, perceuse", "gravite": 1, "frequence": 4, "mesures_existantes": "Variation des tâches.\nChoix de l'outil en fonction de leur valeur vibratoire.", "maitrise": 0.1}, {"famille": "R19 Risques de heurt et cognement", "situation": "Travail sous le véhicule placé sur un pont élévateur", "gravite": 1, "frequence": 2, "mesures_existantes": "", "maitrise": 1.0}], "Démontage": [{"famille": "R02 Risque de chute de hauteur", "situation": "Chute du chariot manitou. \nChute de l'escabeau.\nChute du camion.", "gravite": 3, "frequence": 1, "mesures_existantes": "Formation des caristes au CACES", "maitrise": 0.5}, {"famille": "R05 Risques liés à la charge physique de travail", "situation": "Manutention manuelle de charges encombrantes ou lourdes (>15kg)\nManutention répétitives de pièces.\nCoupure à cause des pièces détachées ou des vitres cassées.\nEcrasement des pieds. \nPincement des doig", "gravite": 2, "frequence": 4, "mesures_existantes": "Mise à disposition d'outils d'aide à la manutention pour les pièces détachées (palan, transpalette, chariot....)\nCauseries sur le port de charges.\nPort de gants et de chaussures de sécurité.", "maitrise": 0.1}, {"famille": "R05 Risques liés à la charge physique de travail", "situation": "Postures contraignantes à l'atelier et pour le démonteur parc.", "gravite": 2, "frequence": 4, "mesures_existantes": "Ponts élévateurs et retourneurs pour le démontage des véhicules en atelier. ", "maitrise": 0.5}, {"famille": "R06 Risques liés à la manutention mécanique", "situation": "Coups par les palans suspendus.\nMauvais réglage du retourneur.\nVéhicule mal placé sur le pont élévateur ou sur le chariot jaune.", "gravite": 3, "frequence": 1, "mesures_existantes": "Interdiction de travail sous un chariot.\nVérifications périodiques suivies. ", "maitrise": 0.6}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Respiration des gaz de clim, gaz d'échappement.", "gravite": 2, "frequence": 3, "mesures_existantes": "Test des moteurs au poste dépollution, à côté de la porte toujours ouverte.", "maitrise": 0.6}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Projections de produits CMR (carburants) dans les yeux, sur la peau, sur les vêtements.", "gravite": 2, "frequence": 4, "mesures_existantes": "Vêtements de travail adaptés et régulièrement nettoyés par l'employeur.\nPort de gants. \nSystème de perforation étanche du réservoir.", "maitrise": 0.1}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Manipulation et stockage de pneumatiques usagés.", "gravite": 1, "frequence": 3, "mesures_existantes": "Stockage abrité en extérieur. \nPort de gants.\nSanitaires pour lavage de mains régulier.", "maitrise": 0.1}, {"famille": "R08 Risques liés aux agents biologiques", "situation": "Piqûre de guêpe lors du démontage sur le parc ou du transport de véhicules.", "gravite": 1, "frequence": 2, "mesures_existantes": "Fourniture au personnel sur parc de bombes d'insecticide.\nEquipement des trousses de secours de pompes anti-venin.", "maitrise": 0.5}, {"famille": "R09 Risques liés aux équipements de travail", "situation": "Projection de plastique/métal en utilisant le pied de biche. \nCoupure par outils tranchants.\nEntrainement de doigt par outil électroportatif (pièces en rotation)\nFuite de liquide sur la cisaille hydra", "gravite": 2, "frequence": 4, "mesures_existantes": "Vérification du bon état des outils avant utilisation. \nFormation des opérateurs à chaque poste de travail en doublon pour les nouveaux arrivants. \nPort de gants\nVérifications périodiques des machines.", "maitrise": 0.6}, {"famille": "R09 Risques liés aux équipements de travail", "situation": "Présence d'air sous pression : équipements pneumatiques", "gravite": 2, "frequence": 1, "mesures_existantes": "Contrôles périodiques du compresseur\nIsolement du compresseur.", "maitrise": 0}, {"famille": "R09 Risques liés aux équipements de travail", "situation": "Chariot/gerbeur électrique défectueux.\nConduite du chariot dangereuse. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Vérifications périodiques à jour.\nEntretien régulier du chariot. \nAutorisation de conduite INDRA.\nInterdiction de musique ou téléphone dans les chariots.", "maitrise": 0.1}, {"famille": "R10 Risques liés aux effondrements et aux chutes d'objets", "situation": "Chute d'un véhicule lors des opérations de déchargement du camion, lors du transport sur parc, lors de la dépose à l'atelier. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Port de chaussures de sécurité. \nNombre limité de caristes effectuant le déchargement.", "maitrise": 0.5}, {"famille": "R10 Risques liés aux effondrements et aux chutes d'objets", "situation": "Chute d'un véhicule du pont élévateur. \nChute d'un véhicule du berceau (chariot jaune).", "gravite": 3, "frequence": 3, "mesures_existantes": "Commande déportée pour le pont élévateur.\nSurveillance des abords du pont élévateur lorsque le véhicule est en l'air. \nVérifications périodiques pour le pont élévateur.\nPort de chaussures de sécurité. ", "maitrise": 0.5}, {"famille": "R11 Risques et nuisances liés aux bruits", "situation": "Exposition au bruit en continu avec pics dans l'atelier de démontage. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Protections auditives à disposition.", "maitrise": 0.6}, {"famille": "R18 Risques liés aux vibrations", "situation": "Utilisation fréquente d'outils électroportatifs : clé à chocs, perceuse", "gravite": 1, "frequence": 4, "mesures_existantes": "Variation des tâches.\nChoix de l'outil en fonction de leur valeur vibratoire.", "maitrise": 0.1}, {"famille": "R19 Risques de heurt et cognement", "situation": "Travail sous le véhicule placé sur un pont élévateur", "gravite": 1, "frequence": 2, "mesures_existantes": "", "maitrise": 1.0}, {"famille": "R19 Risques de heurt et cognement", "situation": "Démontage de pièces sur le parc VHU", "gravite": 1, "frequence": 4, "mesures_existantes": "Gilets haute visiblité.", "maitrise": 0.5}], "Cariste": [{"famille": "R02 Risque de chute de hauteur", "situation": "Chute du chariot manitou. \nChute de l'escabeau.\nChute du camion.", "gravite": 3, "frequence": 1, "mesures_existantes": "Formation des caristes au CACES", "maitrise": 0.5}, {"famille": "R05 Risques liés à la charge physique de travail", "situation": "Manutention manuelle de charges encombrantes ou lourdes (>15kg)\nManutention répétitives de pièces.\nCoupure à cause des pièces détachées ou des vitres cassées.\nEcrasement des pieds. \nPincement des doig", "gravite": 2, "frequence": 4, "mesures_existantes": "Mise à disposition d'outils d'aide à la manutention pour les pièces détachées (palan, transpalette, chariot....)\nCauseries sur le port de charges.\nPort de gants et de chaussures de sécurité.", "maitrise": 0.1}, {"famille": "R08 Risques liés aux agents biologiques", "situation": "Piqûre de guêpe lors du démontage sur le parc ou du transport de véhicules.", "gravite": 1, "frequence": 2, "mesures_existantes": "Fourniture au personnel sur parc de bombes d'insecticide.\nEquipement des trousses de secours de pompes anti-venin.", "maitrise": 0.5}, {"famille": "R09 Risques liés aux équipements de travail", "situation": "Chariot/gerbeur électrique défectueux.\nConduite du chariot dangereuse. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Vérifications périodiques à jour.\nEntretien régulier du chariot. \nAutorisation de conduite INDRA.\nInterdiction de musique ou téléphone dans les chariots.", "maitrise": 0.1}, {"famille": "R10 Risques liés aux effondrements et aux chutes d'objets", "situation": "Chute d'un véhicule lors des opérations de déchargement du camion, lors du transport sur parc, lors de la dépose à l'atelier. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Port de chaussures de sécurité. \nNombre limité de caristes effectuant le déchargement.", "maitrise": 0.5}, {"famille": "R10 Risques liés aux effondrements et aux chutes d'objets", "situation": "Chute d'un véhicule du pont élévateur. \nChute d'un véhicule du berceau (chariot jaune).", "gravite": 3, "frequence": 3, "mesures_existantes": "Commande déportée pour le pont élévateur.\nSurveillance des abords du pont élévateur lorsque le véhicule est en l'air. \nVérifications périodiques pour le pont élévateur.\nPort de chaussures de sécurité. ", "maitrise": 0.5}, {"famille": "R11 Risques et nuisances liés aux bruits", "situation": "Exposition au bruit en continu avec pics dans l'atelier de démontage. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Protections auditives à disposition.", "maitrise": 0.6}, {"famille": "R11 Risques et nuisances liés aux bruits", "situation": "Conduite de véhicule bruyant. ", "gravite": 1, "frequence": 3, "mesures_existantes": "Alterner phases de conduite/pauses.", "maitrise": 0.5}, {"famille": "R18 Risques liés aux vibrations", "situation": "Conduite de chariot élévateur et camion", "gravite": 1, "frequence": 4, "mesures_existantes": "Alterner phases de conduite/pauses/marche.\nNouveau goudron sur le parc. ", "maitrise": 0.1}], "Chauffeur camion": [{"famille": "R04 Risque routiers en mission", "situation": "Accident de camion porteur de VHU.\nChute de VHU pendant le transport. ", "gravite": 3, "frequence": 2, "mesures_existantes": "Vérification du permis de conduire+ carte conducteur\nEntretien réguier du camion porteur\nInterdiction de consommer de l'alcool ou des stupéfiants.", "maitrise": 0.1}, {"famille": "R09 Risques liés aux équipements de travail", "situation": "Chariot/gerbeur électrique défectueux.\nConduite du chariot dangereuse. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Vérifications périodiques à jour.\nEntretien régulier du chariot. \nAutorisation de conduite INDRA.\nInterdiction de musique ou téléphone dans les chariots.", "maitrise": 0.1}, {"famille": "R10 Risques liés aux effondrements et aux chutes d'objets", "situation": "Chute d'un véhicule lors des opérations de déchargement du camion, lors du transport sur parc, lors de la dépose à l'atelier. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Port de chaussures de sécurité. \nNombre limité de caristes effectuant le déchargement.", "maitrise": 0.5}, {"famille": "R11 Risques et nuisances liés aux bruits", "situation": "Conduite de véhicule bruyant. ", "gravite": 1, "frequence": 3, "mesures_existantes": "Alterner phases de conduite/pauses.", "maitrise": 0.5}, {"famille": "R18 Risques liés aux vibrations", "situation": "Conduite de chariot élévateur et camion", "gravite": 1, "frequence": 4, "mesures_existantes": "Alterner phases de conduite/pauses/marche.\nNouveau goudron sur le parc. ", "maitrise": 0.1}], "Magasin": [{"famille": "R02 Risque de chute de hauteur", "situation": "Chute du chariot manitou. \nChute de l'escabeau.\nChute du camion.", "gravite": 3, "frequence": 1, "mesures_existantes": "Formation des caristes au CACES", "maitrise": 0.5}, {"famille": "R05 Risques liés à la charge physique de travail", "situation": "Manutention manuelle de charges encombrantes ou lourdes (>15kg)\nManutention répétitives de pièces.\nCoupure à cause des pièces détachées ou des vitres cassées.\nEcrasement des pieds. \nPincement des doig", "gravite": 2, "frequence": 4, "mesures_existantes": "Mise à disposition d'outils d'aide à la manutention pour les pièces détachées (palan, transpalette, chariot....)\nCauseries sur le port de charges.\nPort de gants et de chaussures de sécurité.", "maitrise": 0.1}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Fuite de produits chimiques en vente au comptoir.\nFuite de produits chimiques au centre auto.", "gravite": 1, "frequence": 1, "mesures_existantes": "Absorbant à disposition. \nAffichage de l'interdiction de fumer. \nStockage des produits chimiques au centre auto dans une armoire. ", "maitrise": 0.6}, {"famille": "R10 Risques liés aux effondrements et aux chutes d'objets", "situation": "Chute de pièces détachées dans les racks de stockage. \nChutes de pièces lors du démontage des véhicules.\nChutes d'outils de la servante.", "gravite": 2, "frequence": 3, "mesures_existantes": "Nouveaux racks pour moteurs et boîtes de vitesse.\nMise à disposition d'escabeaux\nGaleries supérieures protégées par des gardes-corps.", "maitrise": 0.1}, {"famille": "R13 Risques d'incendie et d'explosion", "situation": "Fuites de produits chimiques dans les zones de stockage dédiées. ", "gravite": 1, "frequence": 4, "mesures_existantes": "Respect des incompatibilités. \nStockage en armoire métalliques avec rétentions. \nSignalétique claire affichée.\nKit d'absorption à disposition. ", "maitrise": 0.1}, {"famille": "R17 Risques psychosociaux", "situation": "Aggressivité des clients en magasin.", "gravite": 1, "frequence": 1, "mesures_existantes": "Caisse vidée tous les soirs. \nSurveillance caméra.\nManager disponible pour écoute.", "maitrise": 0.1}], "Atelier montage rapide": [{"famille": "R05 Risques liés à la charge physique de travail", "situation": "Manutention manuelle de charges encombrantes ou lourdes (>15kg)\nManutention répétitives de pièces.\nCoupure à cause des pièces détachées ou des vitres cassées.\nEcrasement des pieds. \nPincement des doig", "gravite": 2, "frequence": 4, "mesures_existantes": "Mise à disposition d'outils d'aide à la manutention pour les pièces détachées (palan, transpalette, chariot....)\nCauseries sur le port de charges.\nPort de gants et de chaussures de sécurité.", "maitrise": 0.1}, {"famille": "R05 Risques liés à la charge physique de travail", "situation": "Postures contraignantes à l'atelier et pour le démonteur parc.", "gravite": 2, "frequence": 4, "mesures_existantes": "Ponts élévateurs et retourneurs pour le démontage des véhicules en atelier. ", "maitrise": 0.5}, {"famille": "R06 Risques liés à la manutention mécanique", "situation": "Coups par les palans suspendus.\nMauvais réglage du retourneur.\nVéhicule mal placé sur le pont élévateur ou sur le chariot jaune.", "gravite": 3, "frequence": 1, "mesures_existantes": "Interdiction de travail sous un chariot.\nVérifications périodiques suivies. ", "maitrise": 0.6}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Respiration des gaz de clim, gaz d'échappement.", "gravite": 2, "frequence": 3, "mesures_existantes": "Test des moteurs au poste dépollution, à côté de la porte toujours ouverte.", "maitrise": 0.6}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Projections de produits CMR (carburants) dans les yeux, sur la peau, sur les vêtements.", "gravite": 2, "frequence": 4, "mesures_existantes": "Vêtements de travail adaptés et régulièrement nettoyés par l'employeur.\nPort de gants. \nSystème de perforation étanche du réservoir.", "maitrise": 0.1}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Fuite de produits chimiques lors du retrait des batteries de démarrage.", "gravite": 1, "frequence": 2, "mesures_existantes": "Port de gants.", "maitrise": 0.5}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Manipulation et stockage de pneumatiques usagés.", "gravite": 1, "frequence": 3, "mesures_existantes": "Stockage abrité en extérieur. \nPort de gants.\nSanitaires pour lavage de mains régulier.", "maitrise": 0.1}, {"famille": "R07 Risques liés aux produits chimiques, aux émissions et aux déchets", "situation": "Fuite de produits chimiques en vente au comptoir.\nFuite de produits chimiques au centre auto.", "gravite": 1, "frequence": 1, "mesures_existantes": "Absorbant à disposition. \nAffichage de l'interdiction de fumer. \nStockage des produits chimiques au centre auto dans une armoire. ", "maitrise": 0.6}, {"famille": "R09 Risques liés aux équipements de travail", "situation": "Projection de plastique/métal en utilisant le pied de biche. \nCoupure par outils tranchants.\nEntrainement de doigt par outil électroportatif (pièces en rotation)\nFuite de liquide sur la cisaille hydra", "gravite": 2, "frequence": 4, "mesures_existantes": "Vérification du bon état des outils avant utilisation. \nFormation des opérateurs à chaque poste de travail en doublon pour les nouveaux arrivants. \nPort de gants\nVérifications périodiques des machines.", "maitrise": 0.6}, {"famille": "R09 Risques liés aux équipements de travail", "situation": "Présence d'air sous pression : équipements pneumatiques", "gravite": 2, "frequence": 1, "mesures_existantes": "Contrôles périodiques du compresseur\nIsolement du compresseur.", "maitrise": 0}, {"famille": "R10 Risques liés aux effondrements et aux chutes d'objets", "situation": "Chute d'un véhicule du pont élévateur. \nChute d'un véhicule du berceau (chariot jaune).", "gravite": 3, "frequence": 3, "mesures_existantes": "Commande déportée pour le pont élévateur.\nSurveillance des abords du pont élévateur lorsque le véhicule est en l'air. \nVérifications périodiques pour le pont élévateur.\nPort de chaussures de sécurité. ", "maitrise": 0.5}, {"famille": "R10 Risques liés aux effondrements et aux chutes d'objets", "situation": "Chute de pièces détachées dans les racks de stockage. \nChutes de pièces lors du démontage des véhicules.\nChutes d'outils de la servante.", "gravite": 2, "frequence": 3, "mesures_existantes": "Nouveaux racks pour moteurs et boîtes de vitesse.\nMise à disposition d'escabeaux\nGaleries supérieures protégées par des gardes-corps.", "maitrise": 0.1}, {"famille": "R11 Risques et nuisances liés aux bruits", "situation": "Exposition au bruit en continu avec pics dans l'atelier de démontage. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Protections auditives à disposition.", "maitrise": 0.6}, {"famille": "R13 Risques d'incendie et d'explosion", "situation": "Fuites de produits chimiques dans les zones de stockage dédiées. ", "gravite": 1, "frequence": 4, "mesures_existantes": "Respect des incompatibilités. \nStockage en armoire métalliques avec rétentions. \nSignalétique claire affichée.\nKit d'absorption à disposition. ", "maitrise": 0.1}, {"famille": "R14 Risques liés à l'électricité", "situation": "Electrisation lors du démontage de véhicules électriques", "gravite": 2, "frequence": 2, "mesures_existantes": "Consignation de la batterie VE avant transport par le cariste formé B2XL \"Chargement/déchargement\"\nEPI spécifiques : gants isolés, visière \nOutils spécifiques isolants. ", "maitrise": 0.5}, {"famille": "R17 Risques psychosociaux", "situation": "Aggressivité des clients en magasin.", "gravite": 1, "frequence": 1, "mesures_existantes": "Caisse vidée tous les soirs. \nSurveillance caméra.\nManager disponible pour écoute.", "maitrise": 0.1}, {"famille": "R18 Risques liés aux vibrations", "situation": "Utilisation fréquente d'outils électroportatifs : clé à chocs, perceuse", "gravite": 1, "frequence": 4, "mesures_existantes": "Variation des tâches.\nChoix de l'outil en fonction de leur valeur vibratoire.", "maitrise": 0.1}, {"famille": "R19 Risques de heurt et cognement", "situation": "Travail sous le véhicule placé sur un pont élévateur", "gravite": 1, "frequence": 2, "mesures_existantes": "", "maitrise": 1.0}], "Laboratoire Photo": [{"famille": "R05 Risques liés à la charge physique de travail", "situation": "Manutention manuelle de charges encombrantes ou lourdes (>15kg)\nManutention répétitives de pièces.\nCoupure à cause des pièces détachées ou des vitres cassées.\nEcrasement des pieds. \nPincement des doig", "gravite": 2, "frequence": 4, "mesures_existantes": "Mise à disposition d'outils d'aide à la manutention pour les pièces détachées (palan, transpalette, chariot....)\nCauseries sur le port de charges.\nPort de gants et de chaussures de sécurité.", "maitrise": 0.1}, {"famille": "R10 Risques liés aux effondrements et aux chutes d'objets", "situation": "Chute de pièces détachées dans les racks de stockage. \nChutes de pièces lors du démontage des véhicules.\nChutes d'outils de la servante.", "gravite": 2, "frequence": 3, "mesures_existantes": "Nouveaux racks pour moteurs et boîtes de vitesse.\nMise à disposition d'escabeaux\nGaleries supérieures protégées par des gardes-corps.", "maitrise": 0.1}, {"famille": "R11 Risques et nuisances liés aux bruits", "situation": "Exposition au bruit en continu avec pics dans l'atelier de démontage. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Protections auditives à disposition.", "maitrise": 0.6}], "Expéditions": [{"famille": "R02 Risque de chute de hauteur", "situation": "Chute du chariot manitou. \nChute de l'escabeau.\nChute du camion.", "gravite": 3, "frequence": 1, "mesures_existantes": "Formation des caristes au CACES", "maitrise": 0.5}, {"famille": "R05 Risques liés à la charge physique de travail", "situation": "Manutention manuelle de charges encombrantes ou lourdes (>15kg)\nManutention répétitives de pièces.\nCoupure à cause des pièces détachées ou des vitres cassées.\nEcrasement des pieds. \nPincement des doig", "gravite": 2, "frequence": 4, "mesures_existantes": "Mise à disposition d'outils d'aide à la manutention pour les pièces détachées (palan, transpalette, chariot....)\nCauseries sur le port de charges.\nPort de gants et de chaussures de sécurité.", "maitrise": 0.1}, {"famille": "R10 Risques liés aux effondrements et aux chutes d'objets", "situation": "Chute de pièces détachées dans les racks de stockage. \nChutes de pièces lors du démontage des véhicules.\nChutes d'outils de la servante.", "gravite": 2, "frequence": 3, "mesures_existantes": "Nouveaux racks pour moteurs et boîtes de vitesse.\nMise à disposition d'escabeaux\nGaleries supérieures protégées par des gardes-corps.", "maitrise": 0.1}, {"famille": "R11 Risques et nuisances liés aux bruits", "situation": "Exposition au bruit en continu avec pics dans l'atelier de démontage. ", "gravite": 2, "frequence": 4, "mesures_existantes": "Protections auditives à disposition.", "maitrise": 0.6}]};
+
+
+var params = new URLSearchParams(location.search);
+var currentSite = params.get('site') || '47';
+var currentUT = params.get('ut') || 'depollution';
+var currentMaitrise = null;
+var editingRiskId = null;
+
+document.getElementById('back-link').href = 'DUERP_Site.html?site=' + currentSite;
+
+// Find UT info
+var utInfo = UNITES_TRAVAIL.find(function(u){return u.id===currentUT;}) || {id:currentUT,nom:currentUT,icon:'🏭'};
+document.getElementById('ut-header').innerHTML =
+  '<span style="font-size:28px">'+utInfo.icon+'</span>'
+  +'<div><div style="font-family:sans-serif;font-size:18px;font-weight:800;color:var(--steel-dk)">'+utInfo.nom+'</div>'
+  +'<div style="font-size:12px;color:var(--muted)">Site '+currentSite+'</div></div>';
+
+// Populate famille select
+FAMILLES_RISQUES.forEach(function(f) {
+  var opt = document.createElement('option');
+  opt.value = f; opt.textContent = f.substring(0,60);
+  document.getElementById('r-famille').appendChild(opt);
+});
+
+// Maîtrise grid
+var maitriseOptions = [
+  {coef:0,label:'Risque supprimé',sublabel:'Danger éliminé à la source'},
+  {coef:0.1,label:'Très efficace',sublabel:'EPC, protections collectives'},
+  {coef:0.5,label:'Efficace',sublabel:'EPI, formation, sensibilisation'},
+  {coef:0.6,label:'Moyennement efficace',sublabel:'Signalisation, consignes'},
+  {coef:1,label:'Pas de maîtrise',sublabel:'Aucune mesure en place'},
+];
+var mHtml = '';
+maitriseOptions.forEach(function(m) {
+  mHtml += '<div class="mait-opt" onclick="selectMaitrise('+m.coef+',this)">'
+    +'<div class="mait-coef">×'+m.coef+'</div>'
+    +'<div class="mait-lbl" style="font-weight:700">'+m.label+'</div>'
+    +'<div style="font-size:10px;color:var(--muted)">'+m.sublabel+'</div></div>';
+});
+document.getElementById('maitrise-grid').innerHTML = mHtml;
+
+function selectMaitrise(coef, el) {
+  currentMaitrise = coef;
+  document.querySelectorAll('.mait-opt').forEach(function(o){o.classList.remove('selected');});
+  el.classList.add('selected');
+  calcRisque();
+}
+
+function calcRisque() {
+  var g = parseInt(document.getElementById('r-gravite').value)||0;
+  var f = parseInt(document.getElementById('r-frequence').value)||0;
+  var avant = g*f;
+  var el_avant = document.getElementById('r-avant');
+  el_avant.textContent = avant||'—';
+  el_avant.style.color = avant>=8?'var(--red)':avant>=4?'var(--orange)':'var(--charcoal)';
+  if (avant && currentMaitrise!==null) {
+    var apres = Math.round(avant * currentMaitrise * 10) / 10;
+    var el_apres = document.getElementById('r-apres');
+    el_apres.textContent = apres;
+    el_apres.style.color = apres>=8?'var(--red)':apres>=4?'var(--orange)':'var(--green-dk)';
+    document.getElementById('action-requise').style.display = apres>=8?'block':'none';
+  }
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function openAddRisk() {
+  editingRiskId = null;
+  document.getElementById('modal-risk-title').textContent = 'Nouveau risque';
+  document.getElementById('r-id').value = '';
+  document.getElementById('r-famille').value = '';
+  document.getElementById('r-situation').value = '';
+  document.getElementById('r-gravite').value = '';
+  document.getElementById('r-frequence').value = '';
+  document.getElementById('r-mesures').value = '';
+  document.getElementById('r-nouvelles-mesures').value = '';
+  document.getElementById('r-responsable').value = '';
+  document.getElementById('r-delai').value = '';
+  document.getElementById('r-avant').textContent = '—';
+  document.getElementById('r-apres').textContent = '—';
+  document.getElementById('action-requise').style.display='none';
+  currentMaitrise = null;
+  document.querySelectorAll('.mait-opt').forEach(function(o){o.classList.remove('selected');});
+  document.getElementById('modal-risk').classList.add('open');
+}
+
+function closeRiskModal() { document.getElementById('modal-risk').classList.remove('open'); }
+
+async function saveRisk() {
+  var famille = document.getElementById('r-famille').value;
+  var situation = document.getElementById('r-situation').value.trim();
+  var g = parseInt(document.getElementById('r-gravite').value)||0;
+  var f = parseInt(document.getElementById('r-frequence').value)||0;
+  if (!famille||!situation||!g||!f||currentMaitrise===null) {
+    showToast('Famille, situation, cotation et maitrise obligatoires',false); return;
+  }
+  var avant = g*f;
+  var apres = Math.round(avant*currentMaitrise*10)/10;
+  var id = document.getElementById('r-id').value || (Date.now()+Math.random());
+  var data = {
+    id,site:currentSite,unite:currentUT,famille,situation,
+    gravite:g,frequence:f,mesures_existantes:document.getElementById('r-mesures').value.trim(),
+    maitrise:currentMaitrise,resultat_avant:avant,resultat_apres:apres,
+    nouvelles_mesures:document.getElementById('r-nouvelles-mesures').value.trim(),
+    responsable:document.getElementById('r-responsable').value.trim(),
+    delai:document.getElementById('r-delai').value,
+    statut:'Actif',createdAt:new Date().toISOString()
+  };
+  try {
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveDUERP',data})});
+    // Si risque critique, créer une action dans le plan d'actions
+    if (apres>=8 && data.responsable) {
+      var origine = 'DUERP — Risque critique — ' + utInfo.nom + ' — Site ' + currentSite;
+      await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveAction',data:{
+        id:Date.now()+1,auditId:'DUERP-'+currentSite+'-'+currentUT,
+        site:currentSite,auditDate:'',sectionKey:'duerp',criteriaIdx:0,
+        origin:origine,description:data.nouvelles_mesures||('Traiter le risque: '+situation.substring(0,80)),
+        responsable:data.responsable,delai:data.delai,avancement:0,
+        commentaire:'Résultat='+apres,efficace:'',createdAt:new Date().toISOString()
+      }})});
+    }
+    closeRiskModal();
+    showToast('Risque enregistré'+(apres>=8?' + action créée':''),true);
+    loadRisks();
+  } catch(e) { showToast('Erreur: '+e.message,false); }
+}
+
+// Load risks
+var utRisks = [];
+function loadRisks() {
+  var cb='_cb'+Date.now();
+  window[cb]=function(d){
+    delete window[cb];
+    utRisks=(d.data||[]).filter(function(r){
+      return String(r[1])===currentSite&&String(r[2])===currentUT;
+    });
+    renderRisks();
+  };
+  var s=document.createElement('script');
+  s.src=GSHEET_URL+'?action=getDUERP&callback='+cb;
+  document.head.appendChild(s);
+}
+
+function riskBadge(v) {
+  if (!v&&v!==0) return '<span class="badge badge-na">—</span>';
+  var n=parseFloat(v);
+  if(n>=8) return '<span class="badge badge-critique">'+n.toFixed(1)+'</span>';
+  if(n>=4) return '<span class="badge badge-eleve">'+n.toFixed(1)+'</span>';
+  if(n>0) return '<span class="badge badge-modere">'+n.toFixed(1)+'</span>';
+  return '<span class="badge badge-faible">'+n.toFixed(1)+'</span>';
+}
+
+function renderRisks() {
+  // Load template if no data
+  var risks = utRisks;
+  if (!risks.length) {
+    // Show template data from DUERP_TEMPLATE
+    var templateKey = utInfo.nom;
+    var templateRisks = DUERP_TEMPLATE[templateKey] || [];
+    if (templateRisks.length) {
+      document.getElementById('risks-table').innerHTML =
+        '<tr><td colspan="9" style="background:var(--amber-lt);color:var(--orange);padding:10px;font-size:12px;font-weight:600">⚠️ Données du template site 47 — Cliquez sur Évaluer pour valider pour ce site</td></tr>'
+        + templateRisks.map(function(r,i) {
+          var avant = (r.gravite||0)*(r.frequence||0);
+          var apres = avant*(r.maitrise||1);
+          var cls = apres>=8?'risk-row-critique':apres>=4?'risk-row-eleve':'';
+          return '<tr class="'+cls+'">'
+            +'<td><span class="famille-badge">'+r.famille.substring(0,20)+'</span></td>'
+            +'<td style="font-size:11px">'+r.situation.substring(0,80)+'</td>'
+            +'<td style="text-align:center">'+r.gravite+'</td>'
+            +'<td style="text-align:center">'+r.frequence+'</td>'
+            +'<td style="text-align:center">'+riskBadge(avant)+'</td>'
+            +'<td style="font-size:10px;color:var(--muted)">'+r.mesures_existantes.substring(0,60)+'</td>'
+            +'<td style="text-align:center">×'+r.maitrise+'</td>'
+            +'<td style="text-align:center">'+riskBadge(apres)+'</td>'
+            +'<td><button class="btn btn-sm btn-primary" onclick="importTemplate('+i+')">Évaluer</button></td>'
+            +'</tr>';
+        }).join('');
+    } else {
+      document.getElementById('risks-table').innerHTML =
+        '<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--muted)">Aucun risque évalué — cliquez sur Ajouter un risque</td></tr>';
+    }
+    document.getElementById('ut-kpis').innerHTML =
+      '<div class="kpi-card" style="border-left-color:var(--muted);min-width:120px"><div class="kpi-val" style="color:var(--muted)">0</div><div class="kpi-lbl">Risques enregistrés</div></div>';
+    return;
+  }
+  var crit=risks.filter(function(r){return parseFloat(r[10])>=8;}).length;
+  var elev=risks.filter(function(r){var v=parseFloat(r[10]);return v>=4&&v<8;}).length;
+  document.getElementById('ut-kpis').innerHTML =
+    '<div class="kpi-card" style="border-left-color:var(--red);min-width:120px"><div class="kpi-val" style="color:var(--red)">'+crit+'</div><div class="kpi-lbl">Critiques</div></div>'
+    +'<div class="kpi-card" style="border-left-color:var(--orange);min-width:120px"><div class="kpi-val" style="color:var(--orange)">'+elev+'</div><div class="kpi-lbl">Élevés</div></div>'
+    +'<div class="kpi-card" style="border-left-color:var(--indigo);min-width:120px"><div class="kpi-val" style="color:var(--indigo)">'+risks.length+'</div><div class="kpi-lbl">Total</div></div>';
+  document.getElementById('risks-table').innerHTML = risks.map(function(r) {
+    var apres=parseFloat(r[10])||0;
+    var cls=apres>=8?'risk-row-critique':apres>=4?'risk-row-eleve':'';
+    return '<tr class="'+cls+'">'
+      +'<td><span class="famille-badge">'+String(r[3]).substring(0,25)+'</span></td>'
+      +'<td style="font-size:11px">'+String(r[4]).substring(0,80)+'</td>'
+      +'<td style="text-align:center">'+r[5]+'</td>'
+      +'<td style="text-align:center">'+r[6]+'</td>'
+      +'<td style="text-align:center">'+riskBadge(r[9])+'</td>'
+      +'<td style="font-size:10px;color:var(--muted)">'+String(r[7]).substring(0,60)+'</td>'
+      +'<td style="text-align:center">×'+r[8]+'</td>'
+      +'<td style="text-align:center">'+riskBadge(r[10])+'</td>'
+      +'<td><button class="btn btn-sm btn-ghost" onclick="editRisk(''+r[0]+'')">✏️</button></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function importTemplate(idx) {
+  var templateKey = utInfo.nom;
+  var r = (DUERP_TEMPLATE[templateKey]||[])[idx];
+  if (!r) return;
+  openAddRisk();
+  document.getElementById('r-famille').value = r.famille;
+  document.getElementById('r-situation').value = r.situation;
+  document.getElementById('r-gravite').value = r.gravite||'';
+  document.getElementById('r-frequence').value = r.frequence||'';
+  document.getElementById('r-mesures').value = r.mesures_existantes||'';
+  // Auto-select maitrise
+  var opts = document.querySelectorAll('.mait-opt');
+  opts.forEach(function(o,i) {
+    if (maitriseOptions[i].coef === (r.maitrise||1)) {
+      selectMaitrise(maitriseOptions[i].coef, o);
+    }
+  });
+  calcRisque();
+}
+
+function editRisk(id) {
+  var r = utRisks.find(function(x){return String(x[0])===String(id);});
+  if (!r) return;
+  editingRiskId = id;
+  document.getElementById('modal-risk-title').textContent = 'Modifier le risque';
+  document.getElementById('r-id').value = r[0];
+  document.getElementById('r-famille').value = r[3];
+  document.getElementById('r-situation').value = r[4];
+  document.getElementById('r-gravite').value = r[5];
+  document.getElementById('r-frequence').value = r[6];
+  document.getElementById('r-mesures').value = r[7];
+  document.getElementById('r-nouvelles-mesures').value = r[11]||'';
+  document.getElementById('r-responsable').value = r[12]||'';
+  document.getElementById('r-delai').value = r[13]||'';
+  var coef = parseFloat(r[8]);
+  var opts = document.querySelectorAll('.mait-opt');
+  opts.forEach(function(o,i) {
+    if (maitriseOptions[i].coef === coef) selectMaitrise(coef, o);
+  });
+  calcRisque();
+  document.getElementById('modal-risk').classList.add('open');
+}
+
+// CMR
+var cmrData = [];
+function loadCMR() {
+  var cb='_cb'+Date.now();
+  window[cb]=function(d){
+    delete window[cb];
+    cmrData=(d.data||[]).filter(function(r){return String(r[1])===currentSite&&String(r[2])===currentUT;});
+    renderCMR();
+  };
+  var s=document.createElement('script');
+  s.src=GSHEET_URL+'?action=getCMR&callback='+cb;
+  document.head.appendChild(s);
+}
+function renderCMR() {
+  if (!cmrData.length) {
+    document.getElementById('cmr-body').innerHTML='<div style="text-align:center;padding:24px;color:var(--muted)">Aucune exposition CMR enregistrée</div>';
+    return;
+  }
+  var html='<table class="data-table"><thead><tr><th>Salarié</th><th>Poste</th><th>Substance</th><th>Nature exposition</th><th>Durée</th><th>Degré</th><th>EPI</th><th>Suivi médical</th></tr></thead><tbody>';
+  cmrData.forEach(function(r){
+    html+='<tr><td style="font-weight:600">'+r[3]+'</td><td>'+r[4]+'</td><td><span class="badge badge-critique">'+r[5]+'</span></td><td style="font-size:11px">'+r[6]+'</td><td style="font-size:11px">'+r[7]+'</td><td>'+r[8]+'</td><td style="font-size:11px">'+r[9]+'</td><td>'+(r[10]==='Oui'?'<span class="badge badge-modere">Oui</span>':'—')+'</td></tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('cmr-body').innerHTML=html;
+}
+function openAddCMR() { document.getElementById('modal-cmr').classList.add('open'); }
+async function saveCMR() {
+  var nom=document.getElementById('cmr-nom').value.trim();
+  var substance=document.getElementById('cmr-substance').value;
+  if (!nom||!substance) {showToast('Nom et substance obligatoires',false);return;}
+  var data={id:Date.now(),site:currentSite,unite:currentUT,
+    nom_salarie:nom,poste:document.getElementById('cmr-poste').value.trim(),
+    substance,nature_exposition:document.getElementById('cmr-nature').value.trim(),
+    duree_exposition:document.getElementById('cmr-duree').value.trim(),
+    degre_exposition:document.getElementById('cmr-degre').value,
+    epi:document.getElementById('cmr-epi').value.trim(),
+    suivi_medical:document.getElementById('cmr-suivi').value,
+    createdAt:new Date().toISOString()};
+  try {
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveCMR',data})});
+    document.getElementById('modal-cmr').classList.remove('open');
+    showToast('Exposition CMR enregistrée',true);
+    loadCMR();
+  } catch(e){showToast('Erreur',false);}
+}
+
+// Actions
+function openAddAction() { document.getElementById('modal-action').classList.add('open'); }
+async function saveAction() {
+  var desc=document.getElementById('act-desc').value.trim();
+  var resp=document.getElementById('act-resp').value.trim();
+  var delai=document.getElementById('act-delai').value;
+  var origine=document.getElementById('act-origine').value;
+  if (!desc||!resp||!delai) {showToast('Obligatoires: description, responsable, délai',false);return;}
+  try {
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveAction',data:{
+      id:Date.now(),auditId:'DUERP-'+currentSite+'-'+currentUT,
+      site:currentSite,auditDate:'',sectionKey:'duerp',criteriaIdx:0,
+      origin:origine+' — '+utInfo.nom+' — Site '+currentSite,
+      description:desc,responsable:resp,delai,avancement:0,
+      commentaire:'',efficace:'',createdAt:new Date().toISOString()
+    }})});
+    document.getElementById('modal-action').classList.remove('open');
+    showToast('Action créée dans le plan actions',true);
+  } catch(e){showToast('Erreur',false);}
+}
+
+function openFichePoste() { showToast('Fonctionnalité disponible après envoi du modèle de fiche de poste',false); }
+
+function showToast(msg,ok) {
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.style.background=ok?'var(--green-dk)':'var(--steel-dk)';
+  t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},3000);
+}
+
+loadRisks();
+loadCMR();
+</script>
+</body></html>
