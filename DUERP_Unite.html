@@ -363,11 +363,11 @@ FAMILLES_RISQUES.forEach(function(f) {
 
 // Maîtrise grid
 var maitriseOptions = [
-  {coef:0,label:'Risque supprimé',sublabel:'Danger éliminé à la source'},
-  {coef:0.1,label:'Très efficace',sublabel:'EPC, protections collectives'},
+  {coef:0,label:'Risque supprime',sublabel:'Danger elimine a la source'},
+  {coef:0.1,label:'Tres efficace',sublabel:'EPC, protections collectives'},
   {coef:0.5,label:'Efficace',sublabel:'EPI, formation, sensibilisation'},
   {coef:0.6,label:'Moyennement efficace',sublabel:'Signalisation, consignes'},
-  {coef:1,label:'Pas de maîtrise',sublabel:'Aucune mesure en place'},
+  {coef:1,label:'Pas de maitrise',sublabel:'Aucune mesure en place'},
 ];
 var mHtml = '';
 maitriseOptions.forEach(function(m) {
@@ -452,7 +452,7 @@ async function saveRisk() {
   };
   try {
     await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveDUERP',data})});
-    // Si risque critique, créer une action dans le plan d'actions
+    // Si risque critique, creer une action dans le plan actions
     if (apres>=8 && data.responsable) {
       var origine = 'DUERP — Risque critique — ' + utInfo.nom + ' — Site ' + currentSite;
       await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveAction',data:{
@@ -546,7 +546,7 @@ function renderRisks() {
       +'<td style="font-size:10px;color:var(--muted)">'+String(r[7]).substring(0,60)+'</td>'
       +'<td style="text-align:center">×'+r[8]+'</td>'
       +'<td style="text-align:center">'+riskBadge(r[10])+'</td>'
-      +'<td><button class="btn btn-sm btn-ghost" onclick="editRisk(''+r[0]+'')">✏️</button></td>'
+      +'<td><button class="btn btn-sm btn-ghost" data-id="'+r[0]+'" onclick="editRisk(this.dataset.id)">✏️</button></td>'
       +'</tr>';
   }).join('');
 }
