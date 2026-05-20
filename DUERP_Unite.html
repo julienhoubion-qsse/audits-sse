@@ -1,3 +1,4 @@
+<!-- DUERP Unite v20260520101138 -->
 <!DOCTYPE html>
 <html lang="fr"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -459,11 +460,11 @@ async function saveRisk() {
         site:currentSite,auditDate:'',sectionKey:'duerp',criteriaIdx:0,
         origin:origine,description:data.nouvelles_mesures||('Traiter le risque: '+situation.substring(0,80)),
         responsable:data.responsable,delai:data.delai,avancement:0,
-        commentaire:'Résultat='+apres,efficace:'',createdAt:new Date().toISOString()
+        commentaire:'Resultat='+apres,efficace:'',createdAt:new Date().toISOString()
       }})});
     }
     closeRiskModal();
-    showToast('Risque enregistré'+(apres>=8?' + action créée':''),true);
+    showToast('Risque enregistre'+(apres>=8?' Action creee':''),true);
     loadRisks();
   } catch(e) { showToast('Erreur: '+e.message,false); }
 }
@@ -634,7 +635,7 @@ async function saveCMR() {
   try {
     await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveCMR',data})});
     document.getElementById('modal-cmr').classList.remove('open');
-    showToast('Exposition CMR enregistrée',true);
+    showToast('Exposition CMR enregistree',true);
     loadCMR();
   } catch(e){showToast('Erreur',false);}
 }
@@ -656,11 +657,11 @@ async function saveAction() {
       commentaire:'',efficace:'',createdAt:new Date().toISOString()
     }})});
     document.getElementById('modal-action').classList.remove('open');
-    showToast('Action créée dans le plan actions',true);
+    showToast('Action creee dans le plan actions',true);
   } catch(e){showToast('Erreur',false);}
 }
 
-function openFichePoste() { showToast('Fonctionnalité disponible après envoi du modèle de fiche de poste',false); }
+function openFichePoste() { showToast('Fonctionnalite disponible apres envoi du modele de fiche de poste',false); }
 
 function showToast(msg,ok) {
   var t=document.getElementById('toast');
