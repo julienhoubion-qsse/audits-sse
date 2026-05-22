@@ -240,8 +240,8 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
         </div>
       </div>
 
-      <div style="background:var(--orange-lt);border-radius:8px;padding:14px" id="action-requise" style="display:none">
-        <div style="font-size:12px;font-weight:700;color:var(--orange);margin-bottom:10px">⚠️ Résultat &gt; 8 — Nouvelles mesures requises</div>
+      <div style="background:var(--orange-lt);border-radius:8px;padding:14px" id="action-requise">
+        <div style="font-size:12px;font-weight:700;color:var(--orange);margin-bottom:10px" id="action-requise-title">📋 Mesures complémentaires et action corrective</div>
         <div class="fld"><label class="fld-lbl">Nouvelles mesures de prévention</label>
           <textarea class="fld-txt" id="r-nouvelles-mesures" placeholder="Quelles nouvelles mesures prévoir ?"></textarea></div>
         <div class="form-row">
@@ -250,9 +250,12 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
         </div>
       </div>
     </div>
-    <div class="modal-foot">
+    <div class="modal-foot" style="justify-content:space-between">
       <button class="btn btn-ghost" onclick="closeRiskModal()">Annuler</button>
-      <button class="btn btn-green" onclick="saveRisk()">💾 Enregistrer + créer action si nécessaire</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-green" onclick="saveRisk()">💾 Enregistrer</button>
+        <button class="btn btn-primary" onclick="saveRisk(true)">💾 Enregistrer + ➕ Ajouter une action</button>
+      </div>
     </div>
   </div>
 </div>
@@ -397,7 +400,9 @@ function calcRisque() {
     var el_apres = document.getElementById('r-apres');
     el_apres.textContent = apres;
     el_apres.style.color = apres>=8?'var(--red)':apres>=4?'var(--orange)':'var(--green-dk)';
-    document.getElementById('action-requise').style.display = apres>=8?'block':'none';
+    var title = document.getElementById('action-requise-title');
+    if (title) title.textContent = apres>=8 ? '⚠️ Résultat > 8 — Nouvelles mesures requises' : '📋 Mesures complementaires et action corrective';
+    if (title) title.style.color = apres>=8 ? 'var(--red)' : 'var(--orange)';
   }
 }
 
@@ -430,7 +435,34 @@ function openAddRisk() {
 
 function closeRiskModal() { document.getElementById('modal-risk').classList.remove('open'); }
 
-async function saveRisk() {
+async function saveRiskOnly() {
+  var famille = document.getElementById('r-famille').value;
+  var situation = document.getElementById('r-situation').value.trim();
+  var g = parseInt(document.getElementById('r-gravite').value)||0;
+  var f = parseInt(document.getElementById('r-frequence').value)||0;
+  if (!famille||!situation||!g||!f||currentMaitrise===null) {
+    showToast('Famille, situation, cotation et maitrise obligatoires',false); return;
+  }
+  var avant = g*f;
+  var apres = Math.round(avant*currentMaitrise*10)/10;
+  var id = document.getElementById('r-id').value || (Date.now()+Math.random());
+  var data = {
+    id,site:currentSite,unite:currentUT,famille,situation,
+    gravite:g,frequence:f,
+    mesures_existantes:document.getElementById('r-mesures').value.trim(),
+    maitrise:currentMaitrise,resultat_avant:avant,resultat_apres:apres,
+    nouvelles_mesures:document.getElementById('r-nouvelles-mesures').value.trim(),
+    responsable:'',delai:'',statut:'Actif',createdAt:new Date().toISOString()
+  };
+  try {
+    await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveDUERP',data})});
+    closeRiskModal();
+    showToast('Risque enregistre',true);
+    loadRisks();
+  } catch(e) { showToast('Erreur: '+e.message,false); }
+}
+
+async function saveRisk(createAction) {
   var famille = document.getElementById('r-famille').value;
   var situation = document.getElementById('r-situation').value.trim();
   var g = parseInt(document.getElementById('r-gravite').value)||0;
@@ -452,15 +484,19 @@ async function saveRisk() {
   };
   try {
     await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveDUERP',data})});
-    // Si risque critique, creer une action dans le plan actions
-    if (apres>=8 && data.responsable) {
-      var origine = 'DUERP — Risque critique — ' + utInfo.nom + ' — Site ' + currentSite;
+    // Creer une action si responsable et description renseignés
+    if (createAction && data.responsable) {
+      var criticite = apres>=8?'Critique':apres>=4?'Eleve':'Modere';
+      var origine = 'DUERP — Risque ' + criticite + ' — ' + utInfo.nom + ' — Site ' + currentSite;
       await fetch(GSHEET_URL,{method:'POST',body:JSON.stringify({action:'saveAction',data:{
         id:Date.now()+1,auditId:'DUERP-'+currentSite+'-'+currentUT,
-        site:currentSite,auditDate:'',sectionKey:'duerp',criteriaIdx:0,
-        origin:origine,description:data.nouvelles_mesures||('Traiter le risque: '+situation.substring(0,80)),
-        responsable:data.responsable,delai:data.delai,avancement:0,
-        commentaire:'Resultat='+apres,efficace:'',createdAt:new Date().toISOString()
+        site:currentSite,auditDate:new Date().toISOString().split('T')[0],
+        sectionKey:'duerp',criteriaIdx:0,
+        origin:origine,
+        description:data.nouvelles_mesures||('Traiter le risque: '+situation.substring(0,80)),
+        responsable:data.responsable,delai:data.delai||'',avancement:0,
+        commentaire:'Resultat risque='+apres+' | Famille: '+famille.substring(0,40),
+        efficace:'',createdAt:new Date().toISOString()
       }})});
     }
     closeRiskModal();
