@@ -472,16 +472,19 @@ async function saveRisk() {
 // Load risks
 var utRisks = [];
 function loadRisks() {
-  var cb='_cb'+Date.now();
-  window[cb]=function(d){
-    delete window[cb];
-    utRisks=(d.data||[]).filter(function(r){
-      return String(r[1])===currentSite&&String(r[2])===currentUT;
+  // Use a fixed callback name to avoid timing issues
+  window._duerp_cb = function(d) {
+    utRisks = (d.data || []).filter(function(r) {
+      return String(r[1]) === currentSite && String(r[2]) === currentUT;
     });
+    console.log('DUERP loaded:', (d.data||[]).length, 'total, filtered:', utRisks.length, 'for', currentSite, currentUT);
     renderRisks();
   };
-  var s=document.createElement('script');
-  s.src=GSHEET_URL+'?action=getDUERP&callback='+cb;
+  var old = document.getElementById('_duerp_script');
+  if (old) old.remove();
+  var s = document.createElement('script');
+  s.id = '_duerp_script';
+  s.src = GSHEET_URL + '?action=getDUERP&callback=_duerp_cb';
   document.head.appendChild(s);
 }
 
@@ -598,14 +601,12 @@ function editRisk(id) {
 // CMR
 var cmrData = [];
 function loadCMR() {
-  var cb='_cb'+Date.now();
-  window[cb]=function(d){
-    delete window[cb];
+  window._cmr_cb = function(d) {
     cmrData=(d.data||[]).filter(function(r){return String(r[1])===currentSite&&String(r[2])===currentUT;});
     renderCMR();
   };
   var s=document.createElement('script');
-  s.src=GSHEET_URL+'?action=getCMR&callback='+cb;
+  s.src=GSHEET_URL+'?action=getCMR&callback=_cmr_cb';
   document.head.appendChild(s);
 }
 function renderCMR() {
