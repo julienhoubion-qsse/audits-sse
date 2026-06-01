@@ -205,9 +205,7 @@ document.getElementById('site-grid').innerHTML = siteHtml;
 
 // Load DUERP data from GSheets
 function loadDUERP() {
-  var cb = '_cb' + Date.now();
-  window[cb] = function(d) {
-    delete window[cb];
+  window._duerp_accueil_cb = function(d) {
     var data = d.data || [];
     var critique = 0, eleve = 0;
     var siteStats = {};
@@ -226,7 +224,7 @@ function loadDUERP() {
       if (el1) el1.textContent = siteStats[s].crit;
       if (el2) el2.textContent = siteStats[s].elev;
     });
-    document.getElementById('last-update').textContent = data.length + ' risques enregistrés';
+    document.getElementById('last-update').textContent = data.length + ' risques enregistres';
   };
   var s = document.createElement('script');
   s.src = GSHEET_URL + '?action=getDUERP&callback=' + cb;
@@ -234,13 +232,11 @@ function loadDUERP() {
 }
 
 function loadCMR() {
-  var cb = '_cb' + Date.now();
-  window[cb] = function(d) {
-    delete window[cb];
+  window._cmr_accueil_cb = function(d) {
     document.getElementById('nb-cmr').textContent = (d.data||[]).length;
   };
   var s = document.createElement('script');
-  s.src = GSHEET_URL + '?action=getCMR&callback=' + cb;
+  s.src = GSHEET_URL + '?action=getCMR&callback=_cmr_accueil_cb';
   document.head.appendChild(s);
 }
 

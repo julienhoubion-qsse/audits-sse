@@ -275,7 +275,7 @@ function loadData() {
     buildRisksTable(allRisks);
   };
   var s=document.createElement('script');
-  s.src=GSHEET_URL+'?action=getDUERP&callback='+cb;
+  s.src=GSHEET_URL+'?action=getDUERP&callback=_duerp_site_cb';
   document.head.appendChild(s);
 }
 
