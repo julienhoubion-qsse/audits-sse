@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MR Environnement Renault — Audit</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#6BBF1F;--green-dk:#4D8A12;--green-xlt:#EEF8D8;--steel:#4A6880;--steel-dk:#2E4558;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;--red:#DC2626;--orange:#D97706;--indigo:#4F46E5;--emerald:#059669;--radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10)}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:#3A3A3A;margin:0}
+.page-header{background:linear-gradient(135deg,#064E3B,#059669);padding:18px 28px;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#a7f3d0;margin-bottom:4px}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.ph-sub{font-size:12px;color:#bbf7d0;margin-top:3px}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:11px 16px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block}
+.nav-btn:hover{color:#fff}
+.wrapper{max-width:1300px;margin:0 auto;padding:16px 24px 60px}
+.score-bar{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;margin-bottom:16px;display:grid;grid-template-columns:auto 1fr auto auto;gap:16px;align-items:center}
+.score-total{font-family:'Exo 2',sans-serif;font-size:40px;font-weight:800;line-height:1}
+.score-gauge-wrap{background:var(--border);border-radius:4px;height:12px;overflow:hidden}
+.score-gauge-fill{height:100%;border-radius:4px;transition:width .5s}
+.grade-badge{font-family:'Exo 2',sans-serif;font-size:32px;font-weight:800;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff}
+.mr-block{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:10px}
+.mr-hd{background:#064E3B;color:#fff;padding:12px 18px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.mr-hd-num{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:800;background:rgba(255,255,255,.15);padding:4px 10px;border-radius:6px}
+.mr-hd-text{font-size:13px;font-weight:600;flex:1}
+.mr-body{border-top:1px solid #d1fae5}
+.kr-block{border-bottom:1px solid var(--border);padding:12px 18px}
+.kr-block:last-child{border-bottom:none}
+.kr-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.kr-ref{font-weight:700;color:#059669;font-size:12px;white-space:nowrap;min-width:60px}
+.kr-name{font-weight:700;font-size:12px;color:var(--steel-dk)}
+.kr-intitule{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
+.cotation-row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.cot-label{font-size:11px;color:var(--muted);font-weight:600;min-width:60px}
+.cot-btn{min-width:36px;height:32px;border-radius:6px;border:2px solid var(--border);background:var(--white);font-family:'Exo 2',sans-serif;font-size:12px;font-weight:800;cursor:pointer;padding:0 8px;transition:all .15s}
+.cot-btn:hover{border-color:var(--steel)}
+.cot-btn.sel-0{background:#FEE2E2;border-color:#DC2626;color:#DC2626}
+.cot-btn.sel-1{background:#FEF3C7;border-color:#D97706;color:#D97706}
+.cot-btn.sel-2{background:#EEF2FF;border-color:#4F46E5;color:#4F46E5}
+.cot-btn.sel-3{background:var(--green-xlt);border-color:var(--green-dk);color:var(--green-dk)}
+.cot-btn.sel-na{background:var(--slate);border-color:var(--muted);color:var(--muted)}
+.comment-inp{border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-family:'Nunito Sans',sans-serif;font-size:11px;height:28px;min-width:200px}
+.btn{height:36px;padding:0 16px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.btn-green{background:var(--green);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-primary{background:var(--indigo);color:#fff}
+.btn-sm{height:28px;padding:0 10px;font-size:11px}
+.audit-header-bar{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 20px;margin-bottom:12px;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.fld-sm{display:flex;flex-direction:column;gap:3px}
+.fld-sm label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase}
+.fld-sm input,.fld-sm select{height:32px;border:1px solid var(--border);border-radius:6px;padding:0 8px;font-family:'Nunito Sans',sans-serif;font-size:12px}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style></head><body>
+
+<div class="page-header">
+  <div class="ph-tag">Renault Group — MR Environnement</div>
+  <div class="ph-title">♻️ 8 Mandatory Rules Environnement</div>
+  <div class="ph-sub">40 Key Requirements — Cotation 0/1/2/3 + N/A</div>
+</div>
+<div class="nav-bar">
+  <a class="nav-btn" href="Audit_Exigences_Accueil.html">← Retour référentiels</a>
+  <a class="nav-btn" href="Accueil_SSE.html">🏠 Site SSE</a>
+  <a class="nav-btn" href="Plan_Actions_SSE.html">📋 Plan d'actions</a>
+</div>
+
+<div class="wrapper">
+  <div class="audit-header-bar">
+    <div class="fld-sm">
+      <label>Site audité</label>
+      <select id="sel-site" onchange="changeSite(this.value)" style="width:100px">
+        <option value="17">Site 17</option><option value="37">Site 37</option>
+        <option value="38">Site 38</option><option value="41">Site 41</option>
+        <option value="47" selected>Site 47</option><option value="72">Site 72</option>
+        <option value="72bis">Site 72bis</option><option value="89">Site 89</option>
+      </select>
+    </div>
+    <div class="fld-sm"><label>Date audit</label><input type="date" id="inp-date" style="width:140px"></div>
+    <div class="fld-sm"><label>Auditeur(s)</label><input type="text" id="inp-auditeurs" placeholder="Nom Prénom" style="width:200px"></div>
+    <div style="flex:1"></div>
+    <button class="btn btn-ghost btn-sm" onclick="loadAudit()">📂 Charger dernier audit</button>
+    <button class="btn btn-green" onclick="saveAudit()">💾 Enregistrer</button>
+    <button class="btn btn-primary" onclick="exportResults()">📊 Exporter</button>
+  </div>
+
+  <div class="score-bar">
+    <div>
+      <div class="score-total" id="score-val" style="color:#6B7D8A">0</div>
+      <div style="font-size:11px;color:var(--muted)">/ <span id="score-max">0</span> pts</div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px">
+        <span>Score global</span><span id="score-pct">0%</span>
+      </div>
+      <div class="score-gauge-wrap">
+        <div class="score-gauge-fill" id="score-gauge" style="width:0%;background:#6B7D8A"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:2px">
+        <span>E ≤33%</span><span>D 34-57%</span><span>C 58-74%</span><span>B 75-89%</span><span>A ≥90%</span>
+      </div>
+    </div>
+    <div class="grade-badge" id="grade-badge" style="background:#6B7D8A">—</div>
+    <div style="font-size:12px;color:var(--muted)">
+      <div id="info-nc" style="color:var(--red);font-weight:700">0 KR cotés 0</div>
+      <div id="info-na">0 N/A</div>
+      <div id="info-ok" style="color:var(--green-dk)">0 KR cotés ≥ 2</div>
+    </div>
+  </div>
+
+  <div id="mr-grid"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GSHEET_URL = "https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+var params = new URLSearchParams(location.search);
+var currentSite = params.get('site') || '47';
+document.getElementById('sel-site').value = currentSite;
+document.getElementById('inp-date').value = new Date().toISOString().split('T')[0];
+
+const MR_DATA = [{"id": "MR1", "label": "MR01 Sol et eaux souterraines", "krs": [{"ref": "KR1.1", "name": "Due Diligence", "intitule": "Pour chaque acquisition ou location d’un nouveau site, une Due Diligence Environnementale, incluant un diagnostic de sol, doit être effectuée par un fournisseur agréé par la Direction HSEE.", "questions": ["Y-a-t-il eu une acquisition d'un nouveau bâtiment ou en bail < 5 ans ?", "Une Due Diligence a-t-elle été menée ?", "Due Diligence couvrant l'ensemble des thématiques environnementales (périmètre géographique et/ou technique)", "Une cession ou une fin de bail est-elle en projet ?"]}, {"ref": "KR1.2", "name": "Schéma Conceptuel du Site (CSM)", "intitule": "Un schéma conceptuel du site (dit « CSM ») est établi par un fournisseur approuvé par la Direction HSEE et mis à jour pour chaque nouvelle source de pollution identifiée.", "questions": ["Un CSM* (Conceptual Site Model) a-t-il été effectué  ?", "La réalisation du CSM est plannifée ?"]}, {"ref": "KR1.3", "name": "Sols", "intitule": "Sols : toute zone potentiellement polluée a été investiguée par un prestataire agréé par la Direction HSEE. Pour tout nouveau projet, un diagnostic de sol est réalisé, et un plan de management est mis", "questions": ["Il existe un rapport de diagnostic pour les sources historiques et actuelles", "Rapport de diagnostic complet (toutes les sources potentielles connues ont été investiguées) (plusieurs volumes sur plusieurs années si nécessaire)", "il existe un plan de management des sols à jour et documenté pour les sources diagnostiquées", "Un budget est associé à ce plan de management des sols", "Une dépollution est-elle nécessaire ?", "Avez-vous un ou plusieurs nouveaux projets  (actuel ou dans les 5 dernières années )", "Y a-t-il un rapport de diagnostic incluant les nouveaux projets ?", "Ou sinon une étude est-elle planifiée pour ces nouveaux projets ?", "Il existe un  plan de management des sols à jour et documenté (pour les nouveaux projets)", "Un budget est associé à ce plan de management des sols (pour les nouveaux projets)", "Une dépollution est-elle nécessaire (pour les nouveaux projets)?"]}, {"ref": "KR1.4", "name": "Eaux souterraines", "intitule": "en cas de risques identifiés, un monitoring bi-annuel est mis en place ainsi qu’un plan de management pour toutes valeurs remarquables (excédant les limites réglementaires si elles existent). En cas d", "questions": ["Y-a-t-il un risque identifié suite à l’étude historique et documentaire et au Schéma Conceptuel du Site (CSM) ?"]}, {"ref": "KR1.5", "name": "Prévention", "intitule": "Prévention :  les nouvelles installations sont conçues pour éliminer les risques de pollution des sols. Les installations existantes pouvant générer une pollution des sols ont été identifiées (mise à ", "questions": ["Avez-vous des projets impliquants des produits chimiques ?", "Évaluation des installations à risques réalisée et actualisée", "Des installations engendrent des risques avérés* de pollution", "Plan d'action pour les autres installations les plus à risques**", "5S (zones propres et rangées) appliqué avec des progrès significatifs restant possibles", "Avez-vous eu un accident significatif au cours des 3 dernières années ?", "Avez-vous eu un incident**** significatif au cours des 3 dernières années ?"]}]}, {"id": "MR2", "label": "MR02 Air", "krs": [{"ref": "KR2.1", "name": "Emissions", "intitule": "Les émissions atmosphériques sont cartographiées, surveillées en accord avec le Protocole de reporting environnemental et conformes à la réglementation et aux autorisations d’exploiter.", "questions": ["Existe-t-il des non-conformités réglementaires mineures récurrentes (2 années consécutives) OU une non-conformité majeure (dans l'année) ?", "Aucun écart identifié par les commissaires aux comptes lors du précédent audit de certification des données environnementales de PRIORITÉ 1, NI AUCUN écart visible IMPORTANT avec le protocole", "La cartographie des cheminées et de leurs émissions a été réalisée ?", "AUCUNE non-conformité réglementaire récurrente mineure sur les émissions (depuis plusieurs années)", "AUCUN écart identifié par les commissaires aux comptes lors du précédent audit de certification des données environnementales de PRIORITÉ 2, NI AUCUN écart visible MODÉRÉ avec le protocole", "Cartographie des cheminées et de leurs émissions COMPLETE ET A JOUR", "AUCUNE non-conformité réglementaire mineure PONCTUELLE sur les émissions", "AUCUN écart identifié par les commissaires aux comptes lors du précédent audit de certification des données environnementales de PRIORITÉ 3 ET AUCUN écart visible MINEUR avec le protocole", "Avez-vous eu un accident significatif au cours des 3 dernières années ?"]}, {"ref": "KR2.3", "name": "COV", "intitule": "Des moyens et plans d'actions sont mis en œuvre pour réduire les émissions de COV, avec des cibles fixées conformément aux objectifs du Groupe, et les installations de traitement sont maintenues et ef", "questions": ["Avez-vous une cabine de peinture ?"]}, {"ref": "KR2.4", "name": "Cheminées", "intitule": "Les cheminées (hauteur et système pare-pluie) permettent une dispersion correcte des polluants en fonction de leur niveau d'émissions. Lorsque des mesures sont nécessaires, le point de mesure répond a", "questions": ["Avez une ou plusieurs cheminée(s) reliée(s) à une cabine de peinture ou à une chaudière ?"]}, {"ref": "KR2.5", "name": "Gaz à Effet de Serre", "intitule": "Gaz à Effet de Serre (GES) : les émissions sont connues et les principales sources contributives identifiées. Pour les installations couvertes par la réglementation EU-ETS*, le rapport annuel de vérif", "questions": ["La réglementation EU-ETS* est-elle applicable au site", "Ordre de grandeur des émissions de GES* connu ?", "Existe t'il écart un IMPORTANT avec la trajectoire prévue par les objectifs du Groupe en matière d’émissions de CO2 ? ​", "Liste des installations émettrices des GES connue", "Plan de réduction vers la neutralité carbone ou -80% en 2030 chiffré, avec délais et pilote, pour les postes émetteurs de GES", "Objectifs du Site similaires ou plus ambitieux que ceux demandés par le Groupe"]}, {"ref": "KR2.6", "name": "Energie", "intitule": "Les consommations d'énergie sont suivies, et un plan d'action de réduction d'énergie est mis en œuvre, avec des cibles en accord avec les objectifs du Groupe.", "questions": ["L'ensemble des consommations énergétiques du site est suivi", "AUCUN écart IMPORTANT avec le protocole de reporting sur l'énergie lorsqu'il est applicable", "AUCUN écart IMPORTANT avec la trajectoire prévue par les objectifs du Groupe en matière de consommation d’énergie​", "AUCUN écart avec le protocole de reporting sur l'énergie lorsqu'il est applicable", "AUCUN écart avec la trajectoire prévue par les objectifs du Groupe en matière de consommation d’énergie​", "Il existe un plan de réduction des consommations", "Le plan de réduction est chiffré et animé"]}, {"ref": "KR2.7", "name": "Fluides frigorigènes", "intitule": "Les fluides frigorigènes sont répertoriés, les fuites sont suivies et traitées, et lorsque la réglementation l'exige, un plan de substitution est à l'étude pour les gaz à fort potentiel de réchauffeme", "questions": ["L'inventaire des fluides frigorigènes est complet et à jour", "Les fuites de fluides sont suivies et traitées", "Avez-vous des fluides classés à haut pouvoir réchauffant (dit PRG)* qui doivent faire l'objet de substitution selon la règlementation?"]}]}, {"id": "MR3", "label": "MR03 Déchets", "krs": [{"ref": "KR3.1", "name": "Réduire, Réutiliser, Recycler", "intitule": "Des moyens et actions sont mis en œuvre pour réduire, réutiliser ou recycler les déchets et éviter les traitements en centre d’enfouissement, conformément aux objectifs du Groupe / Politique d'économi", "questions": ["Action mise en œuvre pour réduire les quantités de déchets", "Actions définies comme obligatoires sont mises en place", "Des objectifs et des moyens sont définis pour réduire ou valoriser les déchets. Les objectifs sont validés par la direction HSEE", "Objectifs similaires ou plus ambitieux que ceux demandés par le Groupe", "Situation susceptible d’engendrer un impact MINEUR sur le milieu naturel ou au niveau santé, KPIs Groupe ou conformité réglementaire (dégradation du KPI groupe de moins de 0,3%, point d’attention de l", "Situation susceptible d’engendrer un impact SIGNIFICATIF sur le milieu naturel ou au niveau santé, KPIs Groupe ou conformité réglementaire (dégradation du KPI groupe de plus de 1%, mise en demeure, in"]}, {"ref": "KR3.2", "name": "Tri", "intitule": "Les déchets dangereux / recyclables / non-recyclables sont séparés et triés dans des conteneurs pré-identifiés.", "questions": ["Règles de tri des déchets dangereux / recyclables / non-recyclables, sont définies et formalisées", "Règles définissant le tri des déchets (avec a minima les principaux déchets : Dangereux, Non Recyclables, Papier/Carton, Bois, Plastique, Métal, Verre) et l’identification des contenants", "De nombreux écarts de tri constatés (non-respect manifeste des règles de tri)", "Mise en place d’un suivi de la performance de tri (par exemple caractérisation de bennes, audit de tri, systèmes dématérialisés de suivi de la qualité de tri)"]}, {"ref": "KR3.3", "name": "Collecte", "intitule": "Les équipements de collecte sont en bon état, capacitaires et collectés régulièrement pour éviter les débordements.", "questions": ["Aucun débordement constaté entraînant des risques/impacts environnementaux significatifs", "Aucun débordement constaté sans risques/impacts environnementaux significatifs", "Pas de matériel engendrant de risques environnementaux significatifs", "Suivi formalisé du planning de collecte"]}, {"ref": "KR3.4", "name": "Stockage – Zones déchets", "intitule": "Les stockages de déchets sont en bon état avec une protection des sols appropriée. Les déchets dangereux sont protégés de la pluie et des inondations et les déchets liquides dangereux sont stockés dan", "questions": ["TOUT déchet liquide dangereux est dans un conteneur étanche", "AUCUN stockage de déchets sur sol nu", "100% des déchets dangereux sont stockés à l'abri de la pluie et des inondations", "Le sol est en bon état ET adapté", "TOUS déchets dangereux liquides stockés sur rétentions adaptées, capacitaires, entretenues", "État de référence 5S appliqué", "100% des déchets sont stockés en respectant les règles de compatibilité des produits chimiques"]}, {"ref": "KR3.5", "name": "Stockage – Etiquetage des déchets", "intitule": "Les déchets dangereux sont identifiés de manière claire et indélébile en accord avec le standard établi.", "questions": ["100% des déchets dangereux audités sont étiquetés de manière claire et indélébiles: Identification de la nature ET Identification des dangers pour l'Homme et pour l'environnement"]}, {"ref": "KR3.6", "name": "Stockage – Gestion des enlèvements", "intitule": "Les déchets sont évacués régulièrement pour éviter les sur-stocks sur le site et au moins une fois par an, et les déchets de grande valeur sont stockés dans des zones à accès restreint et sous surveil", "questions": ["Déchet sur le site de plus d'un an", "Constatation de sur-stock (+ de 1,5 fois la capacité d'enlèvement)", "Sur-stock avec impact environnemental", "Sur-stock avec justification acceptable", "Avez-vous des déchets potentiellement à forte valeur ?", "Plus de 1 manquement (déchet à forte valeur en accés libre) à été constaté", "1 manquement (déchet à forte valeur en accés libre) à été constaté"]}, {"ref": "KR3.7", "name": "Pont de pesage", "intitule": "Un pont-bascule, calibrée une fois par an, est disponible sur site si la quantité de déchets dépasse 2500t/an.", "questions": ["Quantité supérieure à 2500T de déchets par an (tous types de déchet (DND, DD, …))", "Pont à bascule sur site", "Le pont à bascule permet-il de peser tout type de déchets, sauf cas exceptionnels justifiés*?"]}, {"ref": "KR3.8", "name": "Transporteurs (ADR)", "intitule": "Les transporteurs ont les autorisations nécessaires au transport de déchets et sont conformes à la réglementation de «Transport de Marchandises Dangereuses (ADR)».", "questions": ["Suivi complet des autorisations administratives des transporteurs", "Organisation pour check ADR à chaque départ de déchets concernés"]}, {"ref": "KR3.9", "name": "Traitement", "intitule": "Les filières de traitements ont des permis valides pour tous types de déchet qui leur sont envoyés. Les filières de traitement des déchets dangereux, les centres d'enfouissement et les incinérateurs s", "questions": ["Archivage des autorisations administratives des filières déchets", "100% des autorisations administratives sont disponibles", "Au moins 50% des audits de filières déchets devant être réalisés tous les 3 ans au sens du standard RPIFENVIR20170037 sont à jour"]}, {"ref": "KR3.10", "name": "Traçabilité", "intitule": "Les déchets sont suivis selon le protocole de Reporting Environnemental et tous les documents de traçabilité sont disponibles.", "questions": ["Il existe un registre déchets contenant toutes les informations minimums requises", "Les documents de traçabilité des déchets dangereux sont archivés", "Toutes typologies de déchets  sont tracées dans le registre et  le Registre est à jour", "100% des documents d'acceptation préalable d'une filière de traitement de Déchet Dangereux sont disponibles", "AU MOINS 80% des documents de traçabilité des Déchets Dangereux audités sont conformes (information complètes et retour filière avant 3 mois)", "100% des documents de traçabilité, audités sont conformes, y compris les certifications de destruction des déchets sensibles"]}]}, {"id": "MR4", "label": "MR04 Eau", "krs": [{"ref": "KR4.1", "name": "Réduction", "intitule": "Réduction", "questions": ["Avez-vous un objectif de progrès fixé", "Cet objectif de progrès est dans une dynamique de réduction des prélevements en eau <1% par an", "Si cet objectif de progrès est dans une dynamique de réduction des prélevements en eau >1% par an : Répondre OUI.Si l'objectif est = 1% : Répondre NON)", "Impacts", "Evolution des prélèvements externes en eau susceptible d’engendrer un impact MAJEUR sur le milieu naturel, KPIs Groupe ou conformité réglementaire (KPI groupe dégradé de plus de 1%, mise en demeure, i", "Evolution des prélèvements externes en eau susceptible d’engendrer un impact SIGNIFICATIF sur le milieu naturel ou au niveau santé, KPIs Groupe ou conformité réglementaire (dégradation du KPI groupe e", "Evolution des prélèvements externes en eau susceptible d’engendrer un impact MINEUR sur le milieu naturel ,KPIs Groupe ou conformité réglementaire (dégradation du KPI groupe de moins de 0,3%, point d’", "Le plan de réduction est-il cohérent avec l'objectif du Groupe Renault (objectifs similaires ou plus ambitieux) ?", "Les résultats sont ils à l'objectif (i.e objectif atteint) ?"]}, {"ref": "KR4.2", "name": "Puits", "intitule": "Tout approvisionnement en eau de forage doit donner lieu à une étude de vulnérabilité de la ressource en eau souterraine et le risque sécheresse est géré", "questions": ["Risque sécheresse", "Un plan d'action du risque 'sécheresse' est formalisé et couvre au moins 50% du risque par des réductions de consommation", "Approvisionnement en eau de forage", "Avez-vous un projet de forage (Accord pour un nouveau forage si aucune autre ressource alternative en eau possible ) ?", "Y a-t-il au moins un forage existant sur le site ?"]}, {"ref": "KR4.5", "name": "Suivi", "intitule": "Les approvisionnements externes en eau sont suivis et analysés selon le protocole de Reporting Environnemental et chaque qualité d’eau distribuée et process consommateur d’eau est suivi à l’aide d’un ", "questions": ["Compteurs d'approvisionnements externes", "Compteur sur TOUS les approvisionnements externes en eau", "Fichier de suivi des approvisionnements externe en eau", "Compteur conforme, géré et connecté sur TOUS les approvisionnements externes en eau", "Fichier de suivi avec une fréquence adaptée des approvisionnements externes en eau", "Fichier de suivi des approvisionnements externes AVEC analyse des évolutions de consommation", "Compteurs divisionnaires de distribution", "Un compteur ou débitmètre totalisateur divisionnaire géré pour tout type d'eau distribuée identifié comme obligatoire", "Plus de 50% des process consommateurs d’eau identifiés comme obligatoires sont équipés d’un débitmètre totalisateur subdivisionnaire géré et connecté", "Au moins 80% des process consommateurs d’eau identifiés comme obligatoires sont équipés d’un débitmètre totalisateur subdivisionnaire géré et connecté", "Avez-vous des projets de nouveaux batiments industriels ?"]}]}, {"id": "MR5", "label": "MR05 Rejets", "krs": [{"ref": "KR5.1", "name": "Réduire, Réutiliser, Recycler", "intitule": "Des moyens et actions sont mis en œuvre pour réduire, ré-utiliser et recycler les eaux usées.", "questions": ["Management des rejets", "Avez-vous une non-conformité avec une exigence réglementaire demandant la mise en place d’actions de réduction, réutilisation ou recyclage ?", "Au moins 40% des actions 3R (Réduire, Réutiliser, Recycler) listées et applicables sont réalisées", "Au moins 80% des actions 3R (Réduire, Réutiliser, Recycler) listées et applicables sont réalisées", "Cas spécifique des polluants « éternels » PFAS »", "Etes-vous inclut dans le reporting R2E", "Avez-vous des non-conformités vis-à-vis des exigences administratives ou réglementaire ?", "Avez-vous un plan d'action en cours pour la maîtrise des PFAS conformément à la stratégie Groupe ?", "Tous les PFAS sont-ils maîtrisés à 100% ?", "Existe-il des traces générées par les PFAS dans vos activités ?"]}, {"ref": "KR5.2", "name": "Collecte des effluents", "intitule": "Collecte des effluents : les eaux usées et les eaux pluviales sont collectées séparément. Les plans des réseaux sont mis à jour et un diagnostic de l'état des réseaux est effectué à une fréquence adap", "questions": ["Les réseaux internes de collecte des eaux pluviales et des eaux usées non traitées, sont-ils SEPARES ?", "La séparation des réseaux est-elle une exigence réglementaire et/ou issue d'une autorisation/convention de rejet ?", "La séparation des réseaux internes de collecte est-elle COMPLETE (voir synoptiques 1-2-3-4-5) ?", "Autorisation de déversement", "Les eaux usées domestiques et les eaux pluviales sont-elles mélangées dans un même réseau interne ?", "Risque d'inondation", "Existe-il une étude ou tout autre élement justificatif relatif aux risques d'inondation par débordement de réseaux ?", "Existe-il un risque d'inondation engendrée par des débordements des réseaux d'évacuation des eaux pluviales ?", "Risque de pollution", "Existe-t-il une pollution significative liée aux réseaux enterrés ?", "Un diagnostic de l'état des réseaux enterrés est diponible ?", "Ce diagnostic est-il suffisant (complet)?", "En cas de risque de pollution identifié, un plan d'action adapté est-il mis en œuvre  ?", "Plans des réseaux", "Plan de réseaux disponibles", "Les plans de réseaux sont mis à jour (< 10 ans ET après travaux de modification sur les réseaux)"]}, {"ref": "KR5.4", "name": "Eaux usées domestiques", "intitule": "Eaux usées domestiques : traitement biologique interne ou réseau d’assainissement externe avec permis valide.\n\nEffluents de restaurant : séparateur de graisse régulièrement entretenu.", "questions": ["Vos eaux usées sont elles directement rejetées en milieu naturel ?", "Avez-vous une station de traitement biologique interne (STEP BIO)", "Vos eaux usées sont elles rejetées vers un réseau externe ?", "Avez-vous une autorisation de rejet ?", "L'autorisation de rejet est-elle respectée ?", "Avez-vous un restaurant ?"]}, {"ref": "KR5.5", "name": "Eaux pluviales", "intitule": "Eaux de pluie : traitement conforme à la réglementation, installation de séparateurs d’hydrocarbures et de boues avec entretien approprié dans les zones à risque de déversement.", "questions": ["Moyens globaux de gestion des eaux pluviales conformes à la réglementation locale", "Séparateur d'hydrocarbures sur toutes zones à risque (cf Fiche Technique)", "Moyens globaux des eaux pluviales conformes ET MAINTENUS selon règlementation locales", "Fréquence appropriée de vidange des séparateurs d'hydrocarbures et maintenance annuelle", "Séparateurs d'hydrocarbures adaptés équipés d'un système automatique de détection de niveau hydrocarbure avec report alarme"]}, {"ref": "KR5.7", "name": "Rejet accidentel", "intitule": "Déversement accidentel : Un plan de maitrise des risques est mis en place afin de limiter tout déversement accidentel vers les réseaux externes. Des actions de prévention et/ ou de réduction des impac", "questions": ["Plan de gestion des déversements", "Plan de gestion des déversements accidentels vers les réseaux extérieurs EXISTE et DISPONIBLE", "Plan de gestion des déversements accidentels documenté complètement (cf Fiche Technique - tableaux 2 et 4) avec planification des exercices test à une fréquence adaptée (sur un cycle de 3 ans)", "Bassin de confinement capacitaire pour les eaux d'extinction d'incendie pour les sites de fabrication (validé par étude de faisabilité technico-économique)", "Accident / Incident", "Avez-vous eu un rejet accidentel* significatif dans les 3 dernières années ?", "Avez-vous eu un incident de déversement* au cours des 3 dernières années ?"]}]}, {"id": "MR6", "label": "MR06 Légionelle", "krs": [{"ref": "KR6.1", "name": "Design", "intitule": "Conception : les tours de refroidissement, les réseaux d’eau chaude sanitaire et les autres systèmes d’aérosolisation sont conçus pour éliminer les dangers et réduire les risques.", "questions": ["Distance entre le point de génération et le point d'utilisation < 8 mètres", "Ballon accessible (pour les besoins de maintenance)", "Renouvellement du volume du ballon < 7 jours", "Présence de boucle de retour de l'eau entre les douches et le ballon ou la chaudière", "Bras mort* (Section de canalisation avec eau stagnante)", "Avez-vous une non-conformité réglementaire", "Vitesse de circulation de l'eau > 0,2 m/s", "Tuyaux calorifugés"]}, {"ref": "KR6.4", "name": "Inspection visuelle (autres installations)", "intitule": "Inspection visuelle (autres installations) : Les installations sont en bon état avec des températures appropriées pour l'eau chaude sanitaire ou des traitements d'eau efficaces.", "questions": ["La température (T°) est contrôlée (thermostat) et enregistrée"]}, {"ref": "KR6.6", "name": "Maintenance", "intitule": "Un plan de maintenance préventive et d’arrêt des équipements doivent être établis. Les tours de refroidissement et autres équipements à risque doivent être nettoyés et désinfectés au minimum chaque an", "questions": ["Le site contient il au moins une douche utilisable, ou existe-il une réglémentation locale qui oblige un contrôle de Légionelles sur les ECS* ?", "Les installations d'eau chaude sanitaire (ECS) non-utilisées sont identifiées", "Plan de maintenance pour toutes les installations d'eau chaude sanitaire (ECS)", "La température en sortie de ballon/chaudière est >60°C", "Purges en points bas pour les ballons périodiquement", "Plan de maintenance formalisé incluant un nettoyage et désinfection annuelle", "Plan de maintenance avec plan d'actions en cas de non-conformité", "Purge hebdomadaire en point bas  pour les douches non utilisées", "Purge effectuée après mise à l'arrêt (avant le redémarrage)", "Suivi de la procédure suite à la mise à l'arrêt"]}]}, {"id": "MR7", "label": "MR07 Bruit & Biodiversité", "krs": [{"ref": "KR7.1", "name": "Emissions sonores", "intitule": "Les émissions sonores sont gérées en limite des propriété conformément à la fréquence réglementaire et les rapports sont disponibles. Un plan d’action est mis en œuvre pour chaque non-conformité ou pl", "questions": ["Campagne de mesures sonores réalisée à la fréquence définie ET complète", "Avez-vous déjà reçu une plainte ?", "Campagne réalisée avec plan d'action pour les Non-Conformités", "Si plainte on non-conformité, une communication est faite vers le Corporate", "Ecart d'émission sonore significatif constaté (par rapport aux limites), sans motif justificatif", "L'ensemble des sources de bruit potentiellement impactantes en limite de propriété sont identifiées et cartographiées"]}, {"ref": "KR7.2", "name": "Bruit dans les projets", "intitule": "Les projets sont gérés de façon à ce qu’ils n’aient pas d’impact significatif sur le niveau de bruit en limite de propriété.", "questions": ["L'impact bruit est pris en compte dans TOUS les nouveaux projets et installations"]}, {"ref": "KR7.3", "name": "Actions et enjeux biodiversité", "intitule": "Des actions sont mises en œuvre pour préserver la biodiversité et une cartographie des enjeux biodiversité est disponible pour tous les sites industriels et les principaux sites d’ingénierie et de log", "questions": ["Le site est-il inclus dans le périmètre de reporting REE ?", "Une cartographie des enjeux biodiversité est planifiée et disponible ou une mission en coordination avec la direction HSEE ?", "La gestion différenciée des espaces verts et le Zéro Phyto sont en place", "Planification robuste avec budget associé ou réalisation de toutes les actions de priorité 1 figurant dans le rapport de diagnostic***"]}, {"ref": "KR7.4", "name": "Biodiversité dans les projets", "intitule": "L’impact biodiversité est pris en compte dans les projets", "questions": ["Le site comprend-il une zone verte*, ou avez-vous un projet d'extension ou d'acquisition qui impacterait une zone verte*?\"", "Aménagement* d’une zone non artificialisée (> 1000 m2) ou d’une zone naturelle au cours des 2 dernières années ?", "La stratégie « Eviter, Réduire, Compenser » est-elle formalisée pour tous les nouveaux projets impactant la biodiversité ?"]}]}, {"id": "MR8", "label": "MR08 Réglementation", "krs": [{"ref": "KR8.1", "name": "Veille", "intitule": "Le site dispose d’une veille robuste et fiable des textes réglementaires et autres exigences, et identifie les exigences applicables pour ses installations actuelles et les projets.", "questions": ["La liste des textes réglementaires est découpée en exigences"]}, {"ref": "KR8.2", "name": "Conformité", "intitule": "Le site évalue la conformité et fournit un plan d'action priorisé pour lever toute non-conformité.", "questions": ["L'évaluation de conformité a-t-elle été réalisée pour la totalité des installations ?", "Tous les textes majeurs ont-ils fait l'objet d'une évaluation de conformité ?", "Le délai d'évaluation de nouvelles exigences est-il SUPERIEUR à 8 mois (suivant leur publication) ?", "Le délai d'évaluation d'au moins 80%  des nouvelles exigences est-il INFERIEUR à 4mois (suivant leur publication)?", "Toutes les exigences applicables sont ré-évaluées au maximum tous les 3 ans ?"]}, {"ref": "KR8.3", "name": "Permis", "intitule": "Les permis, autorisations et conventions de rejet applicables à l’ensemble des activités du site sont listés et valides.", "questions": ["Le site dispose-t-il de toutes les autorisations ou équivalent (déclaration à l'administration, ...) valides ou en cours de régularisation pour exploiter l'ensemble de ses activités ?", "Avez-vous une liste répertoriant toutes les autorisations valides et/ou en cours de régularisation ?", "La liste est-elle complète ?", "Avez-vous un projet nécessitant une autorisation ?"]}, {"ref": "KR8.4", "name": "Litiges", "intitule": "Les plaintes, mises en demeure, amendes et autres requêtes formelles des autorités sont enregistrées dans un journal de bord, font l’objet d'un plan d'actions géré selon une approche PDCA. Les sanctio", "questions": ["Avez-vous reçu au moins une demande officielle depuis 3 ans ?", "Avez-vous lancé un plan d'action ?", "Avez-vous un plan d’action complet  ?", "Avez-vous un journal de bord qui trace les demandes officielles ?", "Avez-vous reçu au moins une plainte depuis 3 ans ?", "Avez-vous un journal de bord qui trace les plaintes antérieures à 3 ans ?"]}]}];
+
+var scores = {};
+
+const GRADES = [
+  {min:90,label:'A',color:'#059669',text:'Excellent'},
+  {min:75,label:'B',color:'#4F46E5',text:'Bien'},
+  {min:58,label:'C',color:'#D97706',text:'Satisfaisant'},
+  {min:34,label:'D',color:'#DC2626',text:'Non satisfaisant'},
+  {min:0, label:'E',color:'#7F1D1D',text:'Totalement inacceptable'}
+];
+
+function getGrade(pct) {
+  for (var i=0;i<GRADES.length;i++) { if(pct>=GRADES[i].min) return GRADES[i]; }
+  return GRADES[GRADES.length-1];
+}
+
+function updateScore() {
+  var total=0, maxScore=0, naCount=0, zeroCount=0, goodCount=0;
+  MR_DATA.forEach(function(mr) {
+    mr.krs.forEach(function(kr) {
+      var s = scores[kr.ref];
+      if (!s || s.na) { naCount++; return; }
+      maxScore += 3;
+      var v = s.val !== null && s.val !== undefined ? parseInt(s.val) : 0;
+      total += v;
+      if (v===0) zeroCount++;
+      if (v>=2) goodCount++;
+    });
+  });
+  var pct = maxScore>0 ? Math.round(total/maxScore*100) : 0;
+  var grade = getGrade(pct);
+  document.getElementById('score-val').textContent = total;
+  document.getElementById('score-val').style.color = grade.color;
+  document.getElementById('score-max').textContent = maxScore;
+  document.getElementById('score-pct').textContent = pct+'%';
+  document.getElementById('score-gauge').style.width = pct+'%';
+  document.getElementById('score-gauge').style.background = grade.color;
+  document.getElementById('grade-badge').textContent = grade.label;
+  document.getElementById('grade-badge').style.background = grade.color;
+  document.getElementById('info-nc').textContent = zeroCount+' KR cotes 0';
+  document.getElementById('info-na').textContent = naCount+' N/A';
+  document.getElementById('info-ok').textContent = goodCount+' KR cotes >= 2';
+
+  MR_DATA.forEach(function(mr) {
+    var mrT=0,mrM=0;
+    mr.krs.forEach(function(kr){
+      var s=scores[kr.ref];
+      if(!s||s.na)return;
+      mrM+=3; mrT+=(s.val!==null&&s.val!==undefined?parseInt(s.val):0);
+    });
+    var el=document.getElementById('mr-score-'+mr.id);
+    if(el){ el.textContent=mrT+'/'+mrM; var p=mrM>0?Math.round(mrT/mrM*100):0; el.style.color=p>=75?'#86efac':p>=34?'#fde68a':'#fca5a5'; }
+  });
+}
+
+function setCot(krRef, val) {
+  if (!scores[krRef]) scores[krRef]={val:null,na:false,comment:''};
+  scores[krRef].val = val; scores[krRef].na = false;
+  var safeRef = krRef.replace(/\./g,'-');
+  var block = document.getElementById('kr-block-'+safeRef);
+  if (block) {
+    block.querySelectorAll('.cot-btn:not([data-na])').forEach(function(b){
+      b.className='cot-btn';
+      if(parseInt(b.dataset.val)===val) b.classList.add('sel-'+val);
+    });
+  }
+  updateScore();
+}
+
+function setNA(krRef, btn) {
+  if (!scores[krRef]) scores[krRef]={val:null,na:false,comment:''};
+  scores[krRef].na = !scores[krRef].na; scores[krRef].val = null;
+  btn.classList.toggle('sel-na', scores[krRef].na);
+  if (scores[krRef].na) {
+    var safeRef = krRef.replace(/\./g,'-');
+    var block = document.getElementById('kr-block-'+safeRef);
+    if (block) block.querySelectorAll('.cot-btn:not([data-na])').forEach(function(b){b.className='cot-btn';});
+  }
+  updateScore();
+}
+
+function setComment(krRef, val) {
+  if (!scores[krRef]) scores[krRef]={val:null,na:false,comment:''};
+  scores[krRef].comment = val;
+}
+
+function buildGrid() {
+  var html = '';
+  MR_DATA.forEach(function(mr) {
+    html += '<div class="mr-block">';
+    html += '<div class="mr-hd" onclick="toggleMR(\'mr-body-'+mr.id+'\')">';
+    html += '<span class="mr-hd-num">'+mr.id+'</span>';
+    html += '<span class="mr-hd-text">'+mr.label+'</span>';
+    html += '<span style="font-size:13px;font-weight:800" id="mr-score-'+mr.id+'">0/'+mr.krs.length*3+'</span>';
+    html += '<span style="font-size:12px;opacity:.7">▼</span>';
+    html += '</div>';
+    html += '<div class="mr-body" id="mr-body-'+mr.id+'">';
+
+    mr.krs.forEach(function(kr) {
+      var safeRef = kr.ref.replace(/\./g,'-');
+      html += '<div class="kr-block" id="kr-block-'+safeRef+'">';
+      html += '<div class="kr-header">';
+      html += '<span class="kr-ref">'+kr.ref+'</span>';
+      html += '<div><div class="kr-name">'+kr.name+'</div>';
+      if (kr.intitule && kr.intitule !== kr.name) {
+        html += '<div class="kr-intitule">'+kr.intitule.substring(0,180)+'</div>';
+      }
+      html += '</div></div>';
+
+      // Questions
+      if (kr.questions && kr.questions.length) {
+        html += '<div style="background:var(--slate);border-radius:6px;padding:8px 10px;margin-bottom:8px;font-size:11px;color:var(--muted)">';
+        kr.questions.slice(0,3).forEach(function(q){
+          html += '<div style="margin-bottom:2px">• '+q.substring(0,100)+'</div>';
+        });
+        if (kr.questions.length>3) html += '<div style="color:var(--indigo)">+ '+(kr.questions.length-3)+' autres questions...</div>';
+        html += '</div>';
+      }
+
+      // Cotation
+      html += '<div class="cotation-row">';
+      html += '<span class="cot-label">Cotation</span>';
+      for (var v=0;v<=3;v++) {
+        var labels = ['0 — Non conforme','1 — Partiel','2 — Conforme partiel','3 — Conforme total'];
+        html += '<button class="cot-btn" data-val="'+v+'" title="'+labels[v]+'" onclick="setCot(\''+kr.ref+'\','+v+')">'+v+'</button>';
+      }
+      html += '<button class="cot-btn" data-na="1" onclick="setNA(\''+kr.ref+'\',this)">N/A</button>';
+      html += '<input class="comment-inp" placeholder="Commentaire / Preuve..." oninput="setComment(\''+kr.ref+'\',this.value)">';
+      html += '</div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  document.getElementById('mr-grid').innerHTML = html;
+  updateScore();
+}
+
+function toggleMR(bodyId) {
+  var el = document.getElementById(bodyId);
+  if (el) el.style.display = el.style.display==='none' ? '' : 'none';
+}
+
+function changeSite(site) { currentSite=site; history.replaceState(null,'','?site='+site); }
+
+async function saveAudit() {
+  var auditData = {
+    id:'MRENV-'+currentSite+'-'+document.getElementById('inp-date').value,
+    site:currentSite, referentiel:'MR_ENV',
+    date:document.getElementById('inp-date').value,
+    auditeurs:document.getElementById('inp-auditeurs').value.trim(),
+    scores:scores, createdAt:new Date().toISOString()
+  };
+  try {
+    await fetch(GSHEET_URL, {method:'POST', body:JSON.stringify({action:'saveAuditExigences', data:auditData})});
+    showToast('Audit enregistre', true);
+  } catch(e) { showToast('Erreur', false); }
+}
+
+function loadAudit() {
+  window._audit_env_cb = function(d) {
+    var data = d.data || [];
+    var siteAudits = data.filter(function(r){return String(r[1])===currentSite && r[2]==='MR_ENV';});
+    if (!siteAudits.length) { showToast('Aucun audit precedent', false); return; }
+    var last = siteAudits[siteAudits.length-1];
+    try {
+      scores = JSON.parse(last[4]||'{}');
+      document.getElementById('inp-date').value = last[3]||'';
+      document.getElementById('inp-auditeurs').value = last[5]||'';
+      buildGrid();
+      Object.keys(scores).forEach(function(ref) {
+        var s = scores[ref];
+        if (s.na) { var b=document.querySelector('[data-kr="'+ref+'"][data-na]'); if(b)b.classList.add('sel-na'); }
+        else if (s.val!==null) setCot(ref, s.val);
+      });
+      showToast('Audit charge', true);
+    } catch(e) { showToast('Erreur chargement', false); }
+  };
+  var s = document.createElement('script');
+  s.src = GSHEET_URL+'?action=getAuditExigences&callback=_audit_env_cb';
+  document.head.appendChild(s);
+}
+
+function exportResults() {
+  var lines=['MR Environnement Renault — Site '+currentSite+' — '+document.getElementById('inp-date').value,''];
+  var total=0,maxScore=0;
+  MR_DATA.forEach(function(mr){
+    lines.push('=== '+mr.id+': '+mr.label+' ===');
+    mr.krs.forEach(function(kr){
+      var s=scores[kr.ref];
+      var val=s?(s.na?'N/A':s.val!==null?s.val:'—'):'—';
+      lines.push('  '+kr.ref+' — '+kr.name+': '+val+(s&&s.comment?' ['+s.comment+']':''));
+      if(s&&!s.na&&s.val!==null){maxScore+=3;total+=parseInt(s.val||0);}
+    });
+    lines.push('');
+  });
+  var pct=maxScore>0?Math.round(total/maxScore*100):0;
+  lines.push('SCORE: '+total+'/'+maxScore+' ('+pct+'%) — Grade: '+getGrade(pct).label);
+  var blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='MR_Env_Site'+currentSite+'_'+document.getElementById('inp-date').value+'.txt';
+  a.click();
+}
+
+function showToast(msg,ok){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.style.background=ok?'var(--green-dk)':'var(--steel-dk)';
+  t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},3000);
+}
+
+buildGrid();
+</script>
+</body></html>

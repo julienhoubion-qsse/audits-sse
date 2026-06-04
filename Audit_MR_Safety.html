@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MR Safety Renault — Audit</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#6BBF1F;--green-dk:#4D8A12;--green-xlt:#EEF8D8;--steel:#4A6880;--steel-dk:#2E4558;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;--red:#DC2626;--red-lt:#FEE2E2;--orange:#D97706;--orange-lt:#FEF3C7;--indigo:#4F46E5;--indigo-lt:#EEF2FF;--radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10)}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:#3A3A3A;margin:0}
+.page-header{background:linear-gradient(135deg,#7F1D1D,#DC2626);padding:18px 28px;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#fca5a5;margin-bottom:4px}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.ph-sub{font-size:12px;color:#fecaca;margin-top:3px}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:11px 16px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block}
+.nav-btn:hover{color:#fff}
+.nav-btn.active{color:#fff!important;border-bottom-color:var(--green)!important}
+.wrapper{max-width:1300px;margin:0 auto;padding:16px 24px 60px}
+.score-bar{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;margin-bottom:16px;display:grid;grid-template-columns:auto 1fr auto auto;gap:16px;align-items:center}
+.score-total{font-family:'Exo 2',sans-serif;font-size:40px;font-weight:800;line-height:1}
+.score-label{font-size:12px;color:var(--muted);text-transform:uppercase;font-weight:600;margin-top:2px}
+.score-gauge-wrap{background:var(--border);border-radius:4px;height:12px;overflow:hidden}
+.score-gauge-fill{height:100%;border-radius:4px;transition:width .5s}
+.grade-badge{font-family:'Exo 2',sans-serif;font-size:32px;font-weight:800;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff}
+.audit-info{font-size:12px;color:var(--muted)}
+.mr-block{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:10px}
+.mr-hd{background:#7F1D1D;color:#fff;padding:12px 18px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.mr-hd-num{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:800;background:rgba(255,255,255,.15);padding:4px 10px;border-radius:6px}
+.mr-hd-text{font-size:13px;font-weight:600;flex:1}
+.mr-hd-score{font-family:'Exo 2',sans-serif;font-size:14px;font-weight:800}
+.mr-body{border-top:1px solid #fee2e2}
+.kr-row{display:grid;grid-template-columns:90px 1fr auto auto auto auto;gap:8px;align-items:center;padding:10px 18px;border-bottom:1px solid var(--border);font-size:12px}
+.kr-row:last-child{border-bottom:none}
+.kr-row:hover{background:var(--slate)}
+.kr-ref{font-weight:700;color:#DC2626;font-size:11px}
+.kr-text{color:#3A3A3A;line-height:1.4}
+.cotation-btns{display:flex;gap:3px}
+.cot-btn{width:32px;height:32px;border-radius:6px;border:2px solid var(--border);background:var(--white);font-family:'Exo 2',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center}
+.cot-btn:hover{border-color:var(--steel)}
+.cot-btn.sel-0{background:#FEE2E2;border-color:#DC2626;color:#DC2626}
+.cot-btn.sel-1{background:#FEF3C7;border-color:#D97706;color:#D97706}
+.cot-btn.sel-2{background:#EEF2FF;border-color:#4F46E5;color:#4F46E5}
+.cot-btn.sel-3{background:var(--green-xlt);border-color:var(--green-dk);color:var(--green-dk)}
+.cot-btn.sel-na{background:var(--slate);border-color:var(--muted);color:var(--muted)}
+.comment-inp{border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-family:'Nunito Sans',sans-serif;font-size:11px;width:160px;height:28px}
+.comment-inp:focus{outline:none;border-color:var(--indigo)}
+.btn{height:36px;padding:0 16px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.btn-primary{background:var(--indigo);color:#fff}
+.btn-green{background:var(--green);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-red{background:#DC2626;color:#fff}
+.btn-sm{height:28px;padding:0 10px;font-size:11px}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.audit-header-bar{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 20px;margin-bottom:12px;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.fld-sm{display:flex;flex-direction:column;gap:3px}
+.fld-sm label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase}
+.fld-sm input,.fld-sm select{height:32px;border:1px solid var(--border);border-radius:6px;padding:0 8px;font-family:'Nunito Sans',sans-serif;font-size:12px}
+</style></head><body>
+
+<div class="page-header">
+  <div class="ph-tag">Renault Group — MR Safety</div>
+  <div class="ph-title">🦺 10 Mandatory Rules Safety</div>
+  <div class="ph-sub">74 Key Requirements — Cotation 0/1/2/3 + A/NA</div>
+</div>
+<div class="nav-bar">
+  <a class="nav-btn" href="Audit_Exigences_Accueil.html">← Retour référentiels</a>
+  <a class="nav-btn" href="Accueil_SSE.html">🏠 Site SSE</a>
+  <a class="nav-btn" href="Plan_Actions_SSE.html">📋 Plan d'actions</a>
+</div>
+
+<div class="wrapper">
+  <!-- Entête audit -->
+  <div class="audit-header-bar">
+    <div class="fld-sm">
+      <label>Site audité</label>
+      <select id="sel-site" onchange="changeSite(this.value)" style="width:100px">
+        <option value="17">Site 17</option><option value="37">Site 37</option>
+        <option value="38">Site 38</option><option value="41">Site 41</option>
+        <option value="47" selected>Site 47</option><option value="72">Site 72</option>
+        <option value="72bis">Site 72bis</option><option value="89">Site 89</option>
+      </select>
+    </div>
+    <div class="fld-sm"><label>Date audit</label><input type="date" id="inp-date" style="width:140px"></div>
+    <div class="fld-sm"><label>Auditeur(s)</label><input type="text" id="inp-auditeurs" placeholder="Nom Prénom" style="width:200px"></div>
+    <div style="flex:1"></div>
+    <button class="btn btn-ghost btn-sm" onclick="loadAudit()">📂 Charger dernier audit</button>
+    <button class="btn btn-green" onclick="saveAudit()">💾 Enregistrer</button>
+    <button class="btn btn-primary" onclick="exportResults()">📊 Exporter résultats</button>
+  </div>
+
+  <!-- Score global -->
+  <div class="score-bar" id="score-bar">
+    <div>
+      <div class="score-total" id="score-val" style="color:#6B7D8A">0</div>
+      <div class="score-label">/ 222 pts</div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px">
+        <span>Score global</span><span id="score-pct">0%</span>
+      </div>
+      <div class="score-gauge-wrap">
+        <div class="score-gauge-fill" id="score-gauge" style="width:0%;background:#6B7D8A"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:2px">
+        <span>E ≤33%</span><span>D 34-57%</span><span>C 58-74%</span><span>B 75-89%</span><span>A ≥90%</span>
+      </div>
+    </div>
+    <div class="grade-badge" id="grade-badge" style="background:#6B7D8A">—</div>
+    <div class="audit-info">
+      <div id="info-nc" style="color:var(--red);font-weight:700">0 KR à 0</div>
+      <div id="info-na" style="color:var(--muted)">0 N/A</div>
+      <div id="info-ok" style="color:var(--green-dk)">0 KR ≥ 2</div>
+    </div>
+  </div>
+
+  <!-- Grille MR -->
+  <div id="mr-grid"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GSHEET_URL = "https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+var params = new URLSearchParams(location.search);
+var currentSite = params.get('site') || '47';
+document.getElementById('sel-site').value = currentSite;
+document.getElementById('inp-date').value = new Date().toISOString().split('T')[0];
+
+const MR_DATA = [{"id": "1", "label": "Je respecte l’état de référence 5S de mon poste de travail et de son environnement.", "krs": [{"ref": "1.1", "text": "Une place pour chaque chose et chaque chose à sa place."}, {"ref": "1.2", "text": "Les dangers de glissade, déplacement et chute sont maîtrisés."}, {"ref": "1.3", "text": "Toutes les surfaces sont propres et exemptes de débris."}, {"ref": "1.4", "text": "Les voies de circulation, entrées/sorties, escaliers, équipements de sécurité et de protection incendie, panneaux électriques, etc. sont exempts de tout obstacle."}]}, {"id": "2a", "label": "Je mets hors service l’installation et  je coupe les énergies. Je m’assure de l’absence d’énergies résiduelles avant d’intervenir.", "krs": [{"ref": "2a.1", "text": "Une procédure visuelle, dédiée et spécifique à chaque machine/process de Lock Out Tag Out (LOTO: coupure, purge, condamnation des énergies) doit être mise en œuvre pour chaque machine/process après réalisation d'une évaluation des risques spécifique."}, {"ref": "2a.2", "text": "Toutes les sources d'énergie doivent être clairement identifiées sur la machine/process et référencées dans la procédure LOTO."}, {"ref": "2a.3", "text": "Le moyen de coupure de chaque source d'énergie doit être verrouillable (ex. sectionneur électrique, vanne pneumatique, etc.). En cas d'énergie résiduelle, il existe un moyen de purge dédié."}, {"ref": "2a.4", "text": "La valeur de chaque énergie doit être vérifiée visuellement avant et après isolation (pour cela sont présents un voltmètre pour chaque phase électrique, des manomètres de pression, etc.); les voltmètres et manomètres doivent être en parfait état de fonctionnement."}]}, {"id": "2b", "label": "Je pose mon cadenas nominatif et  je conserve la clé avec moi.  Il y a autant de cadenas posés que d’intervenants.", "krs": [{"ref": "2b.1", "text": "Vous devez toujours placer votre cadenas sur un multilock et en aucun cas directement sur le sectionneur (ceci permet d'utiliser plusieurs cadenas, chaque personne ayant la maîtrise totale de son cadenas personnel)."}, {"ref": "2b.2", "text": "Chaque personne impliquée doit disposer d'un moyen d'identification personnel comportant sa photo, son nom. Cette identification doit être en bon état et disposer des informations requises facilement lisibles."}, {"ref": "2b.3", "text": "Toute personne prenant part à l'activité doit placer son cadenas personnel sur le multilock, le verrouiller et garder sa clé en sa possession. La clé vous appartient, à vous seul, ne la laissez jamais sur le cadenas et ne la remettez jamais à une autre personne."}]}, {"id": "2c", "label": "En cas d’impossibilité de coupure de toutes les énergies, j’interviens exceptionnellement sous énergie après évaluation des risques avec une  protection alternative.", "krs": [{"ref": "2c.1", "text": "Une évaluation des risques spécifique pour chaque ISEPA doit être documentée par le secteur maintenance, puis signée par le Responsable de la maintenance."}, {"ref": "2c.2", "text": "Les résultats de cette évaluation des risques doivent être transmis à TOUTES les personnes concernées par l'activité; seules les personnes ayant démontré leurs compétences peuvent participer aux activités LOTO associées à cette évaluation des risques."}, {"ref": "2c.3", "text": "Dans le cas où (en dernier recours), de l'énergie doit être présente (par exemple un apprentissage robot), un système de travail dédié et sécurisé détaillant les mesures de maitrise précises doit alors être documenté. Il convient de prouver les compétences avant le début de l'activité."}, {"ref": "2c.4", "text": "La liste ISEPA de chaque département est vérifiée chaque mois par le Responsable de la maintenance, son équipe et par le Responsable HSE avec révision du PDCA consacré à l'élimination de chaque ISEPA."}, {"ref": "2c.5", "text": "Si une ISEPA subsiste après un délai de 3 mois, le Responsable de la maintenance doit demander une dérogation auprès de la Division HSE Corporate en respectant les règles de dérogation du Groupe. (Règles et formulaire à créer par la Division HSE)"}]}, {"id": "3a", "label": "Je vérifie la présence des éléments de protection (carters, grilles, rideaux, barrières immatérielles…).", "krs": [{"ref": "3a.1", "text": "Les protecteurs doivent être adaptés afin d'empêcher tout accès aux éléments dangereux de la machine (cela signifie que l'écartement/la taille/la distance est compatible avec les dangers, matières/projections de substance potentiels, etc.)."}, {"ref": "3a.2", "text": "Les protecteurs sont en bon état, solides et complets, toutes les fixations sont bien présentes et vissées à l'aide d'outils."}, {"ref": "3a.3", "text": "Les armoires électriques et panneaux de commande sont fermés, verrouillés et exempts de tout obstacle.\nLa signalisation indiquant un danger électrique est présente sur chaque armoire et panneau électriques."}, {"ref": "3a.4", "text": "Les contacts de protection et les dispositifs de verrouillage doivent être sécurisés à l'aide de vis inviolables.\nToutes les fixations sont en place (aucune vis inviolable et/ou aucun écrou frein ne manque)."}, {"ref": "3a.5", "text": "Un schéma 3D de la machine/process présente l'ensemble des fonctions de sécurité, ainsi que la catégorie atteinte par rapport à la catégorie requise et le niveau de performance atteint par rapport au niveau requis."}, {"ref": "3a.6", "text": "Le rapport Sistema est parfaitement en phase avec le schéma 3D cité en 3a.5 (toutes les références des fonctions de sécurité correspondent entre schéma 3D et Sistema) \nNOTE : les références doivent être descriptives (c'est-à-dire: arrêts d'urgence 1, 2, 3, etc. sont de bonnes références. Les références alphanumériques, telles que A1, ABC123, ne sont pas autorisées)."}, {"ref": "3a.7", "text": "L'usine fournit les preuves destinées à confirmer que la caractérisation des dangers sur la machine en question est en ligne avec les catégories et les niveaux de performance atteints. (La division HSE peut faire appel à une tierce partie pour validation)"}, {"ref": "3a.8", "text": "Le dispositif de sécurité choisi pour la fonction de sécurité concernée est le bon dispositif correspondant au danger. C'est-à-dire que le contact de sécurité entièrement codé et fonctionnant sans contact est correct. Une configuration avec contact à broche ne peut pas être correcte. (La division HSE peut faire appel à une tierce partie pour validation)."}]}, {"id": "3b", "label": "Je contrôle périodiquement le fonctionnement des  dispositifs de sécurité notamment suite à un arrêt  prolongé ou une modification de l’installation.", "krs": [{"ref": "3b.1", "text": "CONTRÔLE PHYSIQUE RÉALISÉ PAR DU PERSONNEL DE MAINTENANCE QUALIFIÉ (niveau 2, 3 ou 4)\nIl existe un schéma présentant l'emplacement précis de chaque dispositif de sécurité sur la machine/installation.\nUne liste de contrôle de chacun des dispositifs de sécurité parfaitement alignée au schéma est disponible. \nTous les contrôles sont intégrés dans TPM et réalisés au moins tous les 6 mois.\nNom, date et signature du vérificateur doivent être apposés pour chaque contrôle."}, {"ref": "3b.2", "text": "CONTRÔLE VISUEL RÉALISÉ PAR UN OPÉRATEUR FORMÉ\nExamen visuel rapide destiné à vérifier que les protecteurs sont en bon état, en place et fermés de manière  sécurisée.\nExamen visuel rapide destiné à vérifier que les arrêts d'urgence sont en bon état et faciles d'accès.\nNOTE : la fréquence doit englober toutes les équipes de travail et l'ensemble des opérateurs doit participer régulièrement aux contrôles. Nom, date et signature du vérificateur doivent être apposés pour chaque contrôle."}]}, {"id": "3c", "label": "J’arrête immédiatement l’installation en cas d’anomalie sécurité et j’alerte mon chef d’UET.", "krs": [{"ref": "3c", "text": "En cas de défaillance d'un dispositif de sécurité, d'absence, d'endommagement ou d'ouverture d'un protecteur, vous devez arrêter immédiatement votre installation et en informer votre supérieur hiérarchique."}]}, {"id": "4a", "label": "Je respecte les règles de circulation sur le site et le code de la route à l’extérieur.", "krs": [{"ref": "4a.1", "text": "Le conducteur possède un permis de conduire valide (le terme « valide » signifie conforme à la réglementation locale, aux règles Renault et au véhicule utilisé)."}, {"ref": "4a.2", "text": "Il est interdit d'utiliser un téléphone portable ou mains libres lors de la conduite de chariots élévateurs, de tracteurs, de petit trains, de plates-formes élévatrices mobiles de personnel (PEMP), de grues et autres véhicules. \nInterdiction d'utiliser un téléphone pendant que vous marchez, immobilisez-vous dans un lieu sur et prêtez une attention particulière à ce qui vous entoure."}, {"ref": "4a.3", "text": "Les contrôles des véhicules avant toute utilisation sont effectués par les conducteurs au début de chaque équipe de travail et consignés dans le carnet de bord des véhicules. Lorsqu'un contrôle est jugé critique et insatisfaisant, le véhicule est mis à l'arrêt et n'est pas utilisé jusqu'à ce que la défaillance soit résolue."}, {"ref": "4a.4", "text": "La ceinture de sécurité doit être positionnée et correctement ajustée sur les chariots élévateurs, tracteurs, camions et tout autre véhicule équipé de ce dispositif."}]}, {"id": "4b", "label": "Je ralentis à l’approche d’une zone sans visibilité ou en présence de piéton: respect mutuel aux croisements.", "krs": [{"ref": "4b.1", "text": "Les piétons doivent rester en permanence à une distance minimale d'un mètre des véhicules suivants (chariots élévateurs, tracteurs, petits trains) lorsque le moteur est en marche et ce, même si le véhicule est à l'arrêt. Le conducteur doit toujours garder un contact visuel avec les piétons présents dans la zone environnante."}, {"ref": "4b.2", "text": "Une signalisation indiquant de manière explicite de rester à une distance minimale d'un mètre des chariots élévateurs, tracteurs, petits trains doit être solidement apposée à l'arrière et sur les deux côtés de ces véhicules."}, {"ref": "4b.3", "text": "Avant de descendre du véhicule, le conducteur doit veiller à ce que le véhicule (chariot élévateur, tracteur, petit train) soit garé en toute sécurité, que le frein à main soit serré et que la clé de contact soit retirée (NOTE : les fourches de chariot élévateur doivent être abaissées au niveau du sol). \nIl est interdit au conducteur de laisser le véhicule en marche sans surveillance (il doit toujours rester à proximité immédiate du véhicule et l'avoir sous surveillance à tout moment)."}, {"ref": "4b.4", "text": "Les conducteurs de véhicules doivent laisser la priorité aux piétons.\nCes derniers doivent s'arrêter, observer autour d'eux et seulement traverser la voie de circulation des véhicules lorsque la voie est parfaitement libre et sécurisée.\nDes systèmes de modération du trafic doivent être déployés au niveau de toutes les intersections cachées et semi-cachées (par ex. avec la combinaison de barrières fixes, de barrières pivotantes, de signalisations, etc.)."}, {"ref": "4b.5", "text": "Les charges doivent être sécurisées pour le transport (conformément à la capacité du véhicule, palettes et conteneurs en bon état, charges stables, mât incliné vers l'arrière et fourches positionnées en toute sécurité)."}, {"ref": "4b.6", "text": "Véhicules de manutention: toutes les vitesses doivent être régies par un contrôle mécanique ou électronique NOTE : les vitesses sont soumises à une évaluation des risques adéquate et suffisante. Cadrage pour zones internes: vitesse maximum de 10 km/h à condition que le système automatique de contrôle de la vitesse soit efficace dans les espaces très fréquentés et à risques.\nUne signalisation relative à la vitesse maximale doit être affichée conformément à la limite de vitesse autorisée NOTE : les vitesses maximales ne sont pas des cibles mais des limites."}, {"ref": "4b.7", "text": "Un système de gestion des impacts est mis en œuvre sur tous les chariots élévateurs."}]}, {"id": "4c", "label": "Je respecte les implantations et les règles de gerbage des emballages.", "krs": [{"ref": "4c.1", "text": "L'accès des piétons aux espaces de stockage est strictement contrôlé. Accès formellement interdit aux personnes non autorisées."}, {"ref": "4c.2", "text": "La hauteur des piles d'emballages est conforme aux normes Renault.\nElle est clairement identifiée dans chaque espace de stockage. Les emballages sont correctement stockés."}, {"ref": "4c.3", "text": "Les paletiers doivent être protégés de tout impact d'engins de manutention.\nLes charges maximales sont affichées et respectées.\nLes contrôles hebdomadaires sont effectués et tout dommage signalé, limité et réparé dans les meilleurs délais."}, {"ref": "4c.4", "text": "Pendant le chargement et le déchargement, les camions sont à l'arrêt, avec le frein à main serré, les roues calées et la clé de contact retirée. Le chauffeur du camion se trouve dans la zone sécurisée identifiée (jamais à l'intérieur du véhicule)."}]}, {"id": "5a", "label": "Je n’accède à une zone de stockage que si je suis formé et autorisé. Avant d’entrer dans la zone, je m’assure qu’il n’y a pas de danger et je porte le gilet fluorescent.", "krs": [{"ref": "5a.1", "text": "Les outils et bobines de tôle sont stockées en toute sécurité conformément aux normes Renault (BMIR V5313-2016 & V5313-2008-0039)."}, {"ref": "5a.2", "text": "Seul le pontier est autorisé à se trouver dans la zone de stockage des outils/bobines durant leur manipulation (par exemple, élingage et transfert de l'outil/bobine)."}]}, {"id": "5b", "label": "Je dois être formé et habilité pour conduire un pont roulant et pour élinguer une charge.", "krs": [{"ref": "5b.1", "text": "Tous les accessoires de levage doivent être en bon état, posséder un numéro d'identification unique et indiquer la limite de charge de travail*. NOTE*: doit être apposée de facon pérenne et lisible sur l'accessoire de levage ou sur une plaque fixée sur ce dernier.\nLes accessoires de levage doivent être stockés conformément aux 5S (par ex. sur un présentoir de rangement)."}, {"ref": "5b.2", "text": "Des examens périodiques* sont réalisés par une personne compétente et autorisée, les résultats sont consignés.\nNOTE* : une fois par an ou plus fréquemment, conformément à la législation locale."}, {"ref": "5b.3", "text": "Avant toute utilisation, les accessoires de levage sont inspectés visuellement."}, {"ref": "5b.4", "text": "La commande de contrôle du pont (télécommande) est verrouillée, rangée dans un endroit sécurisé et sa clé est conservée en lieu sûr lorsque l'appareil n'est pas utilisé."}]}, {"id": "6", "label": "Je respecte les conditions d’emploi et de stockage des produits chimiques indiquées dans la FDS.", "krs": [{"ref": "6.1", "text": "Si le site a besoin d'introduire de nouveaux produits chimiques, ces derniers doivent être parfaitement conformes à la procédure GE75-033R. \nNOTE : afin d'introduire des produits chimiques étiquetés CMR (cancérigènes, mutagènes et/ou toxiques pour la reproduction), vous devez apporter les preuves de respect de l'Annexe 4 de la procédure."}, {"ref": "6.2", "text": "Les étiquettes de produits chimiques doivent être identiques, entre celles apposées sur l'emballage, celles figurant sur la FDS et celles présentes sur la « fiche d'instruction sur le lieu de travail destiné à l'utilisateur ». Produits chimiques stockés dans les récipients d'origine, étiquette clairement affichée (par ex. nom du produit chimique et symboles de danger, etc.). Les récipients secondaires doivent être clairement étiquetés conformément à l'étiquette d'origine apposée sur le récipient d'origine."}, {"ref": "6.3", "text": "Une formation° doit être dispensée aux utilisateurs et/ou au magasinier en charge des produits chimiques en stricte conformité à la « fiche d'instruction* sur le lieu de travail destiné à l'utilisateur ». \nNOTE* : les informations contenues dans la « fiche d'instruction sur le lieu de travail destiné à l'utilisateur » reflètent précisément la FDS officielle et les informations figurant sur le récipient. \nNOTE° : la formation doit couvrir le transport de produits chimiques"}, {"ref": "6.4", "text": "Les quantités de produits chimiques au poste de tarvail doivent être limitées au minimum. La démonstration doit etre faite tenant compte de l'utilisation journalière et d'un maximum de consommation d'une semaine."}, {"ref": "6.5", "text": "Les produits chimiques liquides sont stockés avec un système de rétention adapté (par ex., étanche, propre et vide, volume de rétention adapté).\nLes produits chimiques sont stockés conformément au système de code couleur et de compatibilité de Renault."}, {"ref": "6.6", "text": "Les armoires utilisées pour les produits inflammables sont mises à la terre et équipées d'entrées de ventilation haute et basse non obstruées."}, {"ref": "6.7", "text": "Les douches d'urgence et equipements de lavage oculaire sont en bon état et faciles d'accès."}]}, {"id": "7a", "label": "Je signale et délimite la zone en travaux par balisage ou barrières.", "krs": [{"ref": "7a", "text": "La séparation des activités professionnelles dangereuses non régulières est en place (par ex., travaux à chaud, utilisation de tous types d'équipement de levage, travaux d'excavation, de construction, de retrait de couvercles de caniveau, de rénovation de machines, de modification de lignes de production, etc.)."}]}, {"id": "7b", "label": "Je possède un permis de feu quotidien si j’effectue des travaux par points chauds.", "krs": [{"ref": "7b.1", "text": "En cas de travaux à chaud non routiniers, toutes les exigences relatives au permis de feu quotidien sont satisfaites (autorisations, formation, évaluation des risques, mode opératoire spécifique, contrôles des équipements, dispositif en cas d'urgence, surveillance-incendie, etc.)."}, {"ref": "7b.2", "text": "La zone de travaux à chaud est propre et bien rangée. Tous les matériaux combustibles sont protégés des sources d'inflammation.\nUn équipement adapté de lutte contre l'incendie est à portée de main et toutes les personnes du chantier sont formées à son utilisation en toute sécurité."}]}, {"id": "7c", "label": "Je suis formé et j’utilise les équipements adaptés en cas de travaux en hauteur.", "krs": [{"ref": "7c.1", "text": "Lorsqu'ils ne sont pas utilisés, les échelles et escaliers mobiles sont rangés en lieu sûr."}, {"ref": "7c.2", "text": "Les échelles permanentes à crinoline et les escaliers donnant accès aux espaces situés en toiture, au sommet de machines, aux plates-formes sans bordure de protection et/ou ayant accès à des éléments dangereux de machines doivent être équipés d'un contrôle d'accès (par exemple, dispositifs permettant de verrouiller tous types de trappes, de portes et de barrières d'accès en positions fermée et ouverte)."}, {"ref": "7c.3", "text": "Chaque personne travaillant sur une plate-forme élévatrice mobile de personnes doit porter son casque jugulaire attachée, son harnais de sécurité (avec sangles de suspension intégrées) et être solidement attaché à l'aide d'une longe fixe aux points d'ancrage situés à l'intérieur de la nacelle."}, {"ref": "7c.4", "text": "Les plates-formes élévatrices mobiles de personnes sont en parfait état de sécurité et de fonctionnement (les inspections périodiques réglementaires sont à jour et valides, un manuel d'utilisation adapté est conservé dans son support dédié, la clé de contact est retirée en cas de non-utilisation)."}]}, {"id": "7d", "label": "Je m’assure de la présence d’un coordinateur en cas d’intervenants multiples.", "krs": [{"ref": "7d.1", "text": "En cas d'intervenants multiples, un coordinateur compétent est désigné pour coordonner l'ensemble des activités professionnelles conformément aux exigences de sécurité."}, {"ref": "7d.2", "text": "Tous les entrepreneurs et sous-traitants ont prouvé leurs compétences avant d'être autorisés à mener des activités sur les sites Renault."}]}, {"id": "8", "label": "Je porte correctement les EPI définis pour mon poste de travail et dans le secteur.", "krs": [{"ref": "8.1", "text": "Une signalisation réglementaire indiquant les exigences obligatoires relatives aux EPI est affichée sur toutes les portes d'entrée."}, {"ref": "8.2", "text": "Des bouchons d'oreilles sont disponibles si une protection contre le bruit est obligatoire pour la zone concernée."}, {"ref": "8.3", "text": "Un document avec photos montrant les préconisations des EPI exigés est affiché sur chaque poste de travail (photo et spécification)."}]}, {"id": "9", "label": "J’applique les gestes et postures préconisés. J’utilise les assistances à disposition à mon poste de travail.", "krs": [{"ref": "9.1", "text": "Un plan d'action avec délai de suppression de chaque poste rouge existe, objectif poste vert, il est signé par le directeur de l'usine. La maitrise est démontrée pour chaque tâche/poste de travail ergonomique rouge.\nNOTE : la rotation des tâches est une mesure temporaire et uniquement valable jusqu'à la signature du plan d'action/délai de mise en conformité signé(e) par le responsable de l'usine."}, {"ref": "9.2", "text": "Lors d'un transfert de charge à l'aide d'un chariot, des dispositions doivent être prises pour garantir la manipulation en toute sécurité (poignée dédiée). \nNOTE : les chariots doivent être poussés dès que l'orientation de la charge le permet.\nIls doivent être conçus pour faciliter le déplacement manuel, la stabilité, sans aucun risque de basculement."}]}, {"id": "10", "label": "Je veille à ma sécurité et à celle des autres. En cas de blessure, j’informe mon chef d’UET qui me conduit à l’infirmerie.", "krs": [{"ref": "10.1", "text": "La liste (nom et photo) des secouristes est affichée à minima dans chaque UET ou activité."}, {"ref": "10.2", "text": "Le plan d'évacuation à jour indiquant les sorties de secours, les passages, ainsi que l'emplacement des équipements de lutte contre l'incendie est affiché et porté à l'attention de tous."}, {"ref": "10.3", "text": "Les accidents, incidents et presqu'accidents potentiellement graves sont signalés au responsable et des mesures correctives sont prises (un document officiel est à la disposition des employés pour signaler les incidents, presqu'accidents et situations dangereuses).\nLe manager apporte des preuves confirmant les mesures prises et le retour d'information fourni aux employés."}, {"ref": "10.4", "text": "Le site dispose d'un système visuel affichant les Flash alertes ROUGES des 12 derniers mois, les évaluations pertinentes réalisées et les mesures prises, accompagnées des preuves des mesures de maitrise mises en œuvre."}, {"ref": "10.5", "text": "Fumer est permis uniquement dans les espaces dédiés à cet effet."}]}];
+
+// scores[krRef] = {val: 0/1/2/3/null, na: bool, comment: ''}
+var scores = {};
+
+// Grades
+const GRADES = [
+  {min:90, label:'A', color:'#059669', text:'Excellent'},
+  {min:75, label:'B', color:'#4F46E5', text:'Bien'},
+  {min:58, label:'C', color:'#D97706', text:'Satisfaisant'},
+  {min:34, label:'D', color:'#DC2626', text:'Non satisfaisant'},
+  {min:0,  label:'E', color:'#7F1D1D', text:'Totalement inacceptable'}
+];
+
+function getGrade(pct) {
+  for (var i=0;i<GRADES.length;i++) {
+    if (pct >= GRADES[i].min) return GRADES[i];
+  }
+  return GRADES[GRADES.length-1];
+}
+
+function updateScore() {
+  var total = 0, maxScore = 0, naCount = 0, zeroCount = 0, goodCount = 0;
+  MR_DATA.forEach(function(mr) {
+    mr.krs.forEach(function(kr) {
+      var s = scores[kr.ref];
+      if (!s || s.na) { naCount++; return; }
+      maxScore += 3;
+      var v = s.val !== null && s.val !== undefined ? parseInt(s.val) : 0;
+      total += v;
+      if (v === 0) zeroCount++;
+      if (v >= 2) goodCount++;
+    });
+  });
+  var pct = maxScore > 0 ? Math.round(total/maxScore*100) : 0;
+  var grade = getGrade(pct);
+  document.getElementById('score-val').textContent = total;
+  document.getElementById('score-val').style.color = grade.color;
+  document.getElementById('score-pct').textContent = pct+'%';
+  document.getElementById('score-gauge').style.width = pct+'%';
+  document.getElementById('score-gauge').style.background = grade.color;
+  document.getElementById('grade-badge').textContent = grade.label;
+  document.getElementById('grade-badge').style.background = grade.color;
+  document.getElementById('grade-badge').title = grade.text;
+  document.getElementById('info-nc').textContent = zeroCount+' KR cotés 0';
+  document.getElementById('info-na').textContent = naCount+' N/A';
+  document.getElementById('info-ok').textContent = goodCount+' KR cotés ≥ 2';
+
+  // Update MR scores
+  MR_DATA.forEach(function(mr) {
+    var mrTotal=0, mrMax=0;
+    mr.krs.forEach(function(kr){
+      var s=scores[kr.ref];
+      if(!s||s.na)return;
+      mrMax+=3;
+      mrTotal+=(s.val!==null&&s.val!==undefined?parseInt(s.val):0);
+    });
+    var el = document.getElementById('mr-score-'+mr.id);
+    if(el) {
+      el.textContent = mrTotal+'/'+mrMax;
+      var mrPct = mrMax>0?Math.round(mrTotal/mrMax*100):0;
+      el.style.color = mrPct>=75?'#86efac':mrPct>=34?'#fde68a':'#fca5a5';
+    }
+  });
+}
+
+function setCot(krRef, val) {
+  if (!scores[krRef]) scores[krRef] = {val:null, na:false, comment:''};
+  scores[krRef].val = val;
+  scores[krRef].na = false;
+  // Update buttons
+  var row = document.getElementById('kr-row-'+krRef.replace(/\./g,'-'));
+  if (row) {
+    row.querySelectorAll('.cot-btn').forEach(function(b) {
+      b.className = 'cot-btn';
+      if (b.dataset.val === String(val)) b.classList.add('sel-'+val);
+    });
+  }
+  updateScore();
+}
+
+function setNA(krRef, btn) {
+  if (!scores[krRef]) scores[krRef] = {val:null, na:false, comment:''};
+  scores[krRef].na = !scores[krRef].na;
+  scores[krRef].val = null;
+  btn.classList.toggle('sel-na', scores[krRef].na);
+  // Clear other buttons if NA
+  var row = document.getElementById('kr-row-'+krRef.replace(/\./g,'-'));
+  if (row && scores[krRef].na) {
+    row.querySelectorAll('.cot-btn:not([data-na])').forEach(function(b){b.className='cot-btn';});
+  }
+  updateScore();
+}
+
+function setComment(krRef, val) {
+  if (!scores[krRef]) scores[krRef] = {val:null, na:false, comment:''};
+  scores[krRef].comment = val;
+}
+
+function buildGrid() {
+  var html = '';
+  MR_DATA.forEach(function(mr) {
+    html += '<div class="mr-block">';
+    html += '<div class="mr-hd" onclick="toggleMR(\'mr-body-'+mr.id+'\')">';
+    html += '<span class="mr-hd-num">MR '+mr.id+'</span>';
+    html += '<span class="mr-hd-text">'+mr.label+'</span>';
+    html += '<span class="mr-hd-score" id="mr-score-'+mr.id+'">0/'+mr.krs.length*3+'</span>';
+    html += '<span style="font-size:12px;opacity:.7">▼</span>';
+    html += '</div>';
+    html += '<div class="mr-body" id="mr-body-'+mr.id+'">';
+    // Header
+    html += '<div style="display:grid;grid-template-columns:90px 1fr auto auto auto auto;gap:8px;padding:6px 18px;background:var(--slate);font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">';
+    html += '<span>Ref.</span><span>Key Requirement</span><span>0</span><span>1</span><span>2</span><span>3</span></div>';
+
+    mr.krs.forEach(function(kr) {
+      var rowId = 'kr-row-'+kr.ref.replace(/\./g,'-');
+      html += '<div class="kr-row" id="'+rowId+'">';
+      html += '<span class="kr-ref">'+kr.ref+'</span>';
+      html += '<span class="kr-text">'+kr.text+'</span>';
+      // Cotation buttons 0-1-2-3
+      for (var v=0;v<=3;v++) {
+        html += '<button class="cot-btn" data-val="'+v+'" data-kr="'+kr.ref+'" onclick="setCot(\''+kr.ref+'\','+v+')">'+v+'</button>';
+      }
+      html += '</div>';
+      // Comment + NA line
+      html += '<div style="padding:4px 18px 8px 112px;display:flex;gap:8px;align-items:center">';
+      html += '<input class="comment-inp" placeholder="Commentaire / Preuve..." oninput="setComment(\''+kr.ref+'\',this.value)" />';
+      html += '<button class="cot-btn" style="font-size:10px;width:auto;padding:0 8px" data-na="1" onclick="setNA(\''+kr.ref+'\',this)">N/A</button>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  document.getElementById('mr-grid').innerHTML = html;
+  updateScore();
+}
+
+function toggleMR(bodyId) {
+  var el = document.getElementById(bodyId);
+  if (el) el.style.display = el.style.display === 'none' ? '' : 'none';
+}
+
+function changeSite(site) {
+  currentSite = site;
+  history.replaceState(null,'','?site='+site);
+}
+
+async function saveAudit() {
+  var auditData = {
+    id: 'MRSAFETY-'+currentSite+'-'+document.getElementById('inp-date').value,
+    site: currentSite,
+    referentiel: 'MR_SAFETY',
+    date: document.getElementById('inp-date').value,
+    auditeurs: document.getElementById('inp-auditeurs').value.trim(),
+    scores: scores,
+    createdAt: new Date().toISOString()
+  };
+  try {
+    await fetch(GSHEET_URL, {method:'POST', body:JSON.stringify({action:'saveAuditExigences', data:auditData})});
+    showToast('Audit enregistre', true);
+  } catch(e) { showToast('Erreur: '+e.message, false); }
+}
+
+function loadAudit() {
+  window._audit_safety_cb = function(d) {
+    var data = d.data || [];
+    // Find last audit for this site
+    var siteAudits = data.filter(function(r){return String(r[1])===currentSite && r[2]==='MR_SAFETY';});
+    if (!siteAudits.length) { showToast('Aucun audit precedent pour ce site', false); return; }
+    var last = siteAudits[siteAudits.length-1];
+    try {
+      scores = JSON.parse(last[4]||'{}');
+      document.getElementById('inp-date').value = last[3]||'';
+      document.getElementById('inp-auditeurs').value = last[5]||'';
+      // Re-render with saved scores
+      buildGridWithScores();
+      showToast('Audit charge', true);
+    } catch(e) { showToast('Erreur chargement', false); }
+  };
+  var s = document.createElement('script');
+  s.src = GSHEET_URL + '?action=getAuditExigences&callback=_audit_safety_cb';
+  document.head.appendChild(s);
+}
+
+function buildGridWithScores() {
+  buildGrid();
+  // Apply saved scores to UI
+  Object.keys(scores).forEach(function(krRef) {
+    var s = scores[krRef];
+    if (s.na) {
+      var naBtn = document.querySelector('[data-kr="'+krRef+'"][data-na="1"]');
+      if (naBtn) { naBtn.classList.add('sel-na'); }
+    } else if (s.val !== null && s.val !== undefined) {
+      setCot(krRef, s.val);
+    }
+    if (s.comment) {
+      var inp = document.querySelector('#kr-row-'+krRef.replace(/\./g,'-')+' ~ div .comment-inp');
+      if (inp) inp.value = s.comment;
+    }
+  });
+}
+
+function exportResults() {
+  var lines = ['MR Safety Renault — Site '+currentSite+' — '+document.getElementById('inp-date').value];
+  lines.push('Auditeur(s): '+document.getElementById('inp-auditeurs').value);
+  lines.push('');
+  var total=0, maxScore=0;
+  MR_DATA.forEach(function(mr) {
+    lines.push('=== MR '+mr.id+': '+mr.label+' ===');
+    mr.krs.forEach(function(kr) {
+      var s = scores[kr.ref];
+      var val = s ? (s.na?'N/A':s.val!==null?s.val:'—') : '—';
+      var cmt = s&&s.comment ? ' ['+s.comment+']' : '';
+      lines.push('  '+kr.ref+': '+val+cmt+' — '+kr.text.substring(0,60));
+      if (!s||s.na) return;
+      if (s.val!==null) { maxScore+=3; total+=parseInt(s.val||0); }
+    });
+    lines.push('');
+  });
+  var pct = maxScore>0?Math.round(total/maxScore*100):0;
+  var grade = getGrade(pct);
+  lines.push('SCORE TOTAL: '+total+'/'+maxScore+' ('+pct+'%) — Grade: '+grade.label+' — '+grade.text);
+  
+  var blob = new Blob([lines.join('\n')], {type:'text/plain;charset=utf-8'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'MR_Safety_Site'+currentSite+'_'+document.getElementById('inp-date').value+'.txt';
+  a.click();
+}
+
+function showToast(msg, ok) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.style.background = ok?'var(--green-dk)':'var(--steel-dk)';
+  t.classList.add('show'); setTimeout(function(){t.classList.remove('show');}, 3000);
+}
+
+buildGrid();
+</script>
+</body></html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Audit aux exigences — Tableau de bord</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#6BBF1F;--green-dk:#4D8A12;--green-xlt:#EEF8D8;--steel:#4A6880;--steel-dk:#2E4558;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;--red:#DC2626;--red-lt:#FEE2E2;--orange:#D97706;--orange-lt:#FEF3C7;--indigo:#4F46E5;--indigo-lt:#EEF2FF;--radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10)}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:#3A3A3A;margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:18px 28px;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#a5b4fc;margin-bottom:4px}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:11px 16px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block;transition:all .15s}
+.nav-btn:hover{color:#fff}
+.nav-btn.active{color:#fff!important;border-bottom-color:var(--green)!important}
+.wrapper{max-width:1300px;margin:0 auto;padding:20px 24px 60px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.card-hd{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-title{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk);flex:1}
+.card-body{padding:16px 18px}
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.ref-card{border-radius:var(--radius);border:2px solid var(--border);overflow:hidden;cursor:pointer;transition:all .15s;text-decoration:none;display:block}
+.ref-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(46,69,88,.15)}
+.ref-card.available .ref-hd{opacity:1}
+.ref-card.coming-soon{opacity:.6;cursor:default}
+.ref-hd{padding:16px;color:#fff;display:flex;align-items:center;gap:12px}
+.ref-icon{font-size:28px}
+.ref-name{font-family:'Exo 2',sans-serif;font-size:14px;font-weight:700}
+.ref-sub{font-size:11px;opacity:.85;margin-top:2px}
+.ref-body{padding:12px 16px;background:var(--white)}
+.ref-stats{display:flex;gap:12px;margin-bottom:8px}
+.ref-stat{text-align:center}
+.ref-stat-val{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:800}
+.ref-stat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;font-weight:600}
+.ref-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+.site-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.site-pill{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid var(--border);background:var(--white);text-decoration:none;display:inline-block;transition:all .15s}
+.site-pill:hover,.site-pill.active{background:var(--steel-dk);border-color:var(--steel-dk);color:#fff}
+</style></head><body>
+
+<div class="page-header">
+  <div class="ph-tag">Audits — Conformité réglementaire</div>
+  <div class="ph-title">📋 Module Audit aux exigences</div>
+  <div class="ph-sub">MR Renault · ICPE 2712 · Arrêtés préfectoraux · QUALICERT · SRA</div>
+</div>
+<div class="nav-bar">
+  <a class="nav-btn" href="Accueil_SSE.html">🏠 Site SSE</a>
+  <a class="nav-btn active" href="Audit_Exigences_Accueil.html">📋 Audit exigences</a>
+  <a class="nav-btn" href="DUERP_Accueil.html">🦺 DUERP</a>
+  <a class="nav-btn" href="ISO9001_Cartographie.html">🗺️ ISO 9001</a>
+  <a class="nav-btn" href="Plan_Actions_SSE.html">📋 Plan d'actions</a>
+</div>
+
+<div class="wrapper">
+  <!-- Sélecteur site -->
+  <div class="card">
+    <div class="card-hd"><span style="font-size:18px">🏭</span><span class="card-title">Sélectionner un site</span></div>
+    <div class="card-body">
+      <div class="site-pills" id="site-pills"></div>
+    </div>
+  </div>
+
+  <!-- Grilles disponibles -->
+  <div class="card">
+    <div class="card-hd"><span style="font-size:18px">📋</span><span class="card-title">Référentiels disponibles</span></div>
+    <div class="card-body">
+      <div class="ref-grid" id="ref-grid"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SITES = ["17","37","38","41","47","72","72bis","89"];
+var currentSite = new URLSearchParams(location.search).get('site') || '47';
+
+const REFERENTIELS = [
+  {
+    id:'mr_safety', name:'MR Safety Renault', sub:'10 Règles Mandatoires · 74 Key Requirements',
+    icon:'🦺', color:'#DC2626', bg:'#7F1D1D',
+    stats:{mr:10, kr:74, cotation:'0-1-2-3 + A/NA'},
+    url:'Audit_MR_Safety.html',
+    available:true,
+    tag:'Renault Group'
+  },
+  {
+    id:'mr_env', name:'MR Environnement Renault', sub:'8 Règles Mandatoires · 40 Key Requirements',
+    icon:'♻️', color:'#059669', bg:'#064E3B',
+    stats:{mr:8, kr:40, cotation:'0-1-2-3 + N/A'},
+    url:'Audit_MR_Env.html',
+    available:true,
+    tag:'Renault Group'
+  },
+  {
+    id:'icpe', name:'Prescriptions ICPE 2712-1', sub:'Arrêté ministériel du 10/01/2023',
+    icon:'⚖️', color:'#D97706', bg:'#78350F',
+    stats:{mr:'—', kr:'—', cotation:'C/NC/NA'},
+    url:'#',
+    available:false,
+    tag:'Réglementation'
+  },
+  {
+    id:'ap', name:"Arrêté préfectoral du site", sub:'Spécifique à chaque site',
+    icon:'🏛️', color:'#7C3AED', bg:'#4C1D95',
+    stats:{mr:'—', kr:'—', cotation:'C/NC/NA'},
+    url:'#',
+    available:false,
+    tag:'Réglementation'
+  },
+  {
+    id:'qualicert', name:'QUALICERT', sub:'Certification qualité filière VHU',
+    icon:'🏆', color:'#0891B2', bg:'#164E63',
+    stats:{mr:'—', kr:'—', cotation:'C/NC/NA'},
+    url:'#',
+    available:false,
+    tag:'Certification'
+  },
+  {
+    id:'sra', name:'SRA Recycleur vertueux', sub:'Label SRA',
+    icon:'🌿', color:'#4D8A12', bg:'#14532D',
+    stats:{mr:'—', kr:'—', cotation:'C/NC/NA'},
+    url:'#',
+    available:false,
+    tag:'Label'
+  },
+  {
+    id:'sse_indra', name:'Exigences SSE INDRA', sub:'Référentiel interne INDRA SAS',
+    icon:'🔒', color:'#4A6880', bg:'#2E4558',
+    stats:{mr:'—', kr:'—', cotation:'C/NC/NA'},
+    url:'#',
+    available:false,
+    tag:'INDRA'
+  }
+];
+
+// Sites pills
+document.getElementById('site-pills').innerHTML = SITES.map(function(s) {
+  return '<a class="site-pill'+(s===currentSite?' active':'')+'" href="?site='+s+'">Site '+s+'</a>';
+}).join('');
+
+// Ref grid
+document.getElementById('ref-grid').innerHTML = REFERENTIELS.map(function(r) {
+  var href = r.available ? r.url+'?site='+currentSite : '#';
+  var onclick = r.available ? '' : ' onclick="return false"';
+  return '<a class="ref-card '+(r.available?'available':'coming-soon')+'" href="'+href+'"'+onclick+'>'
+    +'<div class="ref-hd" style="background:'+r.bg+'">'
+    +'<span class="ref-icon">'+r.icon+'</span>'
+    +'<div><div class="ref-name">'+r.name+'</div><div class="ref-sub">'+r.sub+'</div></div>'
+    +'</div>'
+    +'<div class="ref-body">'
+    +'<div class="ref-stats">'
+    +'<div class="ref-stat"><div class="ref-stat-val" style="color:'+r.color+'">'+r.stats.mr+'</div><div class="ref-stat-lbl">Règles</div></div>'
+    +'<div class="ref-stat"><div class="ref-stat-val" style="color:'+r.color+'">'+r.stats.kr+'</div><div class="ref-stat-lbl">Critères</div></div>'
+    +'<div class="ref-stat"><div style="font-size:11px;font-weight:700;color:'+r.color+'">'+r.stats.cotation+'</div><div class="ref-stat-lbl">Cotation</div></div>'
+    +'</div>'
+    +'<div style="display:flex;justify-content:space-between;align-items:center">'
+    +'<span class="ref-tag" style="background:'+r.color+'22;color:'+r.color+'">'+r.tag+'</span>'
+    +(r.available
+      ? '<span style="font-size:12px;font-weight:700;color:'+r.color+'">Lancer l\'audit →</span>'
+      : '<span style="font-size:11px;color:var(--muted);font-style:italic">Document à venir</span>')
+    +'</div>'
+    +'</div>'
+    +'</a>';
+}).join('');
+</script>
+</body></html>
