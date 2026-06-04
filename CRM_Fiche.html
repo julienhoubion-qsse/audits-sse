@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CRM — Fiche client</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;--steel:#4A6880;--steel-dk:#2E4558;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;--charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;--red:#DC2626;--red-lt:#FEE2E2;--orange:#D97706;--orange-lt:#FEF3C7;--indigo:#4F46E5;--indigo-lt:#EEF2FF;--radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10);--shadow-md:0 6px 28px rgba(46,69,88,.16)}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:18px 28px;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#a5b4fc;margin-bottom:4px}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:11px 16px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block}
+.nav-btn:hover{color:#fff}
+.wrapper{max-width:1200px;margin:0 auto;padding:20px 24px 60px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
+.card-hd{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-title{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk);flex:1}
+.card-body{padding:16px 18px}
+.tab-bar{background:var(--white);border-bottom:2px solid var(--border);padding:0 24px;display:flex;flex-wrap:wrap}
+.tab-btn{background:none;border:none;border-bottom:3px solid transparent;padding:11px 18px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;margin-bottom:-2px}
+.tab-btn.active{color:var(--indigo);border-bottom-color:var(--indigo)}
+.tab-content{display:none}.tab-content.active{display:block}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.info-item{padding:10px 12px;background:var(--slate);border-radius:8px;border-left:3px solid var(--border)}
+.info-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+.info-val{font-size:13px;color:var(--charcoal);font-weight:600}
+.fld{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.fld-lbl{font-size:11px;font-weight:700;color:var(--steel-dk);text-transform:uppercase}
+.fld-inp,.fld-sel{height:36px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:13px;width:100%}
+.fld-txt{border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;resize:vertical;min-height:60px;width:100%}
+.form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.btn{height:36px;padding:0 16px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.btn-primary{background:var(--indigo);color:#fff}
+.btn-green{background:var(--green);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-sm{height:28px;padding:0 10px;font-size:11px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:700px;max-height:90vh;overflow-y:auto}
+.modal-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff}
+.modal-title{font-family:'Exo 2',sans-serif;font-size:15px;font-weight:700;color:var(--steel-dk)}
+.modal-body{padding:16px 18px}
+.modal-foot{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:#fff}
+.star-input{display:flex;gap:6px;font-size:28px;cursor:pointer;margin:8px 0}
+.star-i{color:var(--border);transition:color .1s;user-select:none}
+.star-i.filled{color:#F59E0B}
+.score-gauge{height:12px;background:var(--border);border-radius:6px;overflow:hidden;margin-top:6px}
+.score-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--red),var(--orange),var(--green))}
+.history-item{padding:12px;border-left:3px solid var(--border);margin-bottom:8px;background:var(--slate);border-radius:0 8px 8px 0}
+.section-sep{font-size:11px;font-weight:700;color:var(--steel-dk);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--green)}
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table thead th{background:var(--steel-dk);color:#fff;padding:9px 12px;text-align:left;font-size:11px;font-weight:700}
+.data-table tbody tr{border-bottom:1px solid var(--border)}
+.data-table tbody td{padding:9px 12px}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style></head><body>
+
+<div class="page-header">
+  <div class="ph-tag">CRM — Fiche client</div>
+  <div class="ph-title" id="page-title">Chargement...</div>
+  <div class="ph-sub" id="page-sub"></div>
+</div>
+<div class="nav-bar">
+  <a class="nav-btn" href="CRM_Accueil.html">← Retour CRM</a>
+  <a class="nav-btn" href="Accueil_SSE.html">🏠 Site SSE</a>
+</div>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('identite',this)">🏢 Identite</button>
+  <button class="tab-btn" onclick="showTab('contrat',this)">📄 Contrat</button>
+  <button class="tab-btn" onclick="showTab('contacts',this)">👤 Contacts</button>
+  <button class="tab-btn" onclick="showTab('satisfaction',this)">⭐ Satisfaction</button>
+  <button class="tab-btn" onclick="showTab('performance',this)">📊 Performance</button>
+  <button class="tab-btn" onclick="showTab('historique',this)">📋 Historique</button>
+  <button class="tab-btn" onclick="showTab('iso9001',this)">🗺️ ISO 9001</button>
+</div>
+
+<div class="wrapper">
+  <!-- TAB: Identite -->
+  <div class="tab-content active" id="tab-identite">
+    <div class="card">
+      <div class="card-hd"><span style="font-size:18px">🏢</span><span class="card-title">Informations generales</span>
+        <button class="btn btn-sm btn-ghost" onclick="openEditClient()">✏️ Modifier</button></div>
+      <div class="card-body" id="identite-body"></div>
+    </div>
+  </div>
+
+  <!-- TAB: Contrat -->
+  <div class="tab-content" id="tab-contrat">
+    <div class="card">
+      <div class="card-hd"><span style="font-size:18px">📄</span><span class="card-title">Contrat et engagements</span>
+        <button class="btn btn-sm btn-ghost" onclick="openEditClient()">✏️ Modifier</button></div>
+      <div class="card-body" id="contrat-body"></div>
+    </div>
+  </div>
+
+  <!-- TAB: Contacts -->
+  <div class="tab-content" id="tab-contacts">
+    <div class="card">
+      <div class="card-hd"><span style="font-size:18px">👤</span><span class="card-title">Interlocuteurs</span>
+        <button class="btn btn-sm btn-green" onclick="openAddContact()">➕ Ajouter</button></div>
+      <div class="card-body" id="contacts-body"></div>
+    </div>
+  </div>
+
+  <!-- TAB: Satisfaction -->
+  <div class="tab-content" id="tab-satisfaction">
+    <div class="card">
+      <div class="card-hd"><span style="font-size:18px">⭐</span>
+        <span class="card-title">Mesure de la satisfaction</span>
+        <div id="freq-badge" style="font-size:11px;color:var(--muted)"></div>
+        <button class="btn btn-sm btn-green" onclick="openNewSatisfaction()">➕ Nouvelle mesure</button>
+      </div>
+      <div class="card-body">
+        <!-- Score global actuel -->
+        <div id="score-global-section"></div>
+        <!-- Historique des mesures -->
+        <div class="section-sep">Historique des mesures</div>
+        <div id="sat-history"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Performance -->
+  <div class="tab-content" id="tab-performance">
+    <div class="card">
+      <div class="card-hd"><span style="font-size:18px">📊</span><span class="card-title">Indicateurs de performance</span>
+        <button class="btn btn-sm btn-ghost" onclick="openAddPerf()">➕ Saisir periode</button></div>
+      <div class="card-body" id="perf-body">
+        <div style="text-align:center;padding:24px;color:var(--muted)">Aucune donnee de performance enregistree</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Historique -->
+  <div class="tab-content" id="tab-historique">
+    <div class="card">
+      <div class="card-hd"><span style="font-size:18px">📋</span><span class="card-title">Journal des echanges</span>
+        <button class="btn btn-sm btn-green" onclick="openAddHistorique()">➕ Ajouter</button></div>
+      <div class="card-body" id="historique-body">
+        <div style="text-align:center;padding:24px;color:var(--muted)">Aucun echange enregistre</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: ISO 9001 -->
+  <div class="tab-content" id="tab-iso9001">
+    <div class="card">
+      <div class="card-hd"><span style="font-size:18px">🗺️</span><span class="card-title">Lien ISO 9001 — Parties prenantes</span></div>
+      <div class="card-body" id="iso9001-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal satisfaction -->
+<div class="modal-overlay" id="modal-sat">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <span class="modal-title">⭐ Nouvelle mesure de satisfaction</span>
+      <button onclick="closeModal('modal-sat')" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row" style="margin-bottom:16px">
+        <div class="fld"><label class="fld-lbl">Date de mesure</label><input type="date" class="fld-inp" id="sat-date"></div>
+        <div class="fld"><label class="fld-lbl">Repondant / Interlocuteur</label><input class="fld-inp" id="sat-repondant" placeholder="Nom de l interlocuteur"></div>
+      </div>
+      <div class="section-sep">Criteres de satisfaction (1 = Tres insatisfait — 5 = Tres satisfait)</div>
+      <div id="criteres-sat"></div>
+      <div style="background:var(--steel-xlt);border-radius:8px;padding:14px;margin-top:12px;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:13px;font-weight:700;color:var(--steel-dk)">Score global calcule</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div id="score-calc" style="font-family:sans-serif;font-size:28px;font-weight:800;color:var(--steel-dk)">—</div>
+          <span style="font-size:11px;color:var(--muted)">/5</span>
+        </div>
+      </div>
+      <div class="fld" style="margin-top:12px">
+        <label class="fld-lbl">Commentaire / Points d amelioration</label>
+        <textarea class="fld-txt" id="sat-commentaire" placeholder="Retours qualitatifs du client..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('modal-sat')">Annuler</button>
+      <button class="btn btn-green" onclick="saveSatisfaction()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal ajout contact -->
+<div class="modal-overlay" id="modal-contact">
+  <div class="modal-box" style="max-width:560px">
+    <div class="modal-hd">
+      <span class="modal-title">👤 Ajouter un contact</span>
+      <button onclick="closeModal('modal-contact')" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="fld"><label class="fld-lbl">Nom *</label><input class="fld-inp" id="ct-nom" placeholder="Nom Prenom"></div>
+        <div class="fld"><label class="fld-lbl">Poste</label><input class="fld-inp" id="ct-poste" placeholder="Ex: Responsable prestataires"></div>
+      </div>
+      <div class="form-row">
+        <div class="fld"><label class="fld-lbl">Email</label><input class="fld-inp" id="ct-email" type="email"></div>
+        <div class="fld"><label class="fld-lbl">Telephone</label><input class="fld-inp" id="ct-tel"></div>
+      </div>
+      <div class="fld"><label class="fld-lbl">Role</label>
+        <select class="fld-sel" id="ct-role">
+          <option>Deciseur</option><option>Operationnel</option>
+          <option>Facturation</option><option>Qualite / QSSE</option><option>Autre</option>
+        </select></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('modal-contact')">Annuler</button>
+      <button class="btn btn-green" onclick="saveContact()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal historique -->
+<div class="modal-overlay" id="modal-histo">
+  <div class="modal-box" style="max-width:560px">
+    <div class="modal-hd">
+      <span class="modal-title">📋 Nouvel echange</span>
+      <button onclick="closeModal('modal-histo')" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="fld"><label class="fld-lbl">Date</label><input type="date" class="fld-inp" id="h-date"></div>
+        <div class="fld"><label class="fld-lbl">Type</label>
+          <select class="fld-sel" id="h-type">
+            <option>Appel telephonique</option><option>Email</option>
+            <option>Reunion</option><option>Visite site</option>
+            <option>Audit client</option><option>Revue de contrat</option><option>Autre</option>
+          </select></div>
+      </div>
+      <div class="fld"><label class="fld-lbl">Interlocuteur</label><input class="fld-inp" id="h-interlocuteur" placeholder="Nom du contact"></div>
+      <div class="fld"><label class="fld-lbl">Compte-rendu *</label>
+        <textarea class="fld-txt" id="h-cr" placeholder="Resume des echanges..." style="min-height:100px"></textarea></div>
+      <div class="fld"><label class="fld-lbl">Actions a suivre</label>
+        <textarea class="fld-txt" id="h-actions" placeholder="Actions decidees lors de cet echange..."></textarea></div>
+      <div class="fld"><label class="fld-lbl">Prochain RDV</label><input type="date" class="fld-inp" id="h-next-rdv"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('modal-histo')">Annuler</button>
+      <button class="btn btn-green" onclick="saveHistorique()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GSHEET_URL = "https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+const CRITERES = [
+  'Delai de prise en charge des vehicules',
+  'Qualite du traitement et de la depollution',
+  'Conformite reglementaire et administrative',
+  'Communication et reactivite de l equipe',
+  'Respect des engagements contractuels (SLA)',
+  'Qualite du reporting et des donnees transmises',
+  'Relation commerciale globale'
+];
+var params = new URLSearchParams(location.search);
+var clientId = params.get('id');
+var client = null;
+var allSatisfactions = [];
+var allContacts = [];
+var allHistorique = [];
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+function loadClient() {
+  window._crm_fiche_cb = function(d) {
+    var data = d.data || [];
+    client = data.find(function(r){return String(r[0])===clientId;});
+    if (!client) {
+      document.getElementById('page-title').textContent = 'Client introuvable';
+      return;
+    }
+    renderClient();
+    loadSatisfactions();
+    loadContacts();
+    loadHistorique();
+  };
+  var s = document.createElement('script');
+  s.src = GSHEET_URL + '?action=getCRM&callback=_crm_fiche_cb';
+  document.head.appendChild(s);
+}
+
+const TYPE_COLORS = {'Assureur':'#4F46E5','Metteur en marche':'#059669','Domaine':'#0891B2','Fourriere':'#D97706','Autre':'#6B7D8A'};
+
+function renderClient() {
+  var color = TYPE_COLORS[client[2]] || '#6B7D8A';
+  document.getElementById('page-title').textContent = client[1];
+  document.getElementById('page-sub').textContent = client[2] + ' · ' + (client[5]||'');
+
+  // Identite
+  document.getElementById('identite-body').innerHTML =
+    '<div class="info-grid">'
+    +'<div class="info-item"><div class="info-lbl">Type</div><div class="info-val" style="color:'+color+'">'+client[2]+'</div></div>'
+    +'<div class="info-item"><div class="info-lbl">SIREN</div><div class="info-val">'+(client[3]||'—')+'</div></div>'
+    +'<div class="info-item"><div class="info-lbl">Regions couvertes</div><div class="info-val">'+(client[5]||'—')+'</div></div>'
+    +'<div class="info-item"><div class="info-lbl">Adresse siege</div><div class="info-val">'+(client[4]||'—')+'</div></div>'
+    +'<div class="info-item"><div class="info-lbl">Prochain RDV</div><div class="info-val" style="color:'+(isUrgent(client[20])?'var(--red)':'var(--charcoal)')+'">'+formatDate(client[20])+'</div></div>'
+    +'<div class="info-item"><div class="info-lbl">Frequence satisfaction</div><div class="info-val">'+(client[15]||'—')+'</div></div>'
+    +'</div>';
+  document.getElementById('freq-badge').textContent = 'Frequence : ' + (client[15]||'—');
+
+  // Contrat
+  document.getElementById('contrat-body').innerHTML =
+    '<div class="info-grid">'
+    +'<div class="info-item"><div class="info-lbl">Debut contrat</div><div class="info-val">'+formatDate(client[10])+'</div></div>'
+    +'<div class="info-item"><div class="info-lbl">Echeance</div><div class="info-val" style="color:'+(isUrgent(client[11])?'var(--red)':'var(--charcoal)')+'">'+formatDate(client[11])+'</div></div>'
+    +'<div class="info-item"><div class="info-lbl">Volume annuel VHU</div><div class="info-val">'+(client[12]||'—')+'</div></div>'
+    +'<div class="info-item"><div class="info-lbl">SLA prise en charge</div><div class="info-val">'+(client[13]||'—')+'</div></div>'
+    +'</div>'
+    +'<div style="margin-top:12px"><div class="info-lbl" style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">Exigences contractuelles specifiques</div>'
+    +'<div style="background:var(--orange-lt);border-left:3px solid var(--orange);border-radius:8px;padding:12px;margin-top:6px;font-size:12px">'+(client[14]||'Aucune exigence specifique enregistree')+'</div></div>';
+
+  // ISO 9001
+  document.getElementById('iso9001-body').innerHTML =
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">'
+    +'<div>'
+    +'<div class="info-lbl" style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Besoins et attentes identifies</div>'
+    +'<div style="background:var(--indigo-lt);border-left:3px solid var(--indigo);border-radius:8px;padding:12px;font-size:12px">'+(client[17]||'Non renseigne')+'</div>'
+    +'</div>'
+    +'<div>'
+    +'<div class="info-lbl" style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Processus ISO 9001 lie</div>'
+    +'<div style="background:var(--green-xlt);border-left:3px solid var(--green);border-radius:8px;padding:12px;font-size:13px;font-weight:700;color:var(--green-dk)">'+(client[18]||'Non defini')+'</div>'
+    +'<a href="ISO9001_Processus.html?p='+(client[18]||'VEN')+'" style="display:inline-block;margin-top:8px;font-size:12px;color:var(--indigo)">Ouvrir la fiche processus →</a>'
+    +'</div>'
+    +'</div>';
+
+  // Tab satisfaction auto-open
+  var tabParam = params.get('tab');
+  if (tabParam) {
+    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+    document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+    var tabEl = document.getElementById('tab-'+tabParam);
+    if (tabEl) {
+      tabEl.classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(function(b){
+        if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+tabParam+"'")) b.classList.add('active');
+      });
+    }
+  }
+}
+
+// SATISFACTION
+function buildCriteresForm() {
+  var html = '';
+  CRITERES.forEach(function(c, i) {
+    html += '<div style="margin-bottom:14px">';
+    html += '<div style="font-size:12px;font-weight:600;color:var(--charcoal);margin-bottom:6px">'+(i+1)+'. '+c+'</div>';
+    html += '<div class="star-input" id="stars-'+i+'">';
+    for (var s=1;s<=5;s++) {
+      html += '<span class="star-i" data-crit="'+i+'" data-val="'+s+'" onclick="setStar('+i+','+s+')">★</span>';
+    }
+    html += '</div></div>';
+  });
+  return html;
+}
+
+var starValues = {};
+function setStar(critIdx, val) {
+  starValues[critIdx] = val;
+  var stars = document.querySelectorAll('[data-crit="'+critIdx+'"]');
+  stars.forEach(function(s){
+    s.classList.toggle('filled', parseInt(s.dataset.val) <= val);
+  });
+  updateScoreCalc();
+}
+function updateScoreCalc() {
+  var vals = Object.values(starValues);
+  if (!vals.length) return;
+  var avg = vals.reduce(function(a,b){return a+b;},0) / vals.length;
+  var el = document.getElementById('score-calc');
+  if (el) {
+    el.textContent = avg.toFixed(1);
+    el.style.color = avg>=4?'var(--green-dk)':avg>=3?'var(--orange)':'var(--red)';
+  }
+}
+
+function openNewSatisfaction() {
+  starValues = {};
+  document.getElementById('sat-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('sat-repondant').value = '';
+  document.getElementById('sat-commentaire').value = '';
+  document.getElementById('score-calc').textContent = '—';
+  document.getElementById('criteres-sat').innerHTML = buildCriteresForm();
+  document.getElementById('modal-sat').classList.add('open');
+}
+
+async function saveSatisfaction() {
+  if (Object.keys(starValues).length < CRITERES.length) {
+    showToast('Veuillez noter tous les criteres', false); return;
+  }
+  var vals = CRITERES.map(function(c,i){return starValues[i]||0;});
+  var avg = vals.reduce(function(a,b){return a+b;},0)/vals.length;
+  var data = {
+    id: 'SAT-'+clientId+'-'+Date.now(),
+    client_id: clientId,
+    date: document.getElementById('sat-date').value,
+    repondant: document.getElementById('sat-repondant').value.trim(),
+    score_global: avg.toFixed(2),
+    criteres: JSON.stringify(vals),
+    commentaire: document.getElementById('sat-commentaire').value.trim(),
+    createdAt: new Date().toISOString()
+  };
+  try {
+    await fetch(GSHEET_URL, {method:'POST', body:JSON.stringify({action:'saveCRMSatisfaction', data})});
+    // Update client score
+    await fetch(GSHEET_URL, {method:'POST', body:JSON.stringify({action:'saveCRM', data:{id:clientId, nom:client[1], type:client[2], score_satisfaction:avg.toFixed(2)}})});
+    closeModal('modal-sat');
+    showToast('Satisfaction enregistree', true);
+    loadSatisfactions();
+  } catch(e) { showToast('Erreur', false); }
+}
+
+function loadSatisfactions() {
+  window._sat_cb = function(d) {
+    allSatisfactions = (d.data||[]).filter(function(r){return String(r[1])===clientId;});
+    renderSatisfactions();
+  };
+  var s = document.createElement('script');
+  s.src = GSHEET_URL + '?action=getCRMSatisfaction&callback=_sat_cb';
+  document.head.appendChild(s);
+}
+
+function renderSatisfactions() {
+  if (!allSatisfactions.length) {
+    document.getElementById('score-global-section').innerHTML =
+      '<div style="text-align:center;padding:24px;color:var(--muted)">Aucune mesure enregistree — cliquez sur Nouvelle mesure</div>';
+    document.getElementById('sat-history').innerHTML = '';
+    return;
+  }
+  var last = allSatisfactions[allSatisfactions.length-1];
+  var score = parseFloat(last[2]);
+  var scoreColor = score>=4?'var(--green-dk)':score>=3?'var(--orange)':'var(--red)';
+  var lastVals = [];
+  try { lastVals = JSON.parse(last[4]||'[]'); } catch(e) {}
+
+  var gaugesHtml = CRITERES.map(function(c,i) {
+    var v = lastVals[i] || 0;
+    var pct = v/5*100;
+    var cColor = v>=4?'var(--green)':v>=3?'var(--orange)':'var(--red)';
+    return '<div style="margin-bottom:10px">'
+      +'<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">'
+      +'<span style="color:var(--charcoal)">'+c+'</span>'
+      +'<span style="font-weight:700;color:'+cColor+'">'+v+'/5</span></div>'
+      +'<div class="score-gauge"><div class="score-fill" style="width:'+pct+'%;background:'+cColor+'"></div></div>'
+      +'</div>';
+  }).join('');
+
+  document.getElementById('score-global-section').innerHTML =
+    '<div style="display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start;margin-bottom:20px">'
+    +'<div style="text-align:center;background:var(--slate);border-radius:12px;padding:20px 24px">'
+    +'<div style="font-family:sans-serif;font-size:52px;font-weight:800;color:'+scoreColor+';line-height:1">'+score.toFixed(1)+'</div>'
+    +'<div style="font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:600">/5 — Score global</div>'
+    +'<div style="font-size:11px;color:var(--muted);margin-top:4px">'+formatDate(last[1])+'</div>'
+    +'</div>'
+    +'<div>'+gaugesHtml+'</div>'
+    +'</div>';
+
+  var histHtml = allSatisfactions.slice().reverse().map(function(r) {
+    var sc = parseFloat(r[2]);
+    var c = sc>=4?'var(--green-dk)':sc>=3?'var(--orange)':'var(--red)';
+    return '<div class="history-item" style="border-left-color:'+c+'">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center">'
+      +'<div style="font-size:12px;font-weight:700">'+formatDate(r[1])+'<span style="color:var(--muted);font-weight:400;margin-left:8px">'+r[3]+'</span></div>'
+      +'<div style="font-family:sans-serif;font-size:20px;font-weight:800;color:'+c+'">'+sc.toFixed(1)+'/5</div>'
+      +'</div>'
+      +(r[5]?'<div style="font-size:11px;color:var(--muted);margin-top:4px">'+r[5]+'</div>':'')
+      +'</div>';
+  }).join('');
+  document.getElementById('sat-history').innerHTML = histHtml || '<div style="color:var(--muted);font-size:12px">Aucun historique</div>';
+}
+
+// CONTACTS
+function loadContacts() {
+  window._ct_cb = function(d) {
+    allContacts = (d.data||[]).filter(function(r){return String(r[1])===clientId;});
+    renderContacts();
+  };
+  var s = document.createElement('script');
+  s.src = GSHEET_URL + '?action=getCRMContacts&callback=_ct_cb';
+  document.head.appendChild(s);
+}
+
+function renderContacts() {
+  if (!allContacts.length) {
+    document.getElementById('contacts-body').innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted)">Aucun contact — cliquez sur Ajouter</div>';
+    return;
+  }
+  var ROLE_COLORS = {'Deciseur':'#4F46E5','Operationnel':'#059669','Facturation':'#D97706','Qualite / QSSE':'#DC2626','Autre':'#6B7D8A'};
+  document.getElementById('contacts-body').innerHTML =
+    '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">'
+    + allContacts.map(function(ct) {
+      var rc = ROLE_COLORS[ct[6]] || '#6B7D8A';
+      return '<div style="background:var(--slate);border-radius:10px;padding:14px;border-top:3px solid '+rc+'">'
+        +'<div style="font-size:14px;font-weight:700;color:var(--steel-dk)">'+ct[2]+'</div>'
+        +'<div style="font-size:11px;color:var(--muted);margin-bottom:8px">'+ct[3]+'</div>'
+        +'<div style="font-size:11px;margin-bottom:3px">📧 '+ct[4]+'</div>'
+        +'<div style="font-size:11px;margin-bottom:6px">📞 '+ct[5]+'</div>'
+        +'<span style="background:'+rc+'22;color:'+rc+';font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px">'+ct[6]+'</span>'
+        +'</div>';
+    }).join('')
+    +'</div>';
+}
+
+function openAddContact() { document.getElementById('modal-contact').classList.add('open'); }
+async function saveContact() {
+  var nom = document.getElementById('ct-nom').value.trim();
+  if (!nom) { showToast('Nom obligatoire', false); return; }
+  var data = {id:'CT-'+clientId+'-'+Date.now(), client_id:clientId,
+    nom, poste:document.getElementById('ct-poste').value.trim(),
+    email:document.getElementById('ct-email').value.trim(),
+    tel:document.getElementById('ct-tel').value.trim(),
+    role:document.getElementById('ct-role').value, createdAt:new Date().toISOString()};
+  try {
+    await fetch(GSHEET_URL, {method:'POST', body:JSON.stringify({action:'saveCRMContact', data})});
+    closeModal('modal-contact'); showToast('Contact ajoute', true); loadContacts();
+  } catch(e) { showToast('Erreur', false); }
+}
+
+// HISTORIQUE
+function loadHistorique() {
+  window._histo_cb = function(d) {
+    allHistorique = (d.data||[]).filter(function(r){return String(r[1])===clientId;});
+    renderHistorique();
+  };
+  var s = document.createElement('script');
+  s.src = GSHEET_URL + '?action=getCRMHistorique&callback=_histo_cb';
+  document.head.appendChild(s);
+}
+
+function renderHistorique() {
+  if (!allHistorique.length) {
+    document.getElementById('historique-body').innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted)">Aucun echange — cliquez sur Ajouter</div>';
+    return;
+  }
+  var TYPE_ICONS = {'Appel telephonique':'📞','Email':'📧','Reunion':'🤝','Visite site':'🏭','Audit client':'🔍','Revue de contrat':'📄','Autre':'💬'};
+  document.getElementById('historique-body').innerHTML = allHistorique.slice().reverse().map(function(h) {
+    return '<div class="history-item">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
+      +'<div style="font-size:13px;font-weight:700">'+(TYPE_ICONS[h[2]]||'💬')+' '+h[2]+'</div>'
+      +'<div style="font-size:11px;color:var(--muted)">'+formatDate(h[1])+'</div></div>'
+      +(h[3]?'<div style="font-size:11px;color:var(--muted);margin-bottom:6px">Interlocuteur: '+h[3]+'</div>':'')
+      +'<div style="font-size:12px">'+h[4]+'</div>'
+      +(h[5]?'<div style="margin-top:8px;background:var(--green-xlt);border-radius:6px;padding:8px;font-size:11px"><strong>Actions:</strong> '+h[5]+'</div>':'')
+      +(h[6]?'<div style="margin-top:6px;font-size:11px;color:var(--indigo)">Prochain RDV: '+formatDate(h[6])+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+function openAddHistorique() {
+  document.getElementById('h-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('h-cr').value = '';
+  document.getElementById('h-actions').value = '';
+  document.getElementById('h-interlocuteur').value = '';
+  document.getElementById('h-next-rdv').value = '';
+  document.getElementById('modal-histo').classList.add('open');
+}
+async function saveHistorique() {
+  var cr = document.getElementById('h-cr').value.trim();
+  if (!cr) { showToast('Compte-rendu obligatoire', false); return; }
+  var data = {id:'H-'+clientId+'-'+Date.now(), client_id:clientId,
+    date:document.getElementById('h-date').value,
+    type:document.getElementById('h-type').value,
+    interlocuteur:document.getElementById('h-interlocuteur').value.trim(),
+    cr, actions:document.getElementById('h-actions').value.trim(),
+    next_rdv:document.getElementById('h-next-rdv').value, createdAt:new Date().toISOString()};
+  // Si prochain RDV renseigné, mettre à jour le client
+  if (data.next_rdv) {
+    await fetch(GSHEET_URL, {method:'POST', body:JSON.stringify({action:'saveCRM', data:{id:clientId, nom:client[1], type:client[2], prochain_rdv:data.next_rdv}})});
+  }
+  try {
+    await fetch(GSHEET_URL, {method:'POST', body:JSON.stringify({action:'saveCRMHistorique', data})});
+    closeModal('modal-histo'); showToast('Echange enregistre', true); loadHistorique();
+  } catch(e) { showToast('Erreur', false); }
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  try { return new Date(d).toLocaleDateString('fr-FR'); } catch(e) { return d; }
+}
+function isUrgent(d) {
+  if (!d) return false;
+  return (new Date(d) - new Date()) / 86400000 < 30;
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function showToast(msg, ok) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.style.background = ok?'var(--green-dk)':'var(--steel-dk)';
+  t.classList.add('show'); setTimeout(function(){t.classList.remove('show');}, 3000);
+}
+
+loadClient();
+</script>
+</body></html>

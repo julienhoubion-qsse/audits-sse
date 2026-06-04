@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CRM — Clients fournisseurs VHU</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#6BBF1F;--green-dk:#4D8A12;--green-lt:#D6F0A8;--green-xlt:#EEF8D8;--steel:#4A6880;--steel-dk:#2E4558;--steel-lt:#C8D8E4;--steel-xlt:#EAF1F6;--charcoal:#3A3A3A;--white:#FFFFFF;--slate:#F2F6F9;--muted:#6B7D8A;--border:#D0DDE8;--red:#DC2626;--red-lt:#FEE2E2;--orange:#D97706;--orange-lt:#FEF3C7;--indigo:#4F46E5;--indigo-lt:#EEF2FF;--teal:#0891B2;--purple:#7C3AED;--radius:10px;--shadow:0 2px 14px rgba(46,69,88,.10);--shadow-md:0 6px 28px rgba(46,69,88,.16)}
+body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--charcoal);margin:0}
+.page-header{background:linear-gradient(135deg,var(--steel-dk),var(--steel));padding:18px 28px;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green)}
+.ph-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#a5b4fc;margin-bottom:4px}
+.ph-title{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.ph-sub{font-size:12px;color:var(--steel-lt);margin-top:3px}
+.nav-bar{background:var(--steel-dk);padding:0 28px;display:flex;overflow-x:auto}
+.nav-btn{background:none;border:none;border-bottom:3px solid transparent;padding:11px 16px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:var(--steel-lt);cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block;transition:all .15s}
+.nav-btn:hover{color:#fff}
+.nav-btn.active{color:#fff!important;border-bottom-color:var(--green)!important}
+.wrapper{max-width:1300px;margin:0 auto;padding:20px 24px 60px}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.kpi-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;text-align:center;border-left:4px solid var(--border)}
+.kpi-val{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:800;line-height:1.1}
+.kpi-lbl{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:3px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
+.card-hd{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-title{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;color:var(--steel-dk);flex:1}
+.card-body{padding:16px 18px}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;white-space:nowrap}
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table thead th{background:var(--steel-dk);color:#fff;padding:9px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase}
+.data-table tbody tr{border-bottom:1px solid var(--border);cursor:pointer}
+.data-table tbody tr:hover td{background:var(--slate)}
+.data-table tbody td{padding:9px 12px;vertical-align:middle}
+.fld{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.fld-lbl{font-size:11px;font-weight:700;color:var(--steel-dk);text-transform:uppercase}
+.fld-inp,.fld-sel{height:36px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:13px;width:100%}
+.fld-txt{border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Nunito Sans',sans-serif;font-size:12px;resize:vertical;min-height:60px;width:100%}
+.form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.btn{height:36px;padding:0 16px;border:none;border-radius:7px;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.btn-primary{background:var(--indigo);color:#fff}
+.btn-green{background:var(--green);color:#fff}
+.btn-ghost{background:var(--steel-xlt);color:var(--steel-dk);border:1px solid var(--border)}
+.btn-sm{height:28px;padding:0 10px;font-size:11px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:860px;max-height:90vh;overflow-y:auto}
+.modal-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1}
+.modal-title{font-family:'Exo 2',sans-serif;font-size:15px;font-weight:700;color:var(--steel-dk)}
+.modal-body{padding:16px 18px}
+.modal-foot{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:#fff}
+.score-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:4px}
+.score-fill{height:100%;border-radius:4px;background:var(--green)}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--steel-dk);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.section-sep{font-size:11px;font-weight:700;color:var(--steel-dk);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--green)}
+</style></head><body>
+
+<div class="page-header">
+  <div class="ph-tag">CRM — Relation Client</div>
+  <div class="ph-title">👥 Clients fournisseurs de véhicules</div>
+  <div class="ph-sub">Assureurs · Metteurs en marché · Domaines · Fourrières</div>
+</div>
+<div class="nav-bar">
+  <a class="nav-btn" href="Accueil_SSE.html">🏠 Site SSE</a>
+  <a class="nav-btn active" href="CRM_Accueil.html">👥 CRM Clients</a>
+  <a class="nav-btn" href="ISO9001_Cartographie.html">🗺️ ISO 9001</a>
+  <a class="nav-btn" href="Plan_Actions_SSE.html">📋 Plan d'actions</a>
+</div>
+
+<div class="wrapper">
+  <div class="kpi-row" id="kpis"></div>
+
+  <div class="card">
+    <div class="card-hd">
+      <span style="font-size:18px">👥</span>
+      <span class="card-title">Portefeuille clients</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <select id="f-type" onchange="render()" style="height:32px;border:1px solid var(--border);border-radius:7px;padding:0 8px;font-size:12px">
+          <option value="">Tous types</option>
+          <option value="Assureur">Assureurs</option>
+          <option value="Metteur en marche">Metteurs en marche</option>
+          <option value="Domaine">Domaines</option>
+          <option value="Fourriere">Fourrieres</option>
+          <option value="Autre">Autres</option>
+        </select>
+        <input id="f-search" placeholder="Rechercher..." oninput="render()" style="height:32px;border:1px solid var(--border);border-radius:7px;padding:0 8px;font-size:12px;width:180px">
+        <button class="btn btn-green btn-sm" onclick="openNewClient()">➕ Nouveau client</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr>
+          <th>Client</th><th>Type</th><th>Regions</th>
+          <th>Interlocuteur</th><th>Contrat</th>
+          <th style="text-align:center">Satisfaction</th>
+          <th style="text-align:center">Prochain RDV</th>
+          <th style="width:80px"></th>
+        </tr></thead>
+        <tbody id="clients-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal nouveau / edit client -->
+<div class="modal-overlay" id="modal-client">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <span class="modal-title" id="modal-client-title">Nouveau client</span>
+      <button onclick="closeModal('modal-client')" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="c-id">
+
+      <div class="section-sep">Identite</div>
+      <div class="form-row">
+        <div class="fld"><label class="fld-lbl">Raison sociale *</label><input class="fld-inp" id="c-nom" placeholder="Ex: AXA France"></div>
+        <div class="fld"><label class="fld-lbl">Type *</label>
+          <select class="fld-sel" id="c-type">
+            <option value="">— Selectionner —</option>
+            <option value="Assureur">Assureur</option>
+            <option value="Metteur en marche">Metteur en marche (Constructeur)</option>
+            <option value="Domaine">Domaine (La Poste, EDF...)</option>
+            <option value="Fourriere">Fourriere</option>
+            <option value="Autre">Autre</option>
+          </select></div>
+      </div>
+      <div class="form-row">
+        <div class="fld"><label class="fld-lbl">SIREN</label><input class="fld-inp" id="c-siren" placeholder="9 chiffres"></div>
+        <div class="fld"><label class="fld-lbl">Region(s) couverte(s)</label><input class="fld-inp" id="c-regions" placeholder="Ex: Auvergne-Rhone-Alpes, PACA"></div>
+      </div>
+      <div class="fld"><label class="fld-lbl">Adresse siege</label><input class="fld-inp" id="c-adresse" placeholder="Adresse complete"></div>
+
+      <!-- Champs specifiques par type -->
+      <div id="specific-fields"></div>
+
+      <div class="section-sep">Interlocuteur principal</div>
+      <div class="form-row">
+        <div class="fld"><label class="fld-lbl">Nom *</label><input class="fld-inp" id="c-contact-nom" placeholder="Nom Prenom"></div>
+        <div class="fld"><label class="fld-lbl">Poste</label><input class="fld-inp" id="c-contact-poste" placeholder="Ex: Responsable prestataires"></div>
+      </div>
+      <div class="form-row">
+        <div class="fld"><label class="fld-lbl">Email</label><input class="fld-inp" id="c-contact-email" type="email" placeholder="prenom.nom@societe.fr"></div>
+        <div class="fld"><label class="fld-lbl">Telephone</label><input class="fld-inp" id="c-contact-tel" placeholder="06 XX XX XX XX"></div>
+      </div>
+
+      <div class="section-sep">Contrat et engagements</div>
+      <div class="form-row">
+        <div class="fld"><label class="fld-lbl">Date debut contrat</label><input type="date" class="fld-inp" id="c-contrat-debut"></div>
+        <div class="fld"><label class="fld-lbl">Date echeance</label><input type="date" class="fld-inp" id="c-contrat-fin"></div>
+      </div>
+      <div class="form-row">
+        <div class="fld"><label class="fld-lbl">Volume annuel VHU (estim.)</label><input class="fld-inp" id="c-volume" placeholder="Ex: 500 VHU/an"></div>
+        <div class="fld"><label class="fld-lbl">SLA delai prise en charge</label><input class="fld-inp" id="c-sla" placeholder="Ex: 48h"></div>
+      </div>
+      <div class="fld"><label class="fld-lbl">Exigences contractuelles specifiques</label>
+        <textarea class="fld-txt" id="c-exigences" placeholder="Ex: Certificat de destruction sous 5 jours, reporting mensuel..."></textarea></div>
+
+      <div class="section-sep">Suivi et satisfaction</div>
+      <div class="form-row">
+        <div class="fld"><label class="fld-lbl">Frequence mesure satisfaction</label>
+          <select class="fld-sel" id="c-freq-sat">
+            <option value="Ponctuel">Ponctuel</option>
+            <option value="Trimestrielle">Trimestrielle</option>
+            <option value="Semestrielle">Semestrielle</option>
+            <option value="Annuelle" selected>Annuelle</option>
+          </select></div>
+        <div class="fld"><label class="fld-lbl">Prochain RDV / revue</label><input type="date" class="fld-inp" id="c-prochain-rdv"></div>
+      </div>
+
+      <div class="section-sep">Lien ISO 9001 — Parties prenantes</div>
+      <div class="fld"><label class="fld-lbl">Besoins et attentes identifies</label>
+        <textarea class="fld-txt" id="c-besoins" placeholder="Ex: Conformite reglementaire, delais de prise en charge, traçabilite..."></textarea></div>
+      <div class="fld"><label class="fld-lbl">Processus ISO 9001 lie</label>
+        <select class="fld-sel" id="c-processus-iso">
+          <option value="">— Selectionner —</option>
+          <option value="VEN">VEN — Ventes / Commercial</option>
+          <option value="RES">RES — Reseau CVHU</option>
+          <option value="DIR">DIR — Direction Strategie</option>
+          <option value="DECO">DECO — Deconstruction</option>
+        </select></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('modal-client')">Annuler</button>
+      <button class="btn btn-green" onclick="saveClient()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GSHEET_URL = "https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQlWkQCV4lQJikI-ldcBS_wYuTTis2RCpYnIvpDS82b4wut4cg/exec";
+var allClients = [];
+
+const TYPE_COLORS = {
+  'Assureur':'#4F46E5','Metteur en marche':'#059669',
+  'Domaine':'#0891B2','Fourriere':'#D97706','Autre':'#6B7D8A'
+};
+const TYPE_BG = {
+  'Assureur':'#EEF2FF','Metteur en marche':'#D1FAE5',
+  'Domaine':'#CFFAFE','Fourriere':'#FEF3C7','Autre':'#F2F6F9'
+};
+
+// Champs specifiques par type
+const SPECIFIC_FIELDS = {
+  'Assureur': '<div class="form-row"><div class="fld"><label class="fld-lbl">Protocole declaration sinistre</label><input class="fld-inp" id="c-protocole" placeholder="Ex: Plateforme web, email dedie..."></div><div class="fld"><label class="fld-lbl">Nb agences partenaires</label><input class="fld-inp" id="c-nb-agences" placeholder="Ex: 12"></div></div>',
+  'Metteur en marche': '<div class="form-row"><div class="fld"><label class="fld-lbl">Cahier des charges constructeur</label><input class="fld-inp" id="c-cdc" placeholder="Ref. ou description"></div><div class="fld"><label class="fld-lbl">Objectif REP annuel</label><input class="fld-inp" id="c-rep" placeholder="Ex: 2500 VHU/an"></div></div>',
+  'Domaine': '<div class="form-row"><div class="fld"><label class="fld-lbl">Type de marche</label><select class="fld-sel" id="c-marche"><option value="">—</option><option>Marche public</option><option>Contrat prive</option><option>Accord-cadre</option></select></div><div class="fld"><label class="fld-lbl">Ref. marche / appel d offres</label><input class="fld-inp" id="c-ref-marche" placeholder="Ex: MAPA-2025-XXX"></div></div>',
+  'Fourriere': '<div class="form-row"><div class="fld"><label class="fld-lbl">Departement(s) couverts</label><input class="fld-inp" id="c-dept" placeholder="Ex: 38, 73, 74"></div><div class="fld"><label class="fld-lbl">Convention prefectorale</label><input class="fld-inp" id="c-conv-pref" placeholder="Ref. convention"></div></div>'
+};
+
+document.getElementById('c-type').addEventListener('change', function() {
+  var sf = SPECIFIC_FIELDS[this.value] || '';
+  document.getElementById('specific-fields').innerHTML = sf ? '<div class="section-sep">Informations specifiques</div>' + sf : '';
+});
+
+function typeBadge(type) {
+  var color = TYPE_COLORS[type] || '#6B7D8A';
+  var bg = TYPE_BG[type] || '#F2F6F9';
+  return '<span style="background:'+bg+';color:'+color+';font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px">'+type+'</span>';
+}
+
+function scoreColor(score) {
+  if (!score) return '#6B7D8A';
+  if (score >= 4) return '#059669';
+  if (score >= 3) return '#D97706';
+  return '#DC2626';
+}
+
+function scoreBadge(score) {
+  if (!score) return '<span style="color:var(--muted);font-size:11px">Non mesure</span>';
+  var c = scoreColor(score);
+  var stars = '';
+  for (var i=1;i<=5;i++) stars += '<span style="color:'+(i<=Math.round(score)?'#F59E0B':'#D0DDE8')+'">★</span>';
+  return '<div style="display:flex;align-items:center;gap:4px"><span style="font-weight:800;color:'+c+';font-size:13px">'+parseFloat(score).toFixed(1)+'</span>'+stars+'</div>';
+}
+
+function render() {
+  var ftype = document.getElementById('f-type').value;
+  var fsearch = document.getElementById('f-search').value.toLowerCase();
+  var filtered = allClients.filter(function(c) {
+    if (ftype && c[2] !== ftype) return false;
+    if (fsearch && !c[1].toLowerCase().includes(fsearch)) return false;
+    return true;
+  });
+
+  var total = allClients.length;
+  var byType = {};
+  allClients.forEach(function(c) { byType[c[2]] = (byType[c[2]]||0)+1; });
+  var scores = allClients.filter(function(c){return parseFloat(c[16]);}).map(function(c){return parseFloat(c[16]);});
+  var avgScore = scores.length ? (scores.reduce(function(a,b){return a+b;},0)/scores.length).toFixed(1) : '—';
+
+  document.getElementById('kpis').innerHTML =
+    '<div class="kpi-card" style="border-left-color:var(--indigo)"><div class="kpi-val" style="color:var(--indigo)">'+total+'</div><div class="kpi-lbl">Clients total</div></div>'+
+    '<div class="kpi-card" style="border-left-color:#4F46E5"><div class="kpi-val" style="color:#4F46E5">'+(byType['Assureur']||0)+'</div><div class="kpi-lbl">Assureurs</div></div>'+
+    '<div class="kpi-card" style="border-left-color:#059669"><div class="kpi-val" style="color:#059669">'+(byType['Metteur en marche']||0)+'</div><div class="kpi-lbl">Constructeurs</div></div>'+
+    '<div class="kpi-card" style="border-left-color:#0891B2"><div class="kpi-val" style="color:#0891B2">'+(byType['Domaine']||0)+'</div><div class="kpi-lbl">Domaines</div></div>'+
+    '<div class="kpi-card" style="border-left-color:#F59E0B"><div class="kpi-val" style="color:#F59E0B">'+avgScore+'</div><div class="kpi-lbl">Satisfaction moy.</div></div>';
+
+  if (!filtered.length) {
+    document.getElementById('clients-tbody').innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted)">Aucun client — cliquez sur Nouveau client</td></tr>';
+    return;
+  }
+  document.getElementById('clients-tbody').innerHTML = filtered.map(function(c) {
+    var rdv = c[20] ? new Date(c[20]).toLocaleDateString('fr-FR') : '—';
+    var rdvStyle = '';
+    if (c[20]) {
+      var diff = (new Date(c[20]) - new Date()) / 86400000;
+      if (diff < 0) rdvStyle = 'color:var(--red);font-weight:700';
+      else if (diff < 30) rdvStyle = 'color:var(--orange);font-weight:700';
+    }
+    return '<tr onclick="location.href=\'CRM_Fiche.html?id='+c[0]+'\'">'
+      +'<td><div style="font-weight:700;font-size:13px">'+c[1]+'</div><div style="font-size:10px;color:var(--muted)">'+c[4]+'</div></td>'
+      +'<td>'+typeBadge(c[2])+'</td>'
+      +'<td style="font-size:11px;color:var(--muted)">'+c[5]+'</td>'
+      +'<td><div style="font-size:12px;font-weight:600">'+c[7]+'</div><div style="font-size:10px;color:var(--muted)">'+c[8]+'</div></td>'
+      +'<td style="font-size:11px"><div>'+c[11]+'</div><div style="color:var(--muted)">SLA: '+c[13]+'</div></td>'
+      +'<td style="text-align:center">'+scoreBadge(c[16])+'</td>'
+      +'<td style="text-align:center;font-size:11px"><span style="'+rdvStyle+'">'+rdv+'</span></td>'
+      +'<td style="text-align:center"><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();openSatisfaction(\''+c[0]+'\',\''+c[1].replace(/'/g,'')+'\')" title="Mesurer satisfaction">⭐</button></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function openNewClient() {
+  document.getElementById('c-id').value = '';
+  document.getElementById('modal-client-title').textContent = 'Nouveau client';
+  ['c-nom','c-siren','c-regions','c-adresse','c-contact-nom','c-contact-poste',
+   'c-contact-email','c-contact-tel','c-volume','c-sla','c-exigences','c-besoins'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('c-type').value = '';
+  document.getElementById('c-processus-iso').value = '';
+  document.getElementById('c-freq-sat').value = 'Annuelle';
+  document.getElementById('c-contrat-debut').value = '';
+  document.getElementById('c-contrat-fin').value = '';
+  document.getElementById('c-prochain-rdv').value = '';
+  document.getElementById('specific-fields').innerHTML = '';
+  document.getElementById('modal-client').classList.add('open');
+}
+
+async function saveClient() {
+  var nom = document.getElementById('c-nom').value.trim();
+  var type = document.getElementById('c-type').value;
+  if (!nom || !type) { showToast('Nom et type obligatoires', false); return; }
+  var id = document.getElementById('c-id').value || ('CRM-' + Date.now());
+  var data = {
+    id, nom, type,
+    siren: document.getElementById('c-siren').value.trim(),
+    adresse: document.getElementById('c-adresse').value.trim(),
+    regions: document.getElementById('c-regions').value.trim(),
+    contact_nom: document.getElementById('c-contact-nom').value.trim(),
+    contact_poste: document.getElementById('c-contact-poste').value.trim(),
+    contact_email: document.getElementById('c-contact-email').value.trim(),
+    contact_tel: document.getElementById('c-contact-tel').value.trim(),
+    contrat_debut: document.getElementById('c-contrat-debut').value,
+    contrat_fin: document.getElementById('c-contrat-fin').value,
+    volume: document.getElementById('c-volume').value.trim(),
+    sla: document.getElementById('c-sla').value.trim(),
+    exigences: document.getElementById('c-exigences').value.trim(),
+    freq_satisfaction: document.getElementById('c-freq-sat').value,
+    score_satisfaction: '',
+    besoins_attentes: document.getElementById('c-besoins').value.trim(),
+    processus_iso: document.getElementById('c-processus-iso').value,
+    prochain_rdv: document.getElementById('c-prochain-rdv').value,
+    createdAt: new Date().toISOString()
+  };
+  try {
+    await fetch(GSHEET_URL, {method:'POST', body:JSON.stringify({action:'saveCRM', data})});
+    // Sync besoins to ISO9001 parties prenantes
+    if (data.besoins_attentes && data.processus_iso) {
+      await fetch(GSHEET_URL, {method:'POST', body:JSON.stringify({action:'saveISO9001PP', data:{
+        id: 'PP-CRM-'+id, processus: data.processus_iso,
+        nom: data.nom, type: data.type,
+        besoins: data.besoins_attentes, source: 'CRM'
+      }})});
+    }
+    closeModal('modal-client');
+    showToast('Client enregistre', true);
+    loadClients();
+  } catch(e) { showToast('Erreur: '+e.message, false); }
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function openSatisfaction(id, nom) {
+  location.href = 'CRM_Fiche.html?id=' + id + '&tab=satisfaction';
+}
+
+function showToast(msg, ok) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.style.background = ok?'var(--green-dk)':'var(--steel-dk)';
+  t.classList.add('show'); setTimeout(function(){t.classList.remove('show');}, 3000);
+}
+
+function loadClients() {
+  window._crm_cb = function(d) {
+    allClients = d.data || [];
+    render();
+  };
+  var old = document.getElementById('_crm_script');
+  if (old) old.remove();
+  var s = document.createElement('script');
+  s.id = '_crm_script';
+  s.src = GSHEET_URL + '?action=getCRM&callback=_crm_cb';
+  document.head.appendChild(s);
+}
+loadClients();
+</script>
+</body></html>
