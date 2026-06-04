@@ -302,6 +302,16 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--slate);color:var(--ch
       <span class="nav-card-arrow" style="color:#4F46E5">›</span>
     </a>
 
+    <!-- Module CRM -->
+    <a class="nav-card" onclick="window.location.href='CRM_Accueil.html'" style="grid-column:1/-1;display:flex;align-items:center;gap:20px;border-top:3px solid #7C3AED">
+      <span class="nav-card-icon" style="font-size:36px">👥</span>
+      <div style="flex:1">
+        <div class="nav-card-title">Module CRM — Clients fournisseurs</div>
+        <div class="nav-card-desc">Assureurs · Metteurs en marche · Domaines · Fourrieres · Mesure satisfaction · Historique echanges · Lien ISO 9001</div>
+      </div>
+      <span class="nav-card-arrow" style="color:#7C3AED">›</span>
+    </a>
+
     <!-- Plan d'actions seul -->
     <a class="nav-card" onclick="window.location.href='Plan_Actions_SSE.html'" style="grid-column:1/-1;display:flex;align-items:center;gap:20px">
       <span class="nav-card-icon" style="font-size:36px">📋</span>
@@ -343,12 +353,15 @@ const GSHEET_URL="https://script.google.com/macros/s/AKfycbxQenH3pxHDRm1pXvhoEQl
 document.getElementById('hero-date').innerHTML='📅 '+new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
 function jsonpGet(action){
-  return new Promise((resolve,reject)=>{
-    const cb='_cb'+Date.now()+Math.random().toString(36).slice(2);
-    window[cb]=function(d){delete window[cb];const el=document.getElementById('_js_'+cb);if(el)el.remove();resolve(d);};
-    const s=document.createElement('script');s.id='_js_'+cb;
+  return new Promise(function(resolve,reject){
+    var cb='_accueil_'+action.replace(/[^a-zA-Z0-9]/g,'_');
+    window[cb]=function(d){ resolve(d); };
+    var old=document.getElementById('_js_'+cb);
+    if(old)old.remove();
+    var s=document.createElement('script');
+    s.id='_js_'+cb;
     s.src=GSHEET_URL+'?action='+action+'&callback='+cb;
-    s.onerror=()=>reject(new Error('failed'));
+    s.onerror=function(){reject(new Error('failed'));};
     document.head.appendChild(s);
   });
 }
@@ -390,7 +403,7 @@ async function loadData(){
           var sc=a.total?Number(a.total):null;
           var cls=scoreClass(sc);
           var dateStr=a.date?new Date(a.date).toLocaleDateString('fr-FR'):'—';
-          return '<div class="recent-item" onclick="window.location.href='Bibliotheque_Audits_SSE.html'">'
+          return '<div class="recent-item" data-href="Bibliotheque_Audits_SSE.html" onclick="location.href=this.dataset.href">'
             +'<span class="recent-icon">📋</span>'
             +'<div class="recent-body">'
             +'<div class="recent-title">Site '+a.site+' — '+(a.auditeur||'—')+'</div>'
